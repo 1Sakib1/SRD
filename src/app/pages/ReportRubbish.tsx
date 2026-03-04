@@ -27,7 +27,7 @@ interface Report {
 }
 
 export const ReportRubbish = () => {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, isGuest } = useAuth();
   const navigate = useNavigate();
   
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
@@ -40,16 +40,80 @@ export const ReportRubbish = () => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
+  const [guestEmail, setGuestEmail] = useState(''); // Email for guest users
   
   // Map data
   const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.8688, 151.2093]);
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(null);
   
-  // Load existing reports from server on mount
+  // Convert reports to location points for heat map
+  const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
+    // Group reports by approximate location (within ~100m)
+    const locationGroups: { [key: string]: Report[] } = {};
+    
+    reports.forEach(report => {
+      // Validate location data exists and is valid
+      if (!report.location || 
+          typeof report.location.lat !== 'number' || 
+          typeof report.location.lng !== 'number' ||
+          isNaN(report.location.lat) || 
+          isNaN(report.location.lng)) {
+        console.warn('Skipping report with invalid location:', report.id);
+        return;
+      }
+      
+      // Validate coordinates are within valid range
+      if (report.location.lat < -90 || report.location.lat > 90 ||
+          report.location.lng < -180 || report.location.lng > 180) {
+        console.warn('Skipping report with out-of-range coordinates:', report.id);
+        return;
+      }
+      
+      // Round to 3 decimal places (~111m precision)
+      const latKey = report.location.lat.toFixed(3);
+      const lngKey = report.location.lng.toFixed(3);
+      const key = `${latKey},${lngKey}`;
+      
+      if (!locationGroups[key]) {
+        locationGroups[key] = [];
+      }
+      locationGroups[key].push(report);
+    });
+    
+    // Convert groups to LocationPoint objects
+    return Object.entries(locationGroups).map(([key, groupReports]) => {
+      const [lat, lng] = key.split(',').map(Number);
+      
+      // Double-check the parsed values are valid
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn('Skipping invalid location group:', key);
+        return null;
+      }
+      
+      const reportCount = groupReports.length;
+      
+      // Calculate intensity based on report count (normalize to 0-1 range)
+      // More than 10 reports = max intensity
+      const intensity = Math.min(reportCount / 10, 1);
+      
+      return {
+        id: `user-report-${key}`,
+        lat,
+        lng,
+        address: groupReports[0].location.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+        reports: reportCount,
+        intensity,
+      };
+    }).filter((loc): loc is LocationPoint => loc !== null); // Filter out any null entries
+  };
+  
+  // Load existing reports from server on mount and combine with demo data
   useEffect(() => {
     const loadReports = async () => {
       try {
+        console.log('🗺️ Loading reports for heat map...');
+        
         const response = await fetch(
           `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list`,
           {
@@ -62,17 +126,41 @@ export const ReportRubbish = () => {
 
         if (response.ok) {
           const { reports } = await response.json();
-          // Merge with mock locations - you can customize this logic
+          console.log('✅ Loaded reports:', reports?.length || 0);
+          
+          if (reports && reports.length > 0) {
+            // Convert real reports to location points
+            const realLocations = convertReportsToLocations(reports);
+            console.log('📍 Generated location points:', realLocations.length);
+            
+            // Combine demo locations with real user reports
+            const combinedLocations = [...SYDNEY_LOCATIONS, ...realLocations];
+            setMapLocations(combinedLocations);
+            
+            toast.success(`Heat map updated with ${reports.length} real reports`, {
+              duration: 3000,
+            });
+          } else {
+            // No real reports yet, use demo data
+            setMapLocations(SYDNEY_LOCATIONS);
+          }
+        } else {
+          console.error('Failed to load reports:', response.statusText);
           setMapLocations(SYDNEY_LOCATIONS);
         }
       } catch (error) {
         console.error('Error loading reports:', error);
-        // Keep showing mock locations if loading fails
+        // Keep showing demo locations if loading fails
         setMapLocations(SYDNEY_LOCATIONS);
       }
     };
 
     loadReports();
+    
+    // Refresh heat map every 30 seconds to show new reports
+    const interval = setInterval(loadReports, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
   
   const handleAutoDetect = async () => {
@@ -150,6 +238,21 @@ export const ReportRubbish = () => {
       return;
     }
     
+    // If guest mode, require email
+    if (isGuest && !guestEmail) {
+      toast.error('Please provide your email address');
+      return;
+    }
+    
+    // Validate guest email format
+    if (isGuest && guestEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(guestEmail)) {
+        toast.error('Please provide a valid email address');
+        return;
+      }
+    }
+    
     const lat = parseFloat(latitude);
     const lng = parseFloat(longitude);
     
@@ -169,7 +272,7 @@ export const ReportRubbish = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: user ? user.id : 'guest',
             type,
             description,
             photo,
@@ -178,6 +281,7 @@ export const ReportRubbish = () => {
               lng,
               address,
             },
+            guestEmail: isGuest ? guestEmail : undefined,
           }),
         }
       );
@@ -319,6 +423,26 @@ export const ReportRubbish = () => {
                   </div>
                 )}
               </div>
+              
+              {/* Guest Email - Only show for guest users */}
+              {isGuest && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-xs text-gray-600 mb-3">
+                    We'll use this to notify you about the status of your report
+                  </p>
+                  <input
+                    type="email"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                    required={isGuest}
+                  />
+                </div>
+              )}
               
               {/* Location Selection */}
               <div>

@@ -6,8 +6,10 @@ interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  loginAsGuest: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isGuest: boolean;
   isLoading: boolean;
   refreshUser: () => Promise<void>;
 }
@@ -58,11 +60,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
+  const loginAsGuest = () => {
+    console.log('AuthContext: Logging in as guest');
+    const guestUser: User = {
+      id: 'guest-' + Date.now(),
+      name: 'Guest User',
+      email: 'guest@temporary.local',
+      role: 'guest',
+      ecoPoints: 0,
+      credits: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setUser(guestUser);
+    // Persist to localStorage
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(guestUser));
+  };
+
   const refreshUser = async () => {
     console.log('AuthContext: Refreshing user data from server');
     
     if (!user) {
       console.log('AuthContext: No user to refresh');
+      return;
+    }
+
+    // Skip refresh for guest users
+    if (user.role === 'guest') {
+      console.log('AuthContext: Skipping refresh for guest user');
       return;
     }
 
@@ -86,10 +111,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(freshUser);
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(freshUser));
       } else {
-        console.error('AuthContext: Failed to refresh user data');
+        console.error('AuthContext: Failed to refresh user data - Status:', response.status);
+        // Don't show error to user, just log it
       }
     } catch (error) {
       console.error('AuthContext: Error refreshing user from server', error);
+      // Don't show error to user, just log it
     }
   };
   
@@ -106,8 +133,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         login,
         logout,
+        loginAsGuest,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
+        isGuest: user?.role === 'guest',
         isLoading,
         refreshUser,
       }}

@@ -17,10 +17,10 @@ export interface User {
 }
 
 const ADMIN_EMAILS = [
-  'admin1@sydney.gov.au',
-  'admin2@sydney.gov.au',
-  'admin3@sydney.gov.au',
-  'admin4@sydney.gov.au',
+  'adminsrd1@srd.com.au',
+  'adminsrd2@srd.com.au',
+  'adminsrd3@srd.com.au',
+  'adminsrd4@srd.com.au',
 ];
 
 const ADMIN_PASSWORD = 'Admin@123';
@@ -202,7 +202,12 @@ export const loginAdmin = async (
     const now = new Date().toISOString();
     const userId = generateId();
     const passwordHash = hashPassword(password);
-    const adminName = sanitizedEmail.split('@')[0].replace(/\d+/, '') || 'Admin';
+    
+    // Extract admin number from email (adminsrd1, adminsrd2, etc.)
+    const adminMatch = sanitizedEmail.match(/adminsrd(\d+)/);
+    const adminNumber = adminMatch ? adminMatch[1] : '1';
+    const adminNames = ['Admin SRD One', 'Admin SRD Two', 'Admin SRD Three', 'Admin SRD Four'];
+    const adminName = adminNames[parseInt(adminNumber) - 1] || `Admin SRD ${adminNumber}`;
 
     admin = {
       id: userId,

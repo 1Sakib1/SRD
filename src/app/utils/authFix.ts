@@ -72,13 +72,18 @@ export const loginUserFixed = async (
     console.log('🔐 Server response:', data);
 
     if (!response.ok) {
-      return { user: null, error: createError('LOGIN_ERROR', data.error || 'Login failed') };
+      // Provide more helpful error messages
+      let errorMessage = data.error || 'Login failed';
+      if (errorMessage === 'Invalid email or password') {
+        errorMessage = 'Invalid email or password. If you don\'t have an account, please register first.';
+      }
+      return { user: null, error: createError('LOGIN_ERROR', errorMessage) };
     }
 
     return { user: data.user, error: null };
   } catch (error) {
     console.error('💥 Login exception:', error);
-    return { user: null, error: createError('NETWORK_ERROR', 'Network error occurred') };
+    return { user: null, error: createError('NETWORK_ERROR', 'Network error occurred. Please check your internet connection.') };
   }
 };
 

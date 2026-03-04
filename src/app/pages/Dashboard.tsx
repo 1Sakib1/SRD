@@ -4,7 +4,7 @@ import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
 import { getReports, Report } from '../utils/storage';
-import { SYDNEY_LOCATIONS } from '../utils/mockData';
+import { SYDNEY_LOCATIONS, LocationPoint } from '../utils/mockData';
 import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift } from 'lucide-react';
 import { format } from 'date-fns';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
@@ -18,6 +18,67 @@ export const Dashboard = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [userReports, setUserReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
+  
+  // Convert reports to location points for heat map
+  const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
+    // Group reports by approximate location (within ~100m)
+    const locationGroups: { [key: string]: Report[] } = {};
+    
+    reports.forEach(report => {
+      // Validate location data exists and is valid
+      if (!report.location || 
+          typeof report.location.lat !== 'number' || 
+          typeof report.location.lng !== 'number' ||
+          isNaN(report.location.lat) || 
+          isNaN(report.location.lng)) {
+        console.warn('Skipping report with invalid location:', report.id);
+        return;
+      }
+      
+      // Validate coordinates are within valid range
+      if (report.location.lat < -90 || report.location.lat > 90 ||
+          report.location.lng < -180 || report.location.lng > 180) {
+        console.warn('Skipping report with out-of-range coordinates:', report.id);
+        return;
+      }
+      
+      // Round to 3 decimal places (~111m precision)
+      const latKey = report.location.lat.toFixed(3);
+      const lngKey = report.location.lng.toFixed(3);
+      const key = `${latKey},${lngKey}`;
+      
+      if (!locationGroups[key]) {
+        locationGroups[key] = [];
+      }
+      locationGroups[key].push(report);
+    });
+    
+    // Convert groups to LocationPoint objects
+    return Object.entries(locationGroups).map(([key, groupReports]) => {
+      const [lat, lng] = key.split(',').map(Number);
+      
+      // Double-check the parsed values are valid
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn('Skipping invalid location group:', key);
+        return null;
+      }
+      
+      const reportCount = groupReports.length;
+      
+      // Calculate intensity based on report count (normalize to 0-1 range)
+      const intensity = Math.min(reportCount / 10, 1);
+      
+      return {
+        id: `user-report-${key}`,
+        lat,
+        lng,
+        address: groupReports[0].location.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+        reports: reportCount,
+        intensity,
+      };
+    }).filter((loc): loc is LocationPoint => loc !== null); // Filter out any null entries
+  };
   
   useEffect(() => {
     console.log('🔄 Dashboard: useEffect - loading reports');
@@ -32,7 +93,7 @@ export const Dashboard = () => {
     setIsLoading(true);
     try {
       // Fetch user's reports from server
-      const response = await fetch(
+      const userReportsResponse = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/user/${user.id}`,
         {
           method: 'GET',
@@ -42,12 +103,39 @@ export const Dashboard = () => {
         }
       );
 
-      if (response.ok) {
-        const { reports: serverReports } = await response.json();
+      if (userReportsResponse.ok) {
+        const { reports: serverReports } = await userReportsResponse.json();
         console.log('📋 Dashboard: Loaded user reports from server', serverReports.length);
         setUserReports(serverReports || []);
       } else {
         console.error('Failed to load user reports from server');
+      }
+      
+      // Fetch ALL reports for heat map
+      const allReportsResponse = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${publicAnonKey}`,
+          },
+        }
+      );
+      
+      if (allReportsResponse.ok) {
+        const { reports: allReports } = await allReportsResponse.json();
+        console.log('🗺️ Dashboard: Loaded all reports for heat map', allReports?.length || 0);
+        
+        if (allReports && allReports.length > 0) {
+          // Convert real reports to location points
+          const realLocations = convertReportsToLocations(allReports);
+          
+          // Combine demo locations with real user reports
+          const combinedLocations = [...SYDNEY_LOCATIONS, ...realLocations];
+          setMapLocations(combinedLocations);
+        }
+      } else {
+        console.error('Failed to load all reports for heat map');
       }
 
       // Refresh user data from server to get updated eco points
@@ -228,7 +316,7 @@ export const Dashboard = () => {
             <p className="text-sm text-gray-600 mb-4">
               Community reports across Sydney showing rubbish density hotspots
             </p>
-            <HeatMap locations={SYDNEY_LOCATIONS} height="400px" />
+            <HeatMap locations={mapLocations} height="400px" />
           </div>
         </div>
         

@@ -1,12 +1,86 @@
 import { Link } from 'react-router';
 import { Header } from '../components/Header';
-import { MapPin, Award, TrendingUp, Users, FileCheck, Zap, ArrowRight, Leaf, Recycle, DollarSign } from 'lucide-react';
+import { MapPin, Award, TrendingUp, Users, FileCheck, Zap, ArrowRight, Leaf, Recycle, DollarSign, Globe } from 'lucide-react';
 import { getUserStats } from '../utils/storage';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { motion } from 'motion/react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import sydneyHeroImage from 'figma:asset/5d064632da890c8838ab92d6f9018fa2845e7367.png';
 
 export const Landing = () => {
   const stats = getUserStats();
+  
+  const globalCities = [
+    {
+      name: 'New York City',
+      country: 'USA',
+      image: 'https://images.unsplash.com/photo-1500632907344-a073709b2448?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxOZXclMjBZb3JrJTIwQ2l0eSUyMHNreWxpbmUlMjBuaWdodxlbnwxfHx8fDE3NzI1NjkxNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'London',
+      country: 'United Kingdom',
+      image: 'https://images.unsplash.com/photo-1672243681582-cebc8c8466e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxMb25kb24lMjBCaWclMjBCZW4lMjBjaXR5c2NhcGV8ZW58MXx8fHwxNzcyNjI1NDQ4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Tokyo',
+      country: 'Japan',
+      image: 'https://images.unsplash.com/photo-1657728509574-c14afd8a9ab3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxUb2t5byUyMEphcGFuJTIwc2t5bGluZSUyMG5pZ2h0fGVufDF8fHx8MTc3MjYyNTQ0OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Paris',
+      country: 'France',
+      image: 'https://images.unsplash.com/photo-1659003505996-d5d7ca66bb25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxQYXJpcyUyMEVpZmZlbCUyMFRvd2VyJTIwY2l0eXNjYXBlfGVufDF8fHx8MTc3MjYyNTQ0OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Dubai',
+      country: 'UAE',
+      image: 'https://images.unsplash.com/photo-1651063820152-d3e7a27b4d2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxEdWJhaSUyMHNreWxpbmUlMjBCdXJqJTIwS2hhbGlmYXxlbnwxfHx8fDE3NzI2MDU2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Singapore',
+      country: 'Singapore',
+      image: 'https://images.unsplash.com/photo-1526797433728-1b6d12a06ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTaW5nYXBvcmUlMjBNYXJpbmElMjBCYXklMjBjaXR5c2NhcGV8ZW58MXx8fHwxNzcyNjI1NDUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Hong Kong',
+      country: 'China',
+      image: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIb25nJTIwS29uZyUyMFZpY3RvcmlhJTIwSGFyYm9yJTIwbmlnaHR8ZW58MXx8fHwxNzcyNjI1NDUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+      name: 'Toronto',
+      country: 'Canada',
+      image: 'https://images.unsplash.com/photo-1668882698355-923d532fa985?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxUb3JvbnRvJTIwQ2FuYWRhJTIwc2t5bGluZXxlbnwxfHx8fDE3NzI2MjU0NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+  ];
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        }
+      }
+    ]
+  };
   
   return (
     <div className="min-h-screen bg-white">
@@ -30,14 +104,14 @@ export const Landing = () => {
             >
               <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
                 <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">Sydney's #1 Community Cleanup Platform</span>
+                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">Global Urban Waste Management Solution</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Together We Keep{' '}
-                <span className="text-green-200">Sydney Beautiful</span>
+                <span className="text-green-200">Our Cities Clean</span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl text-green-50 mb-6 sm:mb-8 leading-relaxed">
-                Join thousands of community members reporting rubbish, earning rewards, and making a real difference in our city's cleanliness.
+                Join a global community reporting rubbish, earning rewards, and making a real difference in urban cleanliness across major cities worldwide.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
@@ -64,9 +138,9 @@ export const Landing = () => {
               className="relative order-first lg:order-last"
             >
               <div className="absolute -inset-4 bg-gradient-to-r from-green-400 to-emerald-400 rounded-2xl blur-2xl opacity-30" />
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1657622884558-cc7525f93638?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzeWRuZXklMjBvcGVyYSUyMGhvdXNlJTIwaGFyYm9yfGVufDF8fHx8MTc3MjExMTU0Nnww&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Sydney Harbour"
+              <img
+                src={sydneyHeroImage}
+                alt="Sydney Harbour and Opera House"
                 className="rounded-2xl shadow-2xl relative border-4 border-white/20 w-full h-auto"
               />
             </motion.div>
@@ -120,6 +194,71 @@ export const Landing = () => {
               <div className="text-sm sm:text-base text-gray-600">Satisfaction Rate</div>
             </motion.div>
           </div>
+        </div>
+      </section>
+      
+      {/* Global Cities Slideshow */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 bg-green-100 px-4 py-2 rounded-full mb-4">
+              <Globe className="w-5 h-5 text-green-600" />
+              <span className="text-green-700 font-medium text-sm">Available Globally</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Serving Major Cities Worldwide
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+              Our platform is making an impact in urban centers across the globe
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="city-slider-container"
+          >
+            <Slider {...sliderSettings}>
+              {globalCities.map((city, index) => (
+                <div key={index} className="px-3">
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300">
+                    <div className="aspect-[4/3] relative">
+                      <img
+                        src={city.image}
+                        alt={`${city.name}, ${city.country}`}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                      
+                      {/* City Info */}
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <h3 className="text-2xl font-bold mb-1">{city.name}</h3>
+                        <p className="text-green-300 font-medium flex items-center gap-2">
+                          <MapPin className="w-4 h-4" />
+                          {city.country}
+                        </p>
+                      </div>
+
+                      {/* Hover Effect Badge */}
+                      <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                        <Leaf className="w-3 h-3" />
+                        Active
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </motion.div>
         </div>
       </section>
       
@@ -178,7 +317,7 @@ export const Landing = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Real-Time Analytics</h3>
               <p className="text-gray-600">
-                View heat maps and insights showing rubbish hotspots across Sydney in real-time.
+                View heat maps and insights showing rubbish hotspots across your city in real-time.
               </p>
             </motion.div>
           </div>
@@ -240,7 +379,7 @@ export const Landing = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Earn Rewards</h3>
               <p className="text-gray-600">
-                Collect eco-points, track your impact, and help make Sydney cleaner every day.
+                Collect eco-points, track your impact, and help make your city cleaner every day.
               </p>
             </motion.div>
           </div>
@@ -260,7 +399,7 @@ export const Landing = () => {
               Ready to Make a Difference?
             </h2>
             <p className="text-xl text-green-100 mb-8">
-              Join thousands of Sydney residents working together for a cleaner, greener future.
+              Join thousands of urban citizens worldwide working together for cleaner, greener cities.
             </p>
             <Link
               to="/auth?tab=register"
@@ -285,7 +424,7 @@ export const Landing = () => {
                 <span className="font-semibold text-white">Smart Rubbish</span>
               </div>
               <p className="text-sm">
-                Making Sydney cleaner, one report at a time.
+                Making our cities cleaner, one report at a time.
               </p>
             </div>
             
@@ -302,7 +441,7 @@ export const Landing = () => {
               <h4 className="font-semibold text-white mb-4">Company</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link to="/about-us" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link to="/about-us" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link to="/about-us#get-in-touch" className="hover:text-white transition-colors">Contact</Link></li>
                 <li><Link to="/awareness" className="hover:text-white transition-colors">Awareness</Link></li>
               </ul>
             </div>

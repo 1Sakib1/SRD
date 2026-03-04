@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
 import { Landing } from './pages/Landing';
 import { Auth } from './pages/Auth';
+import { AuthCallback } from './pages/AuthCallback';
 import { Dashboard } from './pages/Dashboard';
 import { ReportRubbish } from './pages/ReportRubbish';
 import { AdminDashboard } from './pages/AdminDashboard';
@@ -67,18 +68,18 @@ const ProtectedReport = () => {
   );
 };
 
-const ProtectedAwareness = () => {
-  return (
-    <ProtectedRoute>
-      <Awareness />
-    </ProtectedRoute>
-  );
-};
-
 const ProtectedAdmin = () => {
   return (
     <ProtectedRoute adminOnly>
       <AdminDashboard />
+    </ProtectedRoute>
+  );
+};
+
+const ProtectedDebugUsers = () => {
+  return (
+    <ProtectedRoute adminOnly>
+      <DebugUsers />
     </ProtectedRoute>
   );
 };
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
         element: <Auth />,
       },
       {
+        path: '/auth/callback',
+        element: <AuthCallback />,
+      },
+      {
         path: '/dashboard',
         element: <ProtectedDashboard />,
       },
@@ -107,7 +112,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/awareness',
-        element: <ProtectedAwareness />,
+        element: <Awareness />,
       },
       {
         path: '/admin',
@@ -119,7 +124,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/debug-users',
-        element: <DebugUsers />,
+        element: <ProtectedDebugUsers />,
       },
       {
         path: '*',

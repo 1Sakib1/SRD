@@ -45,10 +45,10 @@ interface StorageError {
 
 // Initialize admin accounts
 const ADMIN_ACCOUNTS = [
-  { email: 'admin1@sydney.gov.au', password: 'admin1pass', name: 'Admin One' },
-  { email: 'admin2@sydney.gov.au', password: 'admin2pass', name: 'Admin Two' },
-  { email: 'admin3@sydney.gov.au', password: 'admin3pass', name: 'Admin Three' },
-  { email: 'admin4@sydney.gov.au', password: 'admin4pass', name: 'Admin Four' },
+  { email: 'adminsrd1@srd.com.au', password: 'admin1pass', name: 'Admin SRD One' },
+  { email: 'adminsrd2@srd.com.au', password: 'admin2pass', name: 'Admin SRD Two' },
+  { email: 'adminsrd3@srd.com.au', password: 'admin3pass', name: 'Admin SRD Three' },
+  { email: 'adminsrd4@srd.com.au', password: 'admin4pass', name: 'Admin SRD Four' },
 ];
 
 // Validation helpers

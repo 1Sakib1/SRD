@@ -25,24 +25,56 @@ export interface WeeklyReport {
   }>;
 }
 
-export const generateWeeklyReport = (): WeeklyReport => {
+export const generateWeeklyReport = (serverReports?: any[]): WeeklyReport => {
   const now = new Date();
   const weekStart = startOfWeek(now, { weekStartsOn: 1 }); // Monday
   const weekEnd = endOfWeek(now, { weekStartsOn: 1 }); // Sunday
   
-  const allReports = getReports();
+  // Use server reports if provided, otherwise fallback to local storage
+  const allReports = serverReports && serverReports.length > 0 ? serverReports : getReports();
   const stats = getUserStats();
   const allUsers = getAllUsers();
   
+  console.log('📊 ═══════════════════════════════════════════════════════');
+  console.log('📊 GENERATING WEEKLY REPORT');
+  console.log('📊 ═══════════════════════════════════════════════════════');
+  console.log('📊 Current date:', format(now, 'yyyy-MM-dd HH:mm:ss'));
+  console.log('📊 Week start (Monday):', format(weekStart, 'yyyy-MM-dd HH:mm:ss'));
+  console.log('📊 Week end (Sunday):', format(weekEnd, 'yyyy-MM-dd HH:mm:ss'));
+  console.log('📊 Total reports available:', allReports.length);
+  
+  if (allReports.length > 0) {
+    console.log('📊 Sample report structure:', JSON.stringify(allReports[0], null, 2));
+  }
+  
   // Filter reports from this week
-  const weeklyReports = allReports.filter(report => 
-    isWithinInterval(new Date(report.timestamp), { start: weekStart, end: weekEnd })
-  );
+  const weeklyReports = allReports.filter(report => {
+    // Try multiple date field names
+    const reportDate = new Date(report.timestamp || report.createdAt || report.date);
+    
+    console.log('   Checking report:', report.id);
+    console.log('   - timestamp field:', report.timestamp);
+    console.log('   - createdAt field:', report.createdAt);
+    console.log('   - Parsed date:', format(reportDate, 'yyyy-MM-dd HH:mm:ss'));
+    
+    const isInWeek = isWithinInterval(reportDate, { start: weekStart, end: weekEnd });
+    console.log('   - Is in current week?', isInWeek);
+    
+    return isInWeek;
+  });
+  
+  console.log('📊 Reports matching current week:', weeklyReports.length);
+  console.log('📊 ═══════════════════════════════════════════════════════');
   
   // Count reports by status
   const pendingReports = weeklyReports.filter(r => r.status === 'pending').length;
   const reviewedReports = weeklyReports.filter(r => r.status === 'reviewed').length;
   const resolvedReports = weeklyReports.filter(r => r.status === 'resolved').length;
+  
+  console.log('📊 Status breakdown:');
+  console.log('   - Pending:', pendingReports);
+  console.log('   - Reviewed:', reviewedReports);
+  console.log('   - Resolved:', resolvedReports);
   
   // Count reports by type
   const reportsByType: Record<string, number> = {};
@@ -50,14 +82,19 @@ export const generateWeeklyReport = (): WeeklyReport => {
     reportsByType[report.type] = (reportsByType[report.type] || 0) + 1;
   });
   
+  console.log('📊 Reports by type:', reportsByType);
+  
   // Extract location areas (get suburb/area from address)
   const reportsByLocation: Record<string, number> = {};
   weeklyReports.forEach(report => {
     // Extract suburb from address (usually after first comma)
-    const parts = report.location.address.split(',');
+    const address = report.location?.address || 'Unknown Location';
+    const parts = address.split(',');
     const area = parts.length > 1 ? parts[1].trim() : parts[0].trim();
     reportsByLocation[area] = (reportsByLocation[area] || 0) + 1;
   });
+  
+  console.log('📊 Reports by location:', reportsByLocation);
   
   const locationArray = Object.entries(reportsByLocation)
     .map(([area, count]) => ({ area, count }))
@@ -85,6 +122,9 @@ export const generateWeeklyReport = (): WeeklyReport => {
     }))
     .sort((a, b) => b.reportCount - a.reportCount)
     .slice(0, 10); // Top 10 contributors
+  
+  console.log('📊 Top contributors:', topContributors);
+  console.log('📊 ═══════════════════════════════════════════════════════');
   
   return {
     reportDate: format(now, 'MMMM d, yyyy'),

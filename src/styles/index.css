@@ -2,3 +2,56 @@
 @import './tailwind.css';
 @import './theme.css';
 @import 'leaflet/dist/leaflet.css';
+
+/* City Slider Styles */
+.city-slider-container .slick-dots {
+  bottom: -40px;
+}
+
+.city-slider-container .slick-dots li button:before {
+  font-size: 10px;
+  color: #10b981;
+  opacity: 0.3;
+}
+
+.city-slider-container .slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #10b981;
+}
+
+.city-slider-container .slick-prev,
+.city-slider-container .slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+}
+
+.city-slider-container .slick-prev:before,
+.city-slider-container .slick-next:before {
+  font-size: 40px;
+  color: #10b981;
+  opacity: 0.7;
+}
+
+.city-slider-container .slick-prev:hover:before,
+.city-slider-container .slick-next:hover:before {
+  opacity: 1;
+}
+
+.city-slider-container .slick-prev {
+  left: -50px;
+}
+
+.city-slider-container .slick-next {
+  right: -50px;
+}
+
+@media (max-width: 768px) {
+  .city-slider-container .slick-prev {
+    left: -25px;
+  }
+  
+  .city-slider-container .slick-next {
+    right: -25px;
+  }
+}

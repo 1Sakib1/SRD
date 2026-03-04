@@ -2,19 +2,82 @@ import { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { getReports, updateReportStatus, Report, getUserStats, getAllUsers, createNotification, sendEmailNotification } from '../utils/storage';
-import { SYDNEY_LOCATIONS } from '../utils/mockData';
-import { Shield, FileText, Users, TrendingUp, CheckCircle, Clock, AlertCircle, Download, Calendar } from 'lucide-react';
+import { SYDNEY_LOCATIONS, LocationPoint } from '../utils/mockData';
+import { Shield, FileText, Users, TrendingUp, CheckCircle, Clock, AlertCircle, Download, Calendar, Code } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { generateWeeklyReport, downloadWeeklyReportAsJSON, downloadWeeklyReportAsCSV, getNextSundayDate } from '../utils/reportGenerator';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+import { useNavigate } from 'react-router';
 
 export const AdminDashboard = () => {
   console.log('🏠 AdminDashboard: Component rendering');
   
+  const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<'all' | Report['status']>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
+  
+  // Convert reports to location points for heat map
+  const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
+    // Group reports by approximate location (within ~100m)
+    const locationGroups: { [key: string]: Report[] } = {};
+    
+    reports.forEach(report => {
+      // Validate location data exists and is valid
+      if (!report.location || 
+          typeof report.location.lat !== 'number' || 
+          typeof report.location.lng !== 'number' ||
+          isNaN(report.location.lat) || 
+          isNaN(report.location.lng)) {
+        console.warn('Skipping report with invalid location:', report.id);
+        return;
+      }
+      
+      // Validate coordinates are within valid range
+      if (report.location.lat < -90 || report.location.lat > 90 ||
+          report.location.lng < -180 || report.location.lng > 180) {
+        console.warn('Skipping report with out-of-range coordinates:', report.id);
+        return;
+      }
+      
+      // Round to 3 decimal places (~111m precision)
+      const latKey = report.location.lat.toFixed(3);
+      const lngKey = report.location.lng.toFixed(3);
+      const key = `${latKey},${lngKey}`;
+      
+      if (!locationGroups[key]) {
+        locationGroups[key] = [];
+      }
+      locationGroups[key].push(report);
+    });
+    
+    // Convert groups to LocationPoint objects
+    return Object.entries(locationGroups).map(([key, groupReports]) => {
+      const [lat, lng] = key.split(',').map(Number);
+      
+      // Double-check the parsed values are valid
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn('Skipping invalid location group:', key);
+        return null;
+      }
+      
+      const reportCount = groupReports.length;
+      
+      // Calculate intensity based on report count (normalize to 0-1 range)
+      const intensity = Math.min(reportCount / 10, 1);
+      
+      return {
+        id: `user-report-${key}`,
+        lat,
+        lng,
+        address: groupReports[0].location.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+        reports: reportCount,
+        intensity,
+      };
+    }).filter((loc): loc is LocationPoint => loc !== null); // Filter out any null entries
+  };
   
   let stats;
   try {
@@ -32,6 +95,11 @@ export const AdminDashboard = () => {
   useEffect(() => {
     console.log('🔄 AdminDashboard: useEffect - loading reports');
     loadReports();
+    
+    // Refresh heat map every 30 seconds to show new reports
+    const interval = setInterval(loadReports, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
   
   const loadReports = async () => {
@@ -52,6 +120,14 @@ export const AdminDashboard = () => {
         const { reports: serverReports } = await response.json();
         console.log('📋 AdminDashboard: Loaded reports from server', serverReports.length);
         setReports(serverReports || []);
+        
+        // Update heat map with real reports
+        if (serverReports && serverReports.length > 0) {
+          const realLocations = convertReportsToLocations(serverReports);
+          const combinedLocations = [...SYDNEY_LOCATIONS, ...realLocations];
+          setMapLocations(combinedLocations);
+          console.log('🗺️ AdminDashboard: Heat map updated with', realLocations.length, 'real locations');
+        }
       } else {
         console.error('Failed to load reports from server');
         toast.error('Failed to load reports');
@@ -105,18 +181,54 @@ export const AdminDashboard = () => {
   };
   
   const handleGenerateCSVReport = () => {
-    const report = generateWeeklyReport();
+    console.log('📥 Generating CSV report with', reports.length, 'reports');
+    
+    if (reports.length === 0) {
+      toast.warning('No reports available', {
+        description: 'Please submit some reports first before generating the weekly report.',
+      });
+      return;
+    }
+    
+    const report = generateWeeklyReport(reports);
+    
+    // Show warning if no reports this week
+    if (report.summary.totalReports === 0) {
+      toast.warning('No reports this week', {
+        description: `Found ${reports.length} total reports, but none were submitted during the current week (Monday-Sunday). Check the console for details.`,
+        duration: 8000,
+      });
+    }
+    
     downloadWeeklyReportAsCSV(report);
     toast.success('Weekly report generated!', {
-      description: 'CSV file has been downloaded successfully',
+      description: `CSV file with ${report.summary.totalReports} reports from this week downloaded successfully`,
     });
   };
   
   const handleGenerateJSONReport = () => {
-    const report = generateWeeklyReport();
+    console.log('📥 Generating JSON report with', reports.length, 'reports');
+    
+    if (reports.length === 0) {
+      toast.warning('No reports available', {
+        description: 'Please submit some reports first before generating the weekly report.',
+      });
+      return;
+    }
+    
+    const report = generateWeeklyReport(reports);
+    
+    // Show warning if no reports this week
+    if (report.summary.totalReports === 0) {
+      toast.warning('No reports this week', {
+        description: `Found ${reports.length} total reports, but none were submitted during the current week (Monday-Sunday). Check the console for details.`,
+        duration: 8000,
+      });
+    }
+    
     downloadWeeklyReportAsJSON(report);
     toast.success('Weekly report generated!', {
-      description: 'JSON file has been downloaded successfully',
+      description: `JSON file with ${report.summary.totalReports} reports from this week downloaded successfully`,
     });
   };
   
@@ -350,7 +462,7 @@ export const AdminDashboard = () => {
             <p className="text-sm text-gray-600 mb-4">
               Visual representation of report density across Sydney
             </p>
-            <HeatMap locations={SYDNEY_LOCATIONS} height="550px" />
+            <HeatMap locations={mapLocations} height="550px" />
           </div>
         </div>
         
@@ -417,6 +529,57 @@ export const AdminDashboard = () => {
                 alt="Sydney"
                 className="w-64 h-64 object-cover rounded-lg shadow-lg border-4 border-white"
               />
+            </div>
+          </div>
+        </div>
+        
+        {/* Developer Tools Section */}
+        <div className="mt-8 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-lg border-2 border-gray-700 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
+              <Code className="w-6 h-6 text-green-400" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-white">Developer Tools</h2>
+              <p className="text-sm text-gray-400">Advanced debugging and system monitoring</p>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-2">User Management System</h3>
+              <p className="text-sm text-gray-400 mb-4">
+                Comprehensive user administration panel. View all registered accounts, monitor eco points and credits, export user data, and track community growth with advanced search and filtering capabilities.
+              </p>
+              <button
+                onClick={() => navigate('/debug-users')}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm hover:shadow-md"
+              >
+                <Users className="w-5 h-5" />
+                <span>Open User Management</span>
+              </button>
+            </div>
+            
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-2">System Information</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Environment:</span>
+                  <span className="text-green-400 font-mono">Production</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Backend:</span>
+                  <span className="text-green-400 font-mono">Supabase Edge Functions</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Database:</span>
+                  <span className="text-green-400 font-mono">KV Store + Cloud</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Email Service:</span>
+                  <span className="text-green-400 font-mono">Resend API</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

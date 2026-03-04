@@ -10,7 +10,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'guest';
   ecoPoints: number;
   credits: number;
   createdAt: string;
@@ -52,10 +52,10 @@ interface StorageError {
 
 // Fixed admin accounts
 const ADMIN_EMAILS = [
-  'admin1@sydney.gov.au',
-  'admin2@sydney.gov.au',
-  'admin3@sydney.gov.au',
-  'admin4@sydney.gov.au',
+  'adminsrd1@srd.com.au',
+  'adminsrd2@srd.com.au',
+  'adminsrd3@srd.com.au',
+  'adminsrd4@srd.com.au',
 ];
 
 const ADMIN_PASSWORD = 'Admin@123';

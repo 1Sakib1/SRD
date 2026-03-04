@@ -26,10 +26,22 @@ const RecenterMap: React.FC<{ center: [number, number] }> = ({ center }) => {
   const map = useMap();
   
   useEffect(() => {
-    if (map && map._loaded) {
-      map.setView(center, map.getZoom(), { animate: false });
+    if (!map) return;
+    
+    try {
+      // Only recenter if map is fully loaded and not animating
+      if (map._loaded && map._container && !map._animatingZoom) {
+        // Use flyTo for smoother transition with error handling
+        map.flyTo(center, map.getZoom(), {
+          duration: 0.5,
+          animate: true
+        });
+      }
+    } catch (error) {
+      // Silently handle any Leaflet internal errors
+      console.debug('Map recenter skipped:', error);
     }
-  }, [center, map]);
+  }, [center[0], center[1], map]);
   
   return null;
 };
@@ -47,7 +59,7 @@ const MapClickHandler: React.FC<{ onClick?: (lat: number, lng: number) => void }
   return null;
 };
 
-export const HeatMap: React.FC<HeatMapProps> = ({
+export const HeatMap: React.FC<HeatMapProps> = (({
   locations,
   center = [-33.8688, 151.2093], // Sydney CBD
   zoom = 13,
@@ -162,4 +174,4 @@ export const HeatMap: React.FC<HeatMapProps> = ({
       </div>
     </div>
   );
-};
+});

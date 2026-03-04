@@ -34,6 +34,12 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
             
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
+                to="/awareness"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors hidden sm:inline-block"
+              >
+                Awareness
+              </Link>
+              <Link
                 to="/about-us"
                 className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors hidden sm:inline-block"
               >
