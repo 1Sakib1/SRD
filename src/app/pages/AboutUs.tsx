@@ -3,40 +3,40 @@ import { Header } from '../components/Header';
 import { Users, Mail, Award, Target, Heart, Code, Terminal, GitBranch, Coffee, Database, Zap, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
-// Team member avatars
-import nazmusAvatar from 'figma:asset/79384ac7207c659382a45f8a1d69a4be90644965.png';
-import niloyAvatar from 'figma:asset/934a8add3c4ba0181e75fcc519d5723808a049cc.png';
-import suvekshyaAvatar from 'figma:asset/417ed7a1a0e03b80a9fe18f16d85b0fc3b6e21e3.png';
-import bisestaAvatar from 'figma:asset/f4d0a7c50eba7a56446ecd3bedccc687df84b77a.png';
-
+// Team member avatars - Add your images to /public/images/team/
+// Fallback to generated avatars if images not found
 const teamMembers = [
   {
     name: 'Nazmus Sakib',
     email: 's8116515@live.vu.edu.au',
     role: 'Project Leader',
     github: 'https://github.com/1Sakib1',
-    avatar: nazmusAvatar,
+    avatar: '/images/team/nazmus.jpg',
+    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=NazmusSakib&backgroundColor=059669',
   },
   {
     name: 'Md Abudozana Niloy',
     email: 's8138202@live.vu.edu.au',
     role: 'Full Stack Developer',
     github: null,
-    avatar: niloyAvatar,
+    avatar: '/images/team/niloy.jpg',
+    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MdAbudozanaNiloy&backgroundColor=059669',
   },
   {
     name: 'Suvekshya Shrestha',
     email: 's8103527@live.vu.edu.au',
     role: 'UI/UX Designer & Developer',
     github: null,
-    avatar: suvekshyaAvatar,
+    avatar: '/images/team/suvekshya.jpg',
+    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuvekshyaShrestha&backgroundColor=059669',
   },
   {
     name: 'Bisesta Shah',
     email: 's8103504@live.vu.edu.au',
     role: 'Backend Developer',
     github: null,
-    avatar: bisestaAvatar,
+    avatar: '/images/team/bisesta.jpg',
+    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=BisestaShah&backgroundColor=059669',
   },
 ];
 
@@ -311,6 +311,10 @@ export const AboutUs = () => {
                     src={member.avatar}
                     alt={member.name}
                     className="w-full h-full rounded-full object-cover shadow-lg group-hover:scale-110 transition-transform border-4 border-green-500/50"
+                    onError={(e) => {
+                      // Fallback to generated avatar if image not found
+                      e.currentTarget.src = member.fallback;
+                    }}
                   />
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-slate-900 border-2 border-green-500 rounded-full flex items-center justify-center">
                     <GitBranch className="w-4 h-4 text-green-400" />

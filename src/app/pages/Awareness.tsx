@@ -2,9 +2,22 @@ import { Header } from '../components/Header';
 import { Leaf, Recycle, ShieldAlert, Book, AlertTriangle, CheckCircle2, XCircle, Scale, FileText, Globe, MapPin, TrendingUp, Users, Award } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import cityOfSydneyLogo from 'figma:asset/d0d35aace6f76bd8c38ee735a3b96e7c5b27eb98.png';
-import nswEpaLogo from 'figma:asset/db8b74ec5b456050ad6f7dcaff786adc297a6132.png';
-import planetArkLogo from 'figma:asset/8523ca3e7bbe90d9d5ca9bc80de410a00f73e732.png';
+
+// Partner logos - Add your images to /public/images/partners/
+const partnerLogos = {
+  cityOfSydney: {
+    src: '/images/partners/city-of-sydney.png',
+    fallback: 'https://via.placeholder.com/200x80/0052CC/FFFFFF?text=City+of+Sydney',
+  },
+  nswEpa: {
+    src: '/images/partners/nsw-epa.png',
+    fallback: 'https://via.placeholder.com/200x80/2E7D32/FFFFFF?text=NSW+EPA',
+  },
+  planetArk: {
+    src: '/images/partners/planet-ark.png',
+    fallback: 'https://via.placeholder.com/200x80/4CAF50/FFFFFF?text=Planet+Ark',
+  },
+};
 
 // Country-specific waste management data
 const countryData = {
@@ -713,9 +726,12 @@ export const Awareness = () => {
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-4">
                   <img
-                    src={nswEpaLogo}
+                    src={partnerLogos.nswEpa.src}
                     alt="NSW EPA"
                     className="h-full w-auto object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = partnerLogos.nswEpa.fallback;
+                    }}
                   />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">NSW Environment Protection Authority</h3>
@@ -731,9 +747,12 @@ export const Awareness = () => {
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-50 rounded-lg p-4">
                   <img
-                    src={cityOfSydneyLogo}
+                    src={partnerLogos.cityOfSydney.src}
                     alt="City of Sydney"
                     className="h-full w-auto object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = partnerLogos.cityOfSydney.fallback;
+                    }}
                   />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">City of Sydney Council</h3>
@@ -749,9 +768,12 @@ export const Awareness = () => {
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
                   <img
-                    src={planetArkLogo}
+                    src={partnerLogos.planetArk.src}
                     alt="Recycling Near You"
                     className="h-full w-auto object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = partnerLogos.planetArk.fallback;
+                    }}
                   />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">Recycling Near You</h3>

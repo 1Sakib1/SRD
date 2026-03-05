@@ -2,11 +2,11 @@
 
 **A Global Urban Waste Management Platform**
 
-[![Status](https://img.shields.io/badge/Status-Production-success)](https://github.com/1Sakib1/Smart-Rubbish-Detection)
+[![Status](https://img.shields.io/badge/Status-Production_Ready-success)](https://github.com/1Sakib1/SRD)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Latest-3178c6)](https://www.typescriptlang.org/)
-[![Deployed](https://img.shields.io/badge/Deployed-Vercel-black)](https://vercel.com)
+[![Vercel](https://img.shields.io/badge/Deploy-Ready-black?logo=vercel)](https://vercel.com)
 
 > **Victoria University Sydney - IT Capstone Project 2026**
 
@@ -18,8 +18,9 @@ A comprehensive web application that empowers communities worldwide to actively 
 
 - **🌐 Live Application:** [View on Vercel](https://your-vercel-url.vercel.app)
 - **📘 User Manual:** [Read the Guide](USER_MANUAL.md)
+- **🚀 Deployment Guide:** [Build & Deploy Guide](DEPLOYMENT.md)
 - **👥 Admin Credentials:** [See Below](#-admin-accounts)
-- **🐛 Report Issues:** [GitHub Issues](https://github.com/1Sakib1/Smart-Rubbish-Detection/issues)
+- **🐛 Report Issues:** [GitHub Issues](https://github.com/1Sakib1/SRD/issues)
 
 ---
 
@@ -528,6 +529,7 @@ If you find this project useful, please consider giving it a ⭐ on GitHub!
 ## 📄 Additional Documentation
 
 - 📘 [**User Manual**](USER_MANUAL.md) - Comprehensive guide for all users
+- 🚀 [**Deployment Notes**](DEPLOYMENT_NOTES.md) - Build and deployment troubleshooting
 - 🔐 [**Admin Credentials**](ADMIN_CREDENTIALS.md) - Admin access information
 - 🤝 [**Contributing Guide**](CONTRIBUTING.md) - How to contribute
 - 🏆 [**Attributions**](ATTRIBUTIONS.md) - Credits and acknowledgments

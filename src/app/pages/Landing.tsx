@@ -7,7 +7,10 @@ import { motion } from 'motion/react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import sydneyHeroImage from 'figma:asset/5d064632da890c8838ab92d6f9018fa2845e7367.png';
+
+// Hero image - Add your image to /public/images/hero.jpg
+const sydneyHeroImage = '/images/hero.jpg';
+const heroImageFallback = 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=2070&auto=format&fit=crop';
 
 export const Landing = () => {
   const stats = getUserStats();
@@ -142,6 +145,10 @@ export const Landing = () => {
                 src={sydneyHeroImage}
                 alt="Sydney Harbour and Opera House"
                 className="rounded-2xl shadow-2xl relative border-4 border-white/20 w-full h-auto"
+                onError={(e) => {
+                  // Fallback to Unsplash if custom image not found
+                  e.currentTarget.src = heroImageFallback;
+                }}
               />
             </motion.div>
           </div>
