@@ -16,7 +16,7 @@ A comprehensive web application that empowers communities worldwide to actively 
 
 ## 📑 Quick Links
 
-- **🌐 Live Application:** [View on Vercel](https://your-vercel-url.vercel.app)
+- **🌐 Live Application:** [View on Vercel](https://smart-rubbish.vercel.app/)
 - **📘 User Manual:** [Read the Guide](USER_MANUAL.md)
 - **🚀 Deployment Guide:** [Build & Deploy Guide](DEPLOYMENT.md)
 - **👥 Admin Credentials:** [See Below](#-admin-accounts)
@@ -436,7 +436,7 @@ Thank you to all the maintainers of the open-source libraries that make this pro
 
 ### For Users
 - 📖 **Documentation:** [USER_MANUAL.md](USER_MANUAL.md)
-- 🐛 **Report Bugs:** [GitHub Issues](https://github.com/1Sakib1/Smart-Rubbish-Detection/issues)
+- 🐛 **Report Bugs:** [GitHub Issues](https://github.com/1Sakib1/SRD/issues)
 - 💡 **Feature Requests:** [GitHub Issues](https://github.com/1Sakib1/Smart-Rubbish-Detection/issues)
 
 ### For Developers
