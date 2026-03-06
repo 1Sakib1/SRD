@@ -3,11 +3,11 @@ import { Header } from '../components/Header';
 import { Users, Mail, Award, Target, Heart, Code, Terminal, GitBranch, Coffee, Database, Zap, ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 
-// Team member avatars
-import nazmusAvatar from 'figma:asset/79384ac7207c659382a45f8a1d69a4be90644965.png';
-import niloyAvatar from 'figma:asset/934a8add3c4ba0181e75fcc519d5723808a049cc.png';
-import suvekshyaAvatar from 'figma:asset/417ed7a1a0e03b80a9fe18f16d85b0fc3b6e21e3.png';
-import bisestaAvatar from 'figma:asset/f4d0a7c50eba7a56446ecd3bedccc687df84b77a.png';
+// Team member placeholder avatars (using UI Avatars service)
+const nazmusAvatar = 'https://ui-avatars.com/api/?name=Nazmus+Sakib&background=22c55e&color=fff&size=200';
+const niloyAvatar = 'https://ui-avatars.com/api/?name=Md+Niloy&background=3b82f6&color=fff&size=200';
+const suvekshyaAvatar = 'https://ui-avatars.com/api/?name=Suvekshya+Shrestha&background=8b5cf6&color=fff&size=200';
+const bisestaAvatar = 'https://ui-avatars.com/api/?name=Bisesta+Shah&background=ef4444&color=fff&size=200';
 
 const teamMembers = [
   {

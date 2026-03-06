@@ -7,7 +7,9 @@ import { motion } from 'motion/react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import sydneyHeroImage from 'figma:asset/5d064632da890c8838ab92d6f9018fa2845e7367.png';
+
+// Sydney skyline hero image
+const sydneyHeroImage = 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-4.1.0&q=80&w=1080';
 
 export const Landing = () => {
   const stats = getUserStats();

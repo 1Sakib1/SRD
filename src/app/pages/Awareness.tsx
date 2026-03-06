@@ -2,9 +2,11 @@ import { Header } from '../components/Header';
 import { Leaf, Recycle, ShieldAlert, Book, AlertTriangle, CheckCircle2, XCircle, Scale, FileText, Globe, MapPin, TrendingUp, Users, Award } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
-import cityOfSydneyLogo from 'figma:asset/d0d35aace6f76bd8c38ee735a3b96e7c5b27eb98.png';
-import nswEpaLogo from 'figma:asset/db8b74ec5b456050ad6f7dcaff786adc297a6132.png';
-import planetArkLogo from 'figma:asset/8523ca3e7bbe90d9d5ca9bc80de410a00f73e732.png';
+
+// Placeholder logos for partner organizations
+const cityOfSydneyLogo = 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/City_of_Sydney_logo.svg/220px-City_of_Sydney_logo.svg.png';
+const nswEpaLogo = 'https://upload.wikimedia.org/wikipedia/en/thumb/4/42/NSW_Environment_Protection_Authority_logo.svg/220px-NSW_Environment_Protection_Authority_logo.svg.png';
+const planetArkLogo = 'https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Planet_Ark_logo.svg/220px-Planet_Ark_logo.svg.png';
 
 // Country-specific waste management data
 const countryData = {
