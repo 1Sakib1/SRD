@@ -494,7 +494,8 @@ A: Status can be changed but deletion is not available (data integrity).
 
 ## 📄 License
 
-This project is licensed under the MIT License. See LICENSE file for details.
+This project is licensed under the MIT License. See LICENSE file for details. 
+Creative Commons CC
 
 ---
 
