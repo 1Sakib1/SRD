@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
   // For Vercel/Netlify/other platforms, the base should be /
   // Detect if we're building for GitHub Pages via environment variable
   const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
+ 
   const base = isGitHubPages ? '/Smart-Rubbish-Detection/' : '/';
 
   return {
