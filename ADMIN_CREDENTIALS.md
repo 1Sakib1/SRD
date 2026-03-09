@@ -133,4 +133,4 @@ For admin account issues or password resets:
 
 **Victoria University Sydney IT Capstone Project 2026**
 
-*Building a cleaner, greener future together* 🌍
+*Building a cleaner, greener future together*  🌍
