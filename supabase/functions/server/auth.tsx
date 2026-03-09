@@ -1,6 +1,6 @@
 /**
  * Server-side authentication module
- * Handles user registration, login, and admin authentication
+ * Handles user registration, login, and admin authentication and all
  */
 
 import * as kv from "./kv_store.tsx";
