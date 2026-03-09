@@ -36,7 +36,7 @@ export const ReportRubbish = () => {
    * AI Detection Logic with Rubbish Validation
    */
   const detectRubbishWithAI = async (base64Photo: string) => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = "AIzaSyDs3o3r7ImTLajwi5uwI-h7q68la6kDsKI"; 
     if (!apiKey) {
       toast.error("API Key missing");
       return;
