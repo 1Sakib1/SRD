@@ -124,13 +124,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                       <span>Report</span>
                     </Link>
                     <Link
-                      to="/awareness"
-                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
-                    >
-                      <BookOpen className="w-4 h-4" />
-                      <span>Awareness</span>
-                    </Link>
-                    <Link
                       to="/leaderboard"
                       className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
                     >
@@ -206,14 +199,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 >
                   <FileText className="w-5 h-5" />
                   <span className="font-medium">Report Rubbish</span>
-                </Link>
-                <Link
-                  to="/awareness"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors active:scale-95"
-                >
-                  <BookOpen className="w-5 h-5" />
-                  <span className="font-medium">Awareness</span>
                 </Link>
                 <Link
                   to="/leaderboard"
