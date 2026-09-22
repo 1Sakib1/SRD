@@ -107,7 +107,7 @@ export const AdminDashboard = () => {
     try {
       // Fetch reports from server
       const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list`,
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list?t=${Date.now()}`,
         {
           method: 'GET',
           headers: {
