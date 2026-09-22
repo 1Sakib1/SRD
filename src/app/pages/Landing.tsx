@@ -121,7 +121,7 @@ export const Landing = () => {
                   to="/report"
                   className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-green-600 rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
                 >
-                  <span>Report an Issue</span>
+                  <span>Report Litter</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </div>
@@ -405,7 +405,7 @@ export const Landing = () => {
               to="/report"
               className="inline-flex items-center px-8 py-4 bg-white text-green-600 rounded-lg text-lg font-medium hover:bg-gray-50 transition-all shadow-lg"
             >
-              Get Started Today
+              Report Litter
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </motion.div>
