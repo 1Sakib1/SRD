@@ -12,23 +12,11 @@ type AuthTab = 'login' | 'register' | 'forgot' | 'reset';
 
 // Google SVG Icon Component
 const GoogleIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24">
-    <path
-      fill="currentColor"
-      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-    />
-    <path
-      fill="currentColor"
-      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-    />
-    <path
-      fill="currentColor"
-      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-    />
-    <path
-      fill="currentColor"
-      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-    />
+  <svg className="w-5 h-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
   </svg>
 );
 
@@ -40,7 +28,7 @@ export const Auth = () => {
   const [activeTab, setActiveTab] = useState<AuthTab>(
     (searchParams.get('tab') as AuthTab) || 'login'
   );
-  const [loginType, setLoginType] = useState<'user' | 'admin'>('user');
+
   
   // Form states
   const [email, setEmail] = useState('');
@@ -69,47 +57,45 @@ export const Auth = () => {
     setIsSubmitting(true);
     
     try {
-      if (loginType === 'admin') {
-        console.log('👑 Calling loginAdminFixed...');
-        const result = await loginAdminFixed(email, password);
-        console.log('👑 loginAdminFixed returned:', result);
+      const ADMIN_EMAILS = [
+        'adminsrd1@srd.com.au',
+        'adminsrd2@srd.com.au',
+        'adminsrd3@srd.com.au',
+        'adminsrd4@srd.com.au',
+      ];
+      
+      const normalizedEmail = email.toLowerCase().trim();
+      let result;
+      
+      if (ADMIN_EMAILS.includes(normalizedEmail)) {
+        console.log('👑 Admin email detected, calling loginAdminFixed...');
+        result = await loginAdminFixed(email, password);
+      } else {
+        console.log('👤 Calling loginUserFixed...');
+        result = await loginUserFixed(email, password);
+      }
+      
+      const { user, error } = result;
+      if (error) {
+        console.error('❌ Login error:', error);
+        toast.error(error.message);
+        setIsSubmitting(false);
+      } else if (user) {
+        console.log('✅ Login successful, user:', user);
+        login(user);
         
-        const { user, error } = result;
-        if (error) {
-          console.error('❌ Admin login error:', error);
-          toast.error(error.message);
-          setIsSubmitting(false);
-        } else if (user) {
-          console.log('✅ Admin login successful, user:', user);
-          login(user);
+        if (user.role === 'admin') {
           toast.success('Welcome back, Admin!');
           navigate('/admin');
         } else {
-          console.error('⚠️ No user and no error returned');
-          toast.error('Login failed - no response');
-          setIsSubmitting(false);
-        }
-      } else {
-        console.log('👤 Calling loginUserFixed...');
-        const result = await loginUserFixed(email, password);
-        console.log('👤 loginUserFixed returned:', result);
-        
-        const { user, error } = result;
-        if (error) {
-          console.error('❌ User login error:', error);
-          toast.error(error.message);
-          setIsSubmitting(false);
-        } else if (user) {
-          console.log('✅ User login successful, user:', user);
-          login(user);
           toast.success('Welcome back!');
           const redirect = searchParams.get('redirect') || '/dashboard';
           navigate(redirect);
-        } else {
-          console.error('⚠️ No user and no error returned');
-          toast.error('Login failed - no response');
-          setIsSubmitting(false);
         }
+      } else {
+        console.error('⚠️ No user and no error returned');
+        toast.error('Login failed - no response');
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error('💥 Login exception in Auth component:', error);
@@ -405,39 +391,7 @@ export const Auth = () => {
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
                 
-                {/* Login Type Selector - Only show for non-guest users */}
-                {loginType !== 'guest' && (
-                  <div className="flex gap-2 mb-6">
-                    <button
-                      type="button"
-                      onClick={() => setLoginType('user')}
-                      className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all ${
-                        loginType === 'user'
-                          ? 'border-green-600 bg-green-50 text-green-700'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-2">
-                        <User className="w-5 h-5" />
-                        <span className="font-medium">User</span>
-                      </div>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setLoginType('admin')}
-                      className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all ${
-                        loginType === 'admin'
-                          ? 'border-gray-700 bg-gray-50 text-gray-900'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-center space-x-2">
-                        <Shield className="w-5 h-5" />
-                        <span className="font-medium">Admin</span>
-                      </div>
-                    </button>
-                  </div>
-                )}
+
                 
                 <form onSubmit={handleLogin} className="space-y-5">
                   <div>
@@ -479,27 +433,21 @@ export const Auth = () => {
                     </div>
                   </div>
                   
-                  {/* Forgot Password Link - Only for users */}
-                  {loginType === 'user' && (
-                    <div className="text-right">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('forgot')}
-                        className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
-                      >
-                        Forgot Password?
-                      </button>
-                    </div>
-                  )}
+                  {/* Forgot Password Link */}
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('forgot')}
+                      className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
                   
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-3 rounded-lg font-medium transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                      loginType === 'user'
-                        ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200'
-                        : 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-300'
-                    }`}
+                    className="w-full py-3 rounded-lg font-medium transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -525,31 +473,27 @@ export const Auth = () => {
                   </div>
                 </div>
 
-                {/* Google Sign In - Only for users */}
-                {loginType === 'user' && (
-                  <button
-                    type="button"
-                    onClick={handleGoogleLogin}
-                    disabled={isSubmitting}
-                    className="w-full py-3 px-4 border-2 border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <GoogleIcon />
-                    Sign in with Google
-                  </button>
-                )}
+                {/* Google Sign In */}
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-4 border border-gray-300 bg-white rounded-lg font-medium text-gray-700 hover:bg-gray-50 hover:shadow-sm shadow-sm transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <GoogleIcon />
+                  Sign in with Google
+                </button>
 
-                {/* Continue as Guest - Only for users */}
-                {loginType === 'user' && (
-                  <button
-                    type="button"
-                    onClick={handleGuestMode}
-                    disabled={isSubmitting}
-                    className="w-full mt-3 py-3 px-4 border-2 border-green-300 rounded-lg font-medium text-green-700 hover:bg-green-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <UserCheck className="w-5 h-5" />
-                    Continue as Guest
-                  </button>
-                )}
+                {/* Continue as Guest */}
+                <button
+                  type="button"
+                  onClick={handleGuestMode}
+                  disabled={isSubmitting}
+                  className="w-full mt-3 py-3 px-4 border-2 border-green-300 rounded-lg font-medium text-green-700 hover:bg-green-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <UserCheck className="w-5 h-5" />
+                  Continue as Guest
+                </button>
               </div>
             ) : activeTab === 'forgot' ? (
               <div>
@@ -795,7 +739,7 @@ export const Auth = () => {
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={isSubmitting}
-                  className="w-full py-3 px-4 border-2 border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 px-4 border border-gray-300 bg-white rounded-lg font-medium text-gray-700 hover:bg-gray-50 hover:shadow-sm shadow-sm transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <GoogleIcon />
                   Sign up with Google

@@ -142,27 +142,31 @@ export const ReportRubbish = () => {
     });
   };
 
-  useEffect(() => {
-    const loadReports = async () => {
-      try {
-        const response = await fetch(
-          `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list`,
-          {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${publicAnonKey}` },
-          }
-        );
-        if (response.ok) {
-          const { reports } = await response.json();
-          if (reports && reports.length > 0) {
-            const realLocations = convertReportsToLocations(reports);
-            setMapLocations([...SYDNEY_LOCATIONS, ...realLocations]);
-          }
+  const loadReports = async () => {
+    try {
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list?timestamp=${Date.now()}`,
+        {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${publicAnonKey}`,
+            'Cache-Control': 'no-cache'
+          },
         }
-      } catch (error) {
-        console.error('Error loading reports:', error);
+      );
+      if (response.ok) {
+        const { reports } = await response.json();
+        if (reports && reports.length > 0) {
+          const realLocations = convertReportsToLocations(reports);
+          setMapLocations([...SYDNEY_LOCATIONS, ...realLocations]);
+        }
       }
-    };
+    } catch (error) {
+      console.error('Error loading reports:', error);
+    }
+  };
+
+  useEffect(() => {
     loadReports();
     const interval = setInterval(loadReports, 30000);
     return () => clearInterval(interval);
@@ -221,16 +225,53 @@ export const ReportRubbish = () => {
     toast.success('Location pinned!');
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1920;
+          const MAX_HEIGHT = 1920;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        setPhoto(base64);
-        detectRubbishWithAI(base64);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedBase64 = await compressImage(file);
+        setPhoto(compressedBase64);
+        detectRubbishWithAI(compressedBase64);
+      } catch (err) {
+        toast.error("Failed to process image");
+      }
     }
   };
 
@@ -285,6 +326,7 @@ export const ReportRubbish = () => {
         }
       );
       if (response.ok) {
+        await loadReports();
         toast.success('Report submitted successfully!');
         setTimeout(() => navigate('/dashboard'), 2000);
       }
@@ -295,7 +337,7 @@ export const ReportRubbish = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header variant={user ? 'authenticated' : 'landing'} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Report Rubbish</h1>
