@@ -94,7 +94,7 @@ export const Dashboard = () => {
     try {
       // Fetch user's reports from server
       const userReportsResponse = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/user/${user.id}`,
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/user/${user.id}?t=${Date.now()}`,
         {
           method: 'GET',
           headers: {
@@ -113,7 +113,7 @@ export const Dashboard = () => {
       
       // Fetch ALL reports for heat map
       const allReportsResponse = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list`,
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list?t=${Date.now()}`,
         {
           method: 'GET',
           headers: {
