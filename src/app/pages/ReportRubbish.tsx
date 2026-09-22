@@ -8,7 +8,7 @@ import { getCurrentLocation, reverseGeocode } from '../utils/geocoding';
 import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 export const ReportRubbish = () => {
   const { user, isGuest } = useAuth();
@@ -49,28 +49,7 @@ export const ReportRubbish = () => {
     setDescription('');
 
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash",
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold: HarmBlockThreshold.BLOCK_NONE
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-            threshold: HarmBlockThreshold.BLOCK_NONE
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-            threshold: HarmBlockThreshold.BLOCK_NONE
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold: HarmBlockThreshold.BLOCK_NONE
-          }
-        ]
-      });
+      const ai = new GoogleGenAI({ apiKey });
       
       const prompt = `Analyze this image for public waste/rubbish.
         
@@ -86,18 +65,15 @@ export const ReportRubbish = () => {
         Type: [Category Name or "None"]
         Description: [Your description]`;
 
-      const result = await model.generateContent([
-        prompt,
-        { 
-          inlineData: { 
-            data: base64Photo.split(',')[1], 
-            mimeType: "image/jpeg" 
-          } 
-        }
-      ]);
+      const interaction = await ai.interactions.create({
+        model: "gemini-3.7-flash",
+        input: [
+          { type: "text", text: prompt },
+          { type: "image", data: base64Photo.split(',')[1], mime_type: "image/jpeg" }
+        ]
+      });
       
-      const response = await result.response;
-      const responseText = response.text();
+      const responseText = interaction.output_text || "";
       
       const typeMatch = responseText.match(/Type:\s*(.*)/i);
       const descMatch = responseText.match(/Description:\s*(.*)/i);
