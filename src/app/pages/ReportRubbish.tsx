@@ -66,7 +66,7 @@ export const ReportRubbish = () => {
         Description: [Your description]`;
 
       const interaction = await ai.interactions.create({
-        model: "gemini-3.7-flash",
+        model: "gemini-3.5-flash-lite",
         input: [
           { type: "text", text: prompt },
           { type: "image", data: base64Photo.split(',')[1], mime_type: "image/jpeg" }
