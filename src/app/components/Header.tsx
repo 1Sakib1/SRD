@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { Leaf, LogOut, LayoutDashboard, FileText, BookOpen, Recycle, DollarSign, Menu, X } from 'lucide-react';
+import { Leaf, LogOut, LayoutDashboard, FileText, BookOpen, Recycle, DollarSign, Menu, X, Trophy } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
 import { useState } from 'react';
 
