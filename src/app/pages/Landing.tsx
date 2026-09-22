@@ -118,18 +118,11 @@ export const Landing = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
-                  to="/auth?tab=register"
-                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-green-600 rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px]"
+                  to="/report"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-green-600 rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
                 >
-                  <span className="hidden sm:inline">Join as Community Member</span>
-                  <span className="sm:hidden">Join Community</span>
+                  <span>Report an Issue</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-                <Link
-                  to="/auth"
-                  className="px-6 sm:px-8 py-3 sm:py-4 bg-green-700 text-white rounded-lg text-base sm:text-lg font-medium border-2 border-white/30 hover:bg-green-800 transition-all inline-flex items-center justify-center backdrop-blur-sm active:scale-95 min-h-[48px]"
-                >
-                  Sign In
                 </Link>
               </div>
             </motion.div>
@@ -409,7 +402,7 @@ export const Landing = () => {
               Join thousands of urban citizens worldwide working together for cleaner, greener cities.
             </p>
             <Link
-              to="/auth?tab=register"
+              to="/report"
               className="inline-flex items-center px-8 py-4 bg-white text-green-600 rounded-lg text-lg font-medium hover:bg-gray-50 transition-all shadow-lg"
             >
               Get Started Today

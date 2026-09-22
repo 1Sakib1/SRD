@@ -168,6 +168,34 @@ export const ReportRubbish = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const pendingDataStr = sessionStorage.getItem('pendingReportData');
+    if (pendingDataStr) {
+      try {
+        const pendingData = JSON.parse(pendingDataStr);
+        if (pendingData.type) setType(pendingData.type);
+        if (pendingData.description) setDescription(pendingData.description);
+        if (pendingData.photo) setPhoto(pendingData.photo);
+        if (pendingData.latitude) setLatitude(pendingData.latitude);
+        if (pendingData.longitude) setLongitude(pendingData.longitude);
+        if (pendingData.address) setAddress(pendingData.address);
+        if (pendingData.locationMode) setLocationMode(pendingData.locationMode);
+        
+        if (pendingData.latitude && pendingData.longitude) {
+           const lat = parseFloat(pendingData.latitude);
+           const lng = parseFloat(pendingData.longitude);
+           setMapCenter([lat, lng]);
+           setSelectedLocation([lat, lng]);
+        }
+        
+        sessionStorage.removeItem('pendingReportData');
+        toast.info('Report data recovered. Please submit again.');
+      } catch (err) {
+        console.error('Error parsing pending report data:', err);
+      }
+    }
+  }, []);
+
   const handleAutoDetect = async () => {
     setIsDetecting(true);
     try {
@@ -216,10 +244,27 @@ export const ReportRubbish = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!type || !description || !latitude || !user) {
+    if (!type || !description || !latitude) {
       toast.error('Please fill in all required fields');
       return;
     }
+
+    if (!user) {
+      const formData = {
+        type,
+        description,
+        photo,
+        latitude,
+        longitude,
+        address,
+        locationMode
+      };
+      sessionStorage.setItem('pendingReportData', JSON.stringify(formData));
+      toast.info('Please log in to submit your report');
+      navigate('/auth?redirect=/report');
+      return;
+    }
+
     try {
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/submit`,

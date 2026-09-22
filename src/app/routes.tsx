@@ -60,13 +60,7 @@ const ProtectedDashboard = () => {
   );
 };
 
-const ProtectedReport = () => {
-  return (
-    <ProtectedRoute>
-      <ReportRubbish />
-    </ProtectedRoute>
-  );
-};
+
 
 const ProtectedAdmin = () => {
   return (
@@ -108,7 +102,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/report',
-        element: <ProtectedReport />,
+        element: <ReportRubbish />,
       },
       {
         path: '/awareness',
