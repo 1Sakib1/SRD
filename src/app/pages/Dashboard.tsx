@@ -208,10 +208,10 @@ export const Dashboard = () => {
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">${user?.credits || 0}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">${((user?.ecoPoints || 0) * 0.01).toFixed(2)}</div>
             <div className="text-xs sm:text-sm text-gray-600">AUD Credits</div>
             <div className="mt-2 text-xs text-emerald-600">
-              From {Math.floor((user?.ecoPoints || 0) / 100) * 100} pts
+              From {user?.ecoPoints || 0} pts
             </div>
           </div>
           
