@@ -147,7 +147,17 @@ export const HeatMap: React.FC<HeatMapProps> = (({
         ))}
         
         {selectedLocation && (
-          <Marker position={selectedLocation} />
+          <Marker 
+            position={selectedLocation} 
+            draggable={!!onMapClick}
+            eventHandlers={{
+              dragend: (e) => {
+                const marker = e.target;
+                const position = marker.getLatLng();
+                if (onMapClick) onMapClick(position.lat, position.lng);
+              }
+            }}
+          />
         )}
       </MapContainer>
       
