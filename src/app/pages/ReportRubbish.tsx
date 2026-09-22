@@ -8,7 +8,7 @@ import { getCurrentLocation, reverseGeocode } from '../utils/geocoding';
 import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
 export const ReportRubbish = () => {
   const { user, isGuest } = useAuth();
@@ -36,9 +36,11 @@ export const ReportRubbish = () => {
    * AI Detection Logic with Rubbish Validation
    */
   const detectRubbishWithAI = async (base64Photo: string) => {
-    const apiKey = "AIzaSyDs3o3r7ImTLajwi5uwI-h7q68la6kDsKI"; 
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
     if (!apiKey) {
-      toast.error("API Key missing");
+      toast.error("API Key missing", {
+        description: "Please set VITE_GEMINI_API_KEY in your .env file or Vercel settings."
+      });
       return;
     }
 
@@ -48,7 +50,27 @@ export const ReportRubbish = () => {
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-1.5-flash",
+        safetySettings: [
+          {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_NONE
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_NONE
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE
+          }
+        ]
+      });
       
       const prompt = `Analyze this image for public waste/rubbish.
         
