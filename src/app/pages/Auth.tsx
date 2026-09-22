@@ -103,7 +103,8 @@ export const Auth = () => {
           console.log('✅ User login successful, user:', user);
           login(user);
           toast.success('Welcome back!');
-          navigate('/dashboard');
+          const redirect = searchParams.get('redirect') || '/dashboard';
+          navigate(redirect);
         } else {
           console.error('⚠️ No user and no error returned');
           toast.error('Login failed - no response');
@@ -210,7 +211,8 @@ export const Auth = () => {
     console.log('👥 Continuing as guest');
     loginAsGuest();
     toast.success('Welcome! You\'re browsing as a guest');
-    navigate('/dashboard');
+    const redirect = searchParams.get('redirect') || '/dashboard';
+    navigate(redirect);
   };
   
   const handleRegister = async (e: React.FormEvent) => {
@@ -250,7 +252,8 @@ export const Auth = () => {
         console.log('✅ Registration successful, user:', user);
         login(user);
         toast.success('Account created successfully!');
-        navigate('/dashboard');
+        const redirect = searchParams.get('redirect') || '/dashboard';
+        navigate(redirect);
       } else {
         console.error('⚠️ No user and no error returned');
         toast.error('Registration failed - no response');
