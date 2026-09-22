@@ -281,27 +281,36 @@ export const Dashboard = () => {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-4">
-                {userReports.slice(0, 5).map((report) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[400px] overflow-y-auto pr-2">
+                {userReports.map((report) => (
                   <div
                     key={report.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+                    className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow flex flex-col"
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-medium text-gray-900">{report.type}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}>
-                        {report.status}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{report.description}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <div className="flex items-center">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        <span className="line-clamp-1">{report.location.address}</span>
+                    {report.photo ? (
+                      <img src={report.photo} alt={report.type} className="w-full h-32 object-cover" />
+                    ) : (
+                      <div className="w-full h-32 bg-gray-100 flex items-center justify-center">
+                        <FileText className="w-8 h-8 text-gray-400" />
                       </div>
-                      <div className="flex items-center">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        <span>{format(new Date(report.timestamp), 'MMM d, yyyy')}</span>
+                    )}
+                    <div className="p-4 flex flex-col flex-grow">
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-medium text-gray-900 line-clamp-1">{report.type}</h3>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ml-2 ${getStatusColor(report.status)}`}>
+                          {report.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">{report.description}</p>
+                      <div className="flex flex-col space-y-1 text-xs text-gray-500 mt-auto">
+                        <div className="flex items-center">
+                          <MapPin className="w-3 h-3 mr-1 shrink-0" />
+                          <span className="line-clamp-1">{report.location.address}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className="w-3 h-3 mr-1 shrink-0" />
+                          <span>{format(new Date(report.timestamp), 'MMM d, yyyy')}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
