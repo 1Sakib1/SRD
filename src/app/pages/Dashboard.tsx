@@ -5,7 +5,7 @@ import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
 import { getReports, Report } from '../utils/storage';
 import { SYDNEY_LOCATIONS, LocationPoint } from '../utils/mockData';
-import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift } from 'lucide-react';
+import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift, Trophy, Medal, Crown, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
@@ -17,6 +17,7 @@ export const Dashboard = () => {
   
   const [reports, setReports] = useState<Report[]>([]);
   const [userReports, setUserReports] = useState<Report[]>([]);
+  const [topUsers, setTopUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
   
@@ -109,6 +110,22 @@ export const Dashboard = () => {
         setUserReports(serverReports || []);
       } else {
         console.error('Failed to load user reports from server');
+      }
+      
+      // Fetch top users for leaderboard
+      const topUsersRes = await fetch(
+        `https://${projectId}.supabase.co/rest/v1/top_users?select=*`,
+        {
+          method: 'GET',
+          headers: {
+            'apikey': publicAnonKey,
+            'Authorization': `Bearer ${publicAnonKey}`,
+          },
+        }
+      );
+      if (topUsersRes.ok) {
+        const topUsersData = await topUsersRes.json();
+        setTopUsers(topUsersData || []);
       }
       
       // Fetch ALL reports for heat map
@@ -318,34 +335,74 @@ export const Dashboard = () => {
           
           {/* Heat Map */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Sydney Overview</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Live Rubbish Heat Map</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Community reports across Sydney showing rubbish density hotspots
+              Live community reports showing rubbish density hotspots
             </p>
             <HeatMap locations={mapLocations} height="400px" />
           </div>
         </div>
         
-        {/* Leaderboard Teaser */}
-        <div className="mt-8 bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-8 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">Keep Up the Great Work!</h2>
-              <p className="text-green-100 mb-4">
-                You're making a real difference in Sydney. Every report helps create a cleaner city.
-              </p>
-              <div className="flex items-center space-x-6">
-                <div>
-                  <div className="text-3xl font-bold">{user?.ecoPoints || 0}</div>
-                  <div className="text-sm text-green-100">Your Points</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold">{userReports.length}</div>
-                  <div className="text-sm text-green-100">Reports Submitted</div>
-                </div>
+        {/* Gamified Leaderboard */}
+        <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 p-6 text-white flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Trophy className="w-8 h-8 text-yellow-100" />
+              <h2 className="text-2xl font-bold">Eco-Champions Leaderboard</h2>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-yellow-100 font-medium uppercase tracking-wider">Your Rank</div>
+              <div className="text-2xl font-bold">
+                #{topUsers.findIndex(u => u.id === user?.id) !== -1 ? topUsers.findIndex(u => u.id === user?.id) + 1 : '10+'}
               </div>
             </div>
-            <Award className="w-24 h-24 text-green-300 opacity-50" />
+          </div>
+          
+          <div className="p-0">
+            {topUsers.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">Loading champions...</div>
+            ) : (
+              <ul className="divide-y divide-gray-100">
+                {topUsers.map((topUser, index) => {
+                  const isCurrentUser = topUser.id === user?.id;
+                  const isTop3 = index < 3;
+                  
+                  return (
+                    <li 
+                      key={topUser.id} 
+                      className={`flex items-center justify-between p-4 sm:p-5 transition-colors ${
+                        isCurrentUser ? 'bg-amber-50 border-l-4 border-amber-500' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                          index === 0 ? 'bg-yellow-100 text-yellow-600 shadow-sm border border-yellow-200' :
+                          index === 1 ? 'bg-gray-100 text-gray-500 shadow-sm border border-gray-200' :
+                          index === 2 ? 'bg-orange-100 text-orange-700 shadow-sm border border-orange-200' :
+                          'bg-blue-50 text-blue-600'
+                        }`}>
+                          {index === 0 ? <Crown className="w-5 h-5" /> : 
+                           index === 1 || index === 2 ? <Medal className="w-5 h-5" /> : 
+                           `#${index + 1}`}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900 flex items-center">
+                            {topUser.name}
+                            {isCurrentUser && <span className="ml-2 text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">You</span>}
+                          </div>
+                          {isTop3 && <div className="text-xs text-gray-500">Top Contributor</div>}
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Star className={`w-5 h-5 ${isTop3 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                        <span className="font-bold text-gray-900 text-lg">{topUser.ecoPoints}</span>
+                        <span className="text-sm text-gray-500 hidden sm:inline">pts</span>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       </div>
