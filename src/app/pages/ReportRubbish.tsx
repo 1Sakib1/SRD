@@ -28,7 +28,7 @@ export const ReportRubbish = () => {
   const [guestEmail, setGuestEmail] = useState('');
   
   // Map data
-  const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.8688, 151.2093]);
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(null);
 
@@ -175,7 +175,7 @@ export const ReportRubbish = () => {
       if (response.ok) {
         const { reports } = await response.json();
         const realLocations = convertReportsToLocations(reports || []);
-        setMapLocations(realLocations);
+        setMapLocations([...SYDNEY_LOCATIONS, ...realLocations]);
       }
     } catch (error) {
       console.error('Error loading reports:', error);
