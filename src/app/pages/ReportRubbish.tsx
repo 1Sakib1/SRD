@@ -122,15 +122,33 @@ export const ReportRubbish = () => {
    */
   const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
     const locationGroups: { [key: string]: Report[] } = {};
+    
     reports.forEach(report => {
-      if (!report.location?.lat || !report.location?.lng) return;
-      const key = `${report.location.lat.toFixed(3)},${report.location.lng.toFixed(3)}`;
-      if (!locationGroups[key]) locationGroups[key] = [];
+      if (!report.location || 
+          typeof report.location.lat !== 'number' || 
+          typeof report.location.lng !== 'number' ||
+          isNaN(report.location.lat) || 
+          isNaN(report.location.lng)) {
+        return;
+      }
+      
+      const latKey = report.location.lat.toFixed(3);
+      const lngKey = report.location.lng.toFixed(3);
+      const key = `${latKey},${lngKey}`;
+      
+      if (!locationGroups[key]) {
+        locationGroups[key] = [];
+      }
       locationGroups[key].push(report);
     });
     
     return Object.entries(locationGroups).map(([key, groupReports]) => {
       const [lat, lng] = key.split(',').map(Number);
+      
+      if (isNaN(lat) || isNaN(lng)) {
+        return null;
+      }
+      
       return {
         id: `user-report-${key}`,
         lat,
@@ -139,7 +157,7 @@ export const ReportRubbish = () => {
         reports: groupReports.length,
         intensity: Math.min(groupReports.length / 10, 1),
       };
-    });
+    }).filter((loc): loc is LocationPoint => loc !== null);
   };
 
   const loadReports = async () => {
@@ -328,7 +346,11 @@ export const ReportRubbish = () => {
       );
       if (response.ok) {
         await loadReports();
-        toast.success('Report submitted successfully!');
+        if (user && user.email) {
+          toast.success(`Report submitted! A confirmation email is being sent to ${user.email}.`);
+        } else {
+          toast.success('Report submitted successfully!');
+        }
         setTimeout(() => navigate('/dashboard'), 2000);
       }
     } catch (error) {

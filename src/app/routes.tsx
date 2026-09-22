@@ -10,6 +10,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Awareness } from './pages/Awareness';
 import { AboutUs } from './pages/AboutUs';
 import { NotFound } from './pages/NotFound';
+import { Leaderboard } from './pages/Leaderboard';
 import { DebugUsers } from './pages/DebugUsers';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -111,6 +112,10 @@ export const router = createBrowserRouter([
       {
         path: '/admin',
         element: <ProtectedAdmin />,
+      },
+      {
+        path: '/leaderboard',
+        element: <Leaderboard />,
       },
       {
         path: '/about-us',
