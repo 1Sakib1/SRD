@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to={isAdmin ? '/admin' : '/dashboard'} className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
               <Recycle className="w-5 h-5 text-white" />
             </div>
@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                     <div className="w-px h-4 bg-green-300" />
                     <div className="flex items-center space-x-1">
                       <DollarSign className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-green-700">{user?.credits || 0}</span>
+                      <span className="text-sm font-medium text-green-700">{((user?.ecoPoints || 0) * 0.01).toFixed(2)}</span>
                     </div>
                   </div>
                 )}
@@ -129,6 +129,13 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                     >
                       <BookOpen className="w-4 h-4" />
                       <span>Awareness</span>
+                    </Link>
+                    <Link
+                      to="/leaderboard"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                    >
+                      <Trophy className="w-4 h-4" />
+                      <span>Leaderboard</span>
                     </Link>
                   </>
                 )}
@@ -208,6 +215,14 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                   <BookOpen className="w-5 h-5" />
                   <span className="font-medium">Awareness</span>
                 </Link>
+                <Link
+                  to="/leaderboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors active:scale-95"
+                >
+                  <Trophy className="w-5 h-5" />
+                  <span className="font-medium">Leaderboard</span>
+                </Link>
                 
                 {/* Credits Display */}
                 <div className="px-4 py-3 bg-green-50 rounded-lg border border-green-200">
@@ -223,7 +238,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                       <DollarSign className="w-5 h-5 text-green-600" />
                       <span className="text-sm font-medium text-gray-700">Credits</span>
                     </div>
-                    <span className="text-sm font-bold text-green-600">{user?.credits || 0} AUD</span>
+                    <span className="text-sm font-bold text-green-600">{((user?.ecoPoints || 0) * 0.01).toFixed(2)} AUD</span>
                   </div>
                 </div>
               </>

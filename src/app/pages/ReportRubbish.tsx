@@ -174,10 +174,8 @@ export const ReportRubbish = () => {
       );
       if (response.ok) {
         const { reports } = await response.json();
-        if (reports && reports.length > 0) {
-          const realLocations = convertReportsToLocations(reports);
-          setMapLocations(realLocations);
-        }
+        const realLocations = convertReportsToLocations(reports || []);
+        setMapLocations(realLocations);
       }
     } catch (error) {
       console.error('Error loading reports:', error);
