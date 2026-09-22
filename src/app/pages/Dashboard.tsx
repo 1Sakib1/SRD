@@ -249,16 +249,16 @@ export const Dashboard = () => {
                 Earn Real Rewards for Your Impact!
               </h3>
               <p className="text-sm sm:text-base text-gray-700 mb-3">
-                Every <span className="font-semibold text-green-700">100 eco-points</span> you earn automatically converts to <span className="font-semibold text-emerald-700">$1 AUD credit</span>. Your credits can be redeemed for vouchers, discounts at local eco-friendly businesses, or donated to environmental causes.
+                Every <span className="font-semibold text-green-700">report you make</span> automatically earns you <span className="font-semibold text-emerald-700">10 eco-points ($0.10 AUD)</span>. Your credits can be redeemed for vouchers, discounts at local eco-friendly businesses, or donated to environmental causes.
               </p>
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg border border-emerald-200">
                   <Leaf className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-gray-700">10 points per report</span>
+                  <span className="font-medium text-gray-700">1 report = 10 pts</span>
                 </div>
                 <div className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg border border-emerald-200">
                   <DollarSign className="w-4 h-4 text-emerald-600" />
-                  <span className="font-medium text-gray-700">100 points = $1 AUD</span>
+                  <span className="font-medium text-gray-700">1 report = $0.10 AUD</span>
                 </div>
               </div>
             </div>
