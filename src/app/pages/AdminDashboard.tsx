@@ -17,7 +17,7 @@ export const AdminDashboard = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<'all' | Report['status']>('all');
   const [isLoading, setIsLoading] = useState(true);
-  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
   
   // Convert reports to location points for heat map
   const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
@@ -124,8 +124,7 @@ export const AdminDashboard = () => {
         // Update heat map with real reports
         if (serverReports && serverReports.length > 0) {
           const realLocations = convertReportsToLocations(serverReports);
-          const combinedLocations = [...SYDNEY_LOCATIONS, ...realLocations];
-          setMapLocations(combinedLocations);
+          setMapLocations(realLocations);
           console.log('🗺️ AdminDashboard: Heat map updated with', realLocations.length, 'real locations');
         }
       } else {

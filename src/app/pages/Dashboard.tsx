@@ -18,7 +18,7 @@ export const Dashboard = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [userReports, setUserReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
   
   // Convert reports to location points for heat map
   const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
@@ -129,10 +129,7 @@ export const Dashboard = () => {
         if (allReports && allReports.length > 0) {
           // Convert real reports to location points
           const realLocations = convertReportsToLocations(allReports);
-          
-          // Combine demo locations with real user reports
-          const combinedLocations = [...SYDNEY_LOCATIONS, ...realLocations];
-          setMapLocations(combinedLocations);
+          setMapLocations(realLocations);
         }
       } else {
         console.error('Failed to load all reports for heat map');
