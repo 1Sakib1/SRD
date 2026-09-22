@@ -109,9 +109,11 @@ export const ReportRubbish = () => {
         });
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      toast.error("AI Analysis failed. Please enter details manually.");
+      toast.error("AI Analysis failed", {
+        description: error.message || "Please enter details manually."
+      });
     } finally {
       setIsAIAnalyzing(false);
     }
