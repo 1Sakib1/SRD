@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
-import { SYDNEY_LOCATIONS, RUBBISH_TYPES, LocationPoint } from '../utils/mockData';
+import { RUBBISH_TYPES, LocationPoint } from '../utils/mockData';
 import { getCurrentLocation, reverseGeocode } from '../utils/geocoding';
 import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -29,7 +29,7 @@ export const ReportRubbish = () => {
   const [guestEmail, setGuestEmail] = useState('');
   
   // Map data
-  const [mapLocations, setMapLocations] = useState<LocationPoint[]>(SYDNEY_LOCATIONS);
+  const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.8688, 151.2093]);
   const [selectedLocation, setSelectedLocation] = useState<[number, number] | null>(null);
 
@@ -121,62 +121,31 @@ export const ReportRubbish = () => {
   /**
    * Heatmap data processing
    */
-  const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
-    const locationGroups: { [key: string]: Report[] } = {};
-    
-    reports.forEach(report => {
-      if (!report.location || 
-          typeof report.location.lat !== 'number' || 
-          typeof report.location.lng !== 'number' ||
-          isNaN(report.location.lat) || 
-          isNaN(report.location.lng)) {
+  const loadReports = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('reports')
+        .select('id, location_lat, location_lng, type, status');
+        
+      if (error) {
+        console.error('Error fetching reports from Supabase:', error);
         return;
       }
       
-      const latKey = report.location.lat.toFixed(3);
-      const lngKey = report.location.lng.toFixed(3);
-      const key = `${latKey},${lngKey}`;
-      
-      if (!locationGroups[key]) {
-        locationGroups[key] = [];
-      }
-      locationGroups[key].push(report);
-    });
-    
-    return Object.entries(locationGroups).map(([key, groupReports]) => {
-      const [lat, lng] = key.split(',').map(Number);
-      
-      if (isNaN(lat) || isNaN(lng)) {
-        return null;
-      }
-      
-      return {
-        id: `user-report-${key}`,
-        lat,
-        lng,
-        address: groupReports[0].location.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
-        reports: groupReports.length,
-        intensity: Math.min(groupReports.length / 10, 1),
-      };
-    }).filter((loc): loc is LocationPoint => loc !== null);
-  };
-
-  const loadReports = async () => {
-    try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/list?timestamp=${Date.now()}`,
-        {
-          method: 'GET',
-          headers: { 
-            'Authorization': `Bearer ${publicAnonKey}`,
-            'Cache-Control': 'no-cache'
-          },
-        }
-      );
-      if (response.ok) {
-        const { reports } = await response.json();
-        const realLocations = convertReportsToLocations(reports || []);
-        setMapLocations([...SYDNEY_LOCATIONS, ...realLocations]);
+      if (data) {
+        // Map Supabase rows to LocationPoint format
+        const supabaseLocations: LocationPoint[] = data
+          .filter(r => r.location_lat && r.location_lng)
+          .map(r => ({
+            id: r.id,
+            lat: r.location_lat,
+            lng: r.location_lng,
+            address: r.type || 'Rubbish Report',
+            reports: 1,
+            intensity: r.status === 'resolved' ? 0.2 : (r.status === 'pending' ? 0.8 : 0.5)
+          }));
+          
+        setMapLocations(supabaseLocations);
       }
     } catch (error) {
       console.error('Error loading reports:', error);
@@ -190,7 +159,18 @@ export const ReportRubbish = () => {
     const channel = supabase
       .channel('public:reports')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
-        loadReports();
+        const newReport = payload.new;
+        if (newReport.location_lat && newReport.location_lng) {
+          const newLocationPoint: LocationPoint = {
+            id: newReport.id,
+            lat: newReport.location_lat,
+            lng: newReport.location_lng,
+            address: newReport.type || 'Rubbish Report',
+            reports: 1,
+            intensity: 0.8 // pending
+          };
+          setMapLocations(prev => [...prev, newLocationPoint]);
+        }
       })
       .subscribe();
 
