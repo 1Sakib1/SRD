@@ -46,46 +46,41 @@ export const Auth = () => {
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('🚀 handleLogin called', { email, loginType });
-    
     if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
-    
-    console.log('✅ Form validation passed, setting isSubmitting=true');
     setIsSubmitting(true);
-    
     try {
-      const ADMIN_EMAILS = [
-        'adminsrd1@srd.com.au',
-        'adminsrd2@srd.com.au',
-        'adminsrd3@srd.com.au',
-        'adminsrd4@srd.com.au',
-      ];
-      
-      const normalizedEmail = email.toLowerCase().trim();
-      let result;
-      
-      if (ADMIN_EMAILS.includes(normalizedEmail)) {
-        console.log('👑 Admin email detected, calling loginAdminFixed...');
-        result = await loginAdminFixed(email, password);
-      } else {
-        console.log('👤 Calling loginUserFixed...');
-        result = await loginUserFixed(email, password);
-      }
-      
-      const { user, error } = result;
-      if (error) {
-        console.error('❌ Login error:', error);
-        toast.error(error.message);
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) {
+        toast.error(authError.message);
         setIsSubmitting(false);
-      } else if (user) {
-        console.log('✅ Login successful, user:', user);
-        login(user);
-        
-        if (user.role === 'admin') {
+        return;
+      }
+      if (authData.user) {
+        const { data: userProfile, error: profileError } = await supabase.from('users').select('*').eq('email', email.toLowerCase().trim()).single();
+        let userData = userProfile;
+        const ADMIN_EMAILS = ['adminsrd1@srd.com.au', 'adminsrd2@srd.com.au', 'adminsrd3@srd.com.au', 'adminsrd4@srd.com.au'];
+        if (profileError && ADMIN_EMAILS.includes(email.toLowerCase().trim())) {
+          userData = { id: authData.user.id, email: email.toLowerCase().trim(), name: 'Admin', role: 'admin', eco_points: 0, credits: 0 };
+        } else if (profileError) {
+          toast.error('Failed to load user profile');
+          setIsSubmitting(false);
+          return;
+        }
+        const finalUser = {
+          id: userData.id,
+          name: userData.name,
+          email: userData.email,
+          role: ADMIN_EMAILS.includes(email.toLowerCase().trim()) ? 'admin' : userData.role,
+          ecoPoints: userData.eco_points || userData.ecoPoints || 0,
+          credits: userData.credits || 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        login(finalUser as any);
+        if (finalUser.role === 'admin') {
           toast.success('Welcome back, Admin!');
           navigate('/admin');
         } else {
@@ -93,14 +88,9 @@ export const Auth = () => {
           const redirect = searchParams.get('redirect') || '/dashboard';
           navigate(redirect);
         }
-      } else {
-        console.error('⚠️ No user and no error returned');
-        toast.error('Login failed - no response');
-        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.error('💥 Login exception in Auth component:', error);
-      toast.error('An unexpected error occurred');
+    } catch (error: any) {
+      toast.error(error.message || 'An unexpected error occurred');
       setIsSubmitting(false);
     }
   };
