@@ -134,18 +134,31 @@ export const ReportRubbish = () => {
       
       if (data) {
         // Map Supabase rows to LocationPoint format
-        const supabaseLocations: LocationPoint[] = data
-          .filter(r => r.location_lat && r.location_lng)
-          .map(r => ({
-            id: r.id,
-            lat: r.location_lat,
-            lng: r.location_lng,
-            address: r.type || 'Rubbish Report',
-            reports: 1,
-            intensity: r.status === 'resolved' ? 0.2 : (r.status === 'pending' ? 0.8 : 0.5)
-          }));
+        // Group reports by approximate location to create density hotspots (like the dashboard)
+          const locationGroups: { [key: string]: any[] } = {};
           
-        setMapLocations(supabaseLocations);
+          data.forEach(r => {
+            if (!r.location_lat || !r.location_lng) return;
+            const lat = parseFloat(r.location_lat.toFixed(3));
+            const lng = parseFloat(r.location_lng.toFixed(3));
+            const key = `${lat},${lng}`;
+            if (!locationGroups[key]) locationGroups[key] = [];
+            locationGroups[key].push(r);
+          });
+          
+          const groupedLocations: LocationPoint[] = Object.entries(locationGroups).map(([key, group]) => {
+            const [lat, lng] = key.split(',').map(Number);
+            return {
+              id: `grouped-${key}`,
+              lat,
+              lng,
+              address: group[0].type || 'Rubbish Report',
+              reports: group.length,
+              intensity: Math.max(0.3, Math.min(group.length / 10, 1))
+            };
+          });
+          
+          setMapLocations(groupedLocations);
       }
     } catch (error) {
       console.error('Error loading reports:', error);
@@ -460,6 +473,7 @@ export const ReportRubbish = () => {
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Live Rubbish Heat Map</h2>
+              <p className="text-sm text-gray-600 mb-4">Live community reports showing rubbish density hotspots</p>
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} />
           </div>
         </div>
