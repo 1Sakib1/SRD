@@ -370,7 +370,41 @@ app.post("/make-server-3e3b490b/reports/submit", async (c) => {
 
     // Save report to KV store
     const reportKey = `report:${reportId}`;
-    await kv.set(reportKey, report);
+      await kv.set(reportKey, report);
+
+      // Save report to Postgres
+      try {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+        
+        if (supabaseUrl && supabaseKey) {
+          const { createClient } = await import("npm:@supabase/supabase-js");
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          
+          const { error: pgError } = await supabase.from('reports').insert([{
+            user_id: userId,
+            type: type,
+            description: description,
+            photo: photo || null,
+            location_lat: location.lat,
+            location_lng: location.lng,
+            location_address: location.address || '',
+            status: 'pending',
+            created_at: now,
+            updated_at: now
+          }]);
+          
+          if (pgError) {
+            console.error('Error saving to Postgres reports table:', pgError);
+          } else {
+            console.log('Successfully saved to Postgres reports table');
+          }
+        } else {
+          console.error('Missing Supabase env vars, cannot save to Postgres');
+        }
+      } catch (pgInsertError) {
+        console.error('Exception saving to Postgres:', pgInsertError);
+      }
 
     // Award eco points to user - find user by ID
     // The userId is the actual user ID, so we need to find the user by searching all users
