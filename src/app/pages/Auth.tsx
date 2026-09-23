@@ -87,11 +87,11 @@ export const Auth = () => {
         
         if (user.role === 'admin') {
           toast.success('Welcome back, Admin!');
-          navigate('/admin');
+          setTimeout(() => navigate('/admin'), 150);
         } else {
           toast.success('Welcome back!');
           const redirect = searchParams.get('redirect') || '/dashboard';
-          navigate(redirect);
+          setTimeout(() => navigate(redirect), 150);
         }
       } else {
         console.error('⚠️ No user and no error returned');
