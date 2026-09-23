@@ -477,6 +477,14 @@ export const ReportRubbish = () => {
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} />
           </div>
         </div>
+        
+        {/* Research Disclaimer */}
+        <div className="mt-12 text-center text-sm text-gray-500 pb-8">
+          <p>
+            <strong>Research Disclaimer:</strong> This application is for demonstration and research purposes only. 
+            The map data, machine learning classifications, and eco-points are experimental and may not reflect real-world action by municipal authorities.
+          </p>
+        </div>
       </div>
     </div>
   );
