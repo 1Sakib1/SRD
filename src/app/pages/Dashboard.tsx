@@ -350,7 +350,6 @@ export const Dashboard = () => {
                   ))}
                 </div>
               )}
-              )}
           </div>
           
           {/* Heat Map */}
