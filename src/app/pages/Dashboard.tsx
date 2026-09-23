@@ -350,30 +350,7 @@ export const Dashboard = () => {
                   ))}
                 </div>
               )}
-
-                    <div className="p-4 flex flex-col flex-grow">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-medium text-gray-900 line-clamp-1">{report.type}</h3>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ml-2 ${getStatusColor(report.status)}`}>
-                          {report.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">{report.description}</p>
-                      <div className="flex flex-col space-y-1 text-xs text-gray-500 mt-auto">
-                        <div className="flex items-center">
-                          <MapPin className="w-3 h-3 mr-1 shrink-0" />
-                          <span className="line-clamp-1">{report.location.address}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="w-3 h-3 mr-1 shrink-0" />
-                          <span>{format(new Date(report.timestamp), 'MMM d, yyyy')}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+              )}
           </div>
           
           {/* Heat Map */}
