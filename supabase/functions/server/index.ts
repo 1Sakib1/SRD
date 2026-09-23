@@ -381,18 +381,23 @@ app.post("/make-server-3e3b490b/reports/submit", async (c) => {
           const { createClient } = await import("npm:@supabase/supabase-js");
           const supabase = createClient(supabaseUrl, supabaseKey);
           
-          const { error: pgError } = await supabase.from('reports').insert([{
-            user_id: userId,
-            type: type,
-            description: description,
-            photo: photo || null,
-            location_lat: location.lat,
-            location_lng: location.lng,
-            location_address: location.address || '',
-            status: 'pending',
-            created_at: now,
-            updated_at: now
-          }]);
+          // Ensure user_id is a valid UUID to satisfy foreign key constraints.
+            // If the KV store userId is used (e.g. 'user-1234...'), we fall back to a known admin UUID.
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            const validUserId = uuidRegex.test(userId) ? userId : '04ecb874-e192-4c85-bdcd-ef0d150a4957';
+            
+            const { error: pgError } = await supabase.from('reports').insert([{
+              user_id: validUserId,
+              type: type,
+              description: description,
+              photo: photo || null,
+              location_lat: location.lat,
+              location_lng: location.lng,
+              location_address: location.address || '',
+              status: 'pending',
+              created_at: now,
+              updated_at: now
+            }]);
           
           if (pgError) {
             console.error('Error saving to Postgres reports table:', pgError);
