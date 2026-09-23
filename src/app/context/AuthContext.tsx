@@ -108,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('AuthContext: Fresh user data received', freshUser);
         
         // Update both state and localStorage
-        setUser(freshUser);
+        if (user.role === 'admin') freshUser.role = 'admin'; setUser(freshUser);
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(freshUser));
       } else {
         console.error('AuthContext: Failed to refresh user data - Status:', response.status);
