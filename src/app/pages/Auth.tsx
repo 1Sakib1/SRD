@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
 import { useNavigate, useSearchParams } from 'react-router';
 import { Header } from '../components/Header';
 import { useAuth } from '../context/AuthContext';
@@ -46,41 +45,48 @@ export const Auth = () => {
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('🚀 handleLogin called', { email, loginType });
+    
     if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
+    
+    console.log('✅ Form validation passed, setting isSubmitting=true');
     setIsSubmitting(true);
+    
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) {
-        toast.error(authError.message);
-        setIsSubmitting(false);
-        return;
+      const ADMIN_EMAILS = [
+        'adminsrd1@srd.com.au',
+        'adminsrd2@srd.com.au',
+        'adminsrd3@srd.com.au',
+        'adminsrd4@srd.com.au',
+      ];
+      
+      const normalizedEmail = email.toLowerCase().trim();
+      let result;
+      
+      if (ADMIN_EMAILS.includes(normalizedEmail)) {
+        console.log('👑 Admin email detected, calling loginAdminFixed...');
+        result = await loginAdminFixed(email, password);
+      } else {
+        console.log('👤 Calling loginUserFixed...');
+        result = await loginUserFixed(email, password);
       }
-      if (authData.user) {
-        const { data: userProfile, error: profileError } = await supabase.from('users').select('*').eq('email', email.toLowerCase().trim()).single();
-        let userData = userProfile;
-        const ADMIN_EMAILS = ['adminsrd1@srd.com.au', 'adminsrd2@srd.com.au', 'adminsrd3@srd.com.au', 'adminsrd4@srd.com.au'];
-        if (profileError && ADMIN_EMAILS.includes(email.toLowerCase().trim())) {
-          userData = { id: authData.user.id, email: email.toLowerCase().trim(), name: 'Admin', role: 'admin', eco_points: 0, credits: 0 };
-        } else if (profileError) {
-          toast.error('Failed to load user profile');
-          setIsSubmitting(false);
-          return;
+      
+      const { user, error } = result;
+      if (error) {
+        console.error('Login error:', error);
+        toast.error(error.message);
+        setIsSubmitting(false);
+      } else if (user) {
+        if (ADMIN_EMAILS.includes(normalizedEmail)) {
+          user.role = 'admin';
         }
-        const finalUser = {
-          id: userData.id,
-          name: userData.name,
-          email: userData.email,
-          role: ADMIN_EMAILS.includes(email.toLowerCase().trim()) ? 'admin' : userData.role,
-          ecoPoints: userData.eco_points || userData.ecoPoints || 0,
-          credits: userData.credits || 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        login(finalUser as any);
-        if (finalUser.role === 'admin') {
+        login(user);
+        
+        if (user.role === 'admin') {
           toast.success('Welcome back, Admin!');
           navigate('/admin');
         } else {
@@ -88,9 +94,14 @@ export const Auth = () => {
           const redirect = searchParams.get('redirect') || '/dashboard';
           navigate(redirect);
         }
+      } else {
+        console.error('⚠️ No user and no error returned');
+        toast.error('Login failed - no response');
+        setIsSubmitting(false);
       }
-    } catch (error: any) {
-      toast.error(error.message || 'An unexpected error occurred');
+    } catch (error) {
+      console.error('💥 Login exception in Auth component:', error);
+      toast.error('An unexpected error occurred');
       setIsSubmitting(false);
     }
   };
@@ -141,92 +152,13 @@ export const Auth = () => {
       console.log('Error:', error);
 
       if (error) {
-        console.error('❌ Google OAuth error object:', JSON.stringify(error, null, 2));
-        
-        // Check for specific error types
-        if (error.message?.includes('not enabled') || error.message?.includes('provider')) {
-          toast.error(
-            'Google Sign-In is not configured. Please enable it in Supabase: Authentication → Providers → Google',
-            { duration: 6000 }
-          );
-        } else {
-          toast.error(`Google login failed: ${error.message}`);
-        }
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (data?.url) {
-        console.log('✅ Redirecting to Google OAuth URL:', data.url);
-        toast.success('Redirecting to Google...', { duration: 2000 });
-        // Wait a moment for the toast to show, then redirect
-        setTimeout(() => {
-          window.location.href = data.url;
-        }, 500);
-      } else {
-        console.error('⚠️ No redirect URL received from Supabase');
-        console.log('Full data object:', JSON.stringify(data, null, 2));
-        toast.error('Failed to initiate Google login. No redirect URL was provided.');
-        setIsSubmitting(false);
-      }
-    } catch (error) {
-      console.error('💥 Google login exception:', error);
-      
-      // More detailed error logging
-      if (error instanceof Error) {
-        console.error('Error name:', error.name);
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-      }
-      
-      toast.error(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGuestMode = () => {
-    console.log('👥 Continuing as guest');
-    loginAsGuest();
-    toast.success('Welcome! You\'re browsing as a guest');
-    const redirect = searchParams.get('redirect') || '/dashboard';
-    navigate(redirect);
-  };
-  
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    console.log('🚀 handleRegister called', { email, name });
-    
-    if (!email || !password || !name || !confirmPassword) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-    
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
-    
-    console.log('✅ Form validation passed, setting isSubmitting=true');
-    setIsSubmitting(true);
-    
-    try {
-      console.log('📝 Calling registerUserFixed...');
-      const result = await registerUserFixed(email, password, name);
-      console.log('📝 registerUserFixed returned:', result);
-      
-      const { user, error } = result;
-      if (error) {
-        console.error('❌ Registration error:', error);
+        console.error('Login error:', error);
         toast.error(error.message);
         setIsSubmitting(false);
       } else if (user) {
-        console.log('✅ Registration successful, user:', user);
+        if (ADMIN_EMAILS.includes(normalizedEmail)) {
+          user.role = 'admin';
+        }
         login(user);
         toast.success('Account created successfully!');
         const redirect = searchParams.get('redirect') || '/dashboard';
@@ -767,4 +699,3 @@ export const Auth = () => {
     </div>
   );
 };
-
