@@ -443,7 +443,7 @@ export const ReportRubbish = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Photo Evidence</label>
                 <div className="relative">
-                  <input type="file" accept="image/*" capture="environment" onChange={handlePhotoUpload} className="hidden" id="photo-upload" />
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" id="photo-upload" />
                   <label htmlFor="photo-upload" className={`flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg cursor-pointer transition-all ${photo ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-500'}`}>
                     {isAIAnalyzing ? (
                       <div className="flex flex-col items-center py-2">
