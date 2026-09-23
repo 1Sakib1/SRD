@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { getReports, updateReportStatus, Report, getUserStats, getAllUsers, createNotification, sendEmailNotification } from '../utils/storage';
-import { SYDNEY_LOCATIONS, LocationPoint } from '../utils/mockData';
+import { LocationPoint } from '../utils/mockData';
 import { Shield, FileText, Users, TrendingUp, CheckCircle, Clock, AlertCircle, Download, Calendar, Code } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
