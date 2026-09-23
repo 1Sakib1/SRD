@@ -5,6 +5,7 @@ import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
 import { getReports, Report } from '../utils/storage';
 import { LocationPoint } from '../utils/mockData';
+import { getCurrentLocation, getUserCityName } from '../utils/geocoding';
 import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift, Trophy, Medal, Crown, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
@@ -87,6 +88,7 @@ export const Dashboard = () => {
   const [topUsers, setTopUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mapLocations, setMapLocations] = useState<LocationPoint[]>([]);
+  const [cityName, setCityName] = useState<string>('Sydney');
   
   // Convert reports to location points for heat map
   const convertReportsToLocations = (reports: Report[]): LocationPoint[] => {
@@ -262,7 +264,7 @@ export const Dashboard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Welcome back, {user?.name}!
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">Here's your impact on Sydney's cleanliness</p>
+          <p className="text-sm sm:text-base text-gray-600">Here's your impact on {cityName}'s cleanliness</p>
         </div>
         
         {/* Stats Grid */}

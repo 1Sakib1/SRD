@@ -67,3 +67,17 @@ export const getCurrentLocation = (): Promise<{ lat: number; lng: number }> => {
     );
   });
 };
+
+export const getUserCityName = async (lat: number, lng: number): Promise<string> => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+    );
+    if (!response.ok) return 'your area';
+    const data = await response.json();
+    const address = data.address;
+    return address.city || address.town || address.suburb || address.county || address.state || 'your area';
+  } catch (error) {
+    return 'your area';
+  }
+};
