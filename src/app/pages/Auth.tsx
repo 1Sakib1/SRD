@@ -46,7 +46,7 @@ export const Auth = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('🚀 handleLogin called', { email, loginType });
+    console.log('handleLogin called', { email });
     
     if (!email || !password) {
       toast.error('Please fill in all fields');
