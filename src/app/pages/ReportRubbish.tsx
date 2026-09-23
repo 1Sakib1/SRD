@@ -481,8 +481,7 @@ export const ReportRubbish = () => {
         {/* Research Disclaimer */}
         <div className="mt-12 text-center text-sm text-gray-500 pb-8">
           <p>
-            <strong>Research Disclaimer:</strong> This application is for demonstration and research purposes only. 
-            The map data, machine learning classifications, and eco-points are experimental and may not reflect real-world action by municipal authorities.
+            This uploaded data might be used for research purposes later on for ML prediction.
           </p>
         </div>
       </div>
