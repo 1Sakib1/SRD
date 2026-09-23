@@ -29,7 +29,7 @@ const ReportCard = ({ report, getStatusColor }: { report: any; getStatusColor: a
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className={px-2 py-1 rounded-full text-xs font-semibold "$"getStatusColor(report.status)"}>
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(report.status)}`}>
             {report.status.toUpperCase()}
           </span>
           {isExpanded ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
