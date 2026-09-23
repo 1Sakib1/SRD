@@ -5,10 +5,59 @@ import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
 import { getReports, Report } from '../utils/storage';
 import { SYDNEY_LOCATIONS, LocationPoint } from '../utils/mockData';
-import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift, Trophy, Medal, Crown, Star } from 'lucide-react';
+import { Award, FileText, MapPin, TrendingUp, Plus, Calendar, Leaf, DollarSign, Gift, Trophy, Medal, Crown, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
+const ReportCard = ({ report, getStatusColor }: { report: any; getStatusColor: any }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  return (
+    <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-all flex flex-col mb-3">
+      <div 
+        className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Calendar size={14} />
+            <span>{report.created_at ? format(new Date(report.created_at), 'MMM dd, yyyy') : report.date ? format(new Date(report.date), 'MMM dd, yyyy') : 'Unknown Date'}</span>
+          </div>
+          <div className="flex items-center gap-2 font-medium text-gray-900">
+            <MapPin size={16} className="text-green-600"/>
+            <span className="truncate max-w-[200px] sm:max-w-xs">{report.location?.address || report.location_address || report.type}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className={px-2 py-1 rounded-full text-xs font-semibold "$"getStatusColor(report.status)"}>
+            {report.status.toUpperCase()}
+          </span>
+          {isExpanded ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
+        </div>
+      </div>
+      {isExpanded && (
+        <div className="p-4 border-t border-gray-100 bg-gray-50/50">
+          <p className="text-sm text-gray-700 mb-4 bg-white p-3 rounded border border-gray-100">
+            {report.description || "No description provided."}
+          </p>
+          {report.photo && !imageFailed ? (
+            <img 
+              src={report.photo} 
+              alt="Rubbish" 
+              className="w-full h-48 sm:h-64 object-cover rounded-lg shadow-sm"
+              onError={() => setImageFailed(true)}
+            />
+          ) : (
+            <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+              <FileText className="w-8 h-8 text-gray-400 mb-2" />
+              <span>No Image Available</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 export const Dashboard = () => {
   console.log('🏠 Dashboard: Component rendering');
   
@@ -295,19 +344,13 @@ export const Dashboard = () => {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[400px] overflow-y-auto pr-2">
-                {userReports.map((report) => (
-                  <div
-                    key={report.id}
-                    className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow flex flex-col"
-                  >
-                    {report.photo ? (
-                      <img src={report.photo} alt={report.type} className="w-full h-32 object-cover" />
-                    ) : (
-                      <div className="w-full h-32 bg-gray-100 flex items-center justify-center">
-                        <FileText className="w-8 h-8 text-gray-400" />
-                      </div>
-                    )}
+                              <div className="flex flex-col gap-2 h-[400px] overflow-y-auto pr-2">
+                  {userReports.map((report) => (
+                    <ReportCard key={report.id} report={report} getStatusColor={getStatusColor} />
+                  ))}
+                </div>
+              )}
+
                     <div className="p-4 flex flex-col flex-grow">
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="font-medium text-gray-900 line-clamp-1">{report.type}</h3>
@@ -409,3 +452,5 @@ export const Dashboard = () => {
     </div>
   );
 };
+
+

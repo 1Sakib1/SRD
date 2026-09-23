@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabase';
 import { useNavigate, useSearchParams } from 'react-router';
 import { Header } from '../components/Header';
 import { useAuth } from '../context/AuthContext';
@@ -776,3 +777,4 @@ export const Auth = () => {
     </div>
   );
 };
+
