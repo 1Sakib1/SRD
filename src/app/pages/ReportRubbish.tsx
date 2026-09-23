@@ -153,6 +153,13 @@ export const ReportRubbish = () => {
   };
 
   useEffect(() => {
+    // Automatically detect user's location on page load
+    getCurrentLocation().then(position => {
+      setMapCenter([position.lat, position.lng]);
+    }).catch(err => {
+      console.log('Auto location on mount failed', err);
+    });
+
     loadReports();
     
     // Subscribe to real-time report inserts
