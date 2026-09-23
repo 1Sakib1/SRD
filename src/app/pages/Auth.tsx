@@ -77,14 +77,13 @@ export const Auth = () => {
       
       const { user, error } = result;
       if (error) {
-        console.error('Login error:', error);
+        console.error('❌ Login error:', error);
         toast.error(error.message);
         setIsSubmitting(false);
       } else if (user) {
-        if (ADMIN_EMAILS.includes(normalizedEmail)) {
-          user.role = 'admin';
-        }
-        login(user);
+        console.log('✅ Login successful, user:', user);
+        if (ADMIN_EMAILS && ADMIN_EMAILS.includes && typeof normalizedEmail !== 'undefined' && ADMIN_EMAILS.includes(normalizedEmail)) { user.role = 'admin'; }
+          login(user);
         
         if (user.role === 'admin') {
           toast.success('Welcome back, Admin!');
@@ -152,13 +151,92 @@ export const Auth = () => {
       console.log('Error:', error);
 
       if (error) {
-        console.error('Login error:', error);
+        console.error('❌ Google OAuth error object:', JSON.stringify(error, null, 2));
+        
+        // Check for specific error types
+        if (error.message?.includes('not enabled') || error.message?.includes('provider')) {
+          toast.error(
+            'Google Sign-In is not configured. Please enable it in Supabase: Authentication → Providers → Google',
+            { duration: 6000 }
+          );
+        } else {
+          toast.error(`Google login failed: ${error.message}`);
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (data?.url) {
+        console.log('✅ Redirecting to Google OAuth URL:', data.url);
+        toast.success('Redirecting to Google...', { duration: 2000 });
+        // Wait a moment for the toast to show, then redirect
+        setTimeout(() => {
+          window.location.href = data.url;
+        }, 500);
+      } else {
+        console.error('⚠️ No redirect URL received from Supabase');
+        console.log('Full data object:', JSON.stringify(data, null, 2));
+        toast.error('Failed to initiate Google login. No redirect URL was provided.');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('💥 Google login exception:', error);
+      
+      // More detailed error logging
+      if (error instanceof Error) {
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      
+      toast.error(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGuestMode = () => {
+    console.log('👥 Continuing as guest');
+    loginAsGuest();
+    toast.success('Welcome! You\'re browsing as a guest');
+    const redirect = searchParams.get('redirect') || '/dashboard';
+    navigate(redirect);
+  };
+  
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log('🚀 handleRegister called', { email, name });
+    
+    if (!email || !password || !name || !confirmPassword) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    
+    console.log('✅ Form validation passed, setting isSubmitting=true');
+    setIsSubmitting(true);
+    
+    try {
+      console.log('📝 Calling registerUserFixed...');
+      const result = await registerUserFixed(email, password, name);
+      console.log('📝 registerUserFixed returned:', result);
+      
+      const { user, error } = result;
+      if (error) {
+        console.error('❌ Registration error:', error);
         toast.error(error.message);
         setIsSubmitting(false);
       } else if (user) {
-        if (ADMIN_EMAILS.includes(normalizedEmail)) {
-          user.role = 'admin';
-        }
+        console.log('✅ Registration successful, user:', user);
         login(user);
         toast.success('Account created successfully!');
         const redirect = searchParams.get('redirect') || '/dashboard';
