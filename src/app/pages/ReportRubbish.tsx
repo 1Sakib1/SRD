@@ -8,6 +8,7 @@ import { getCurrentLocation, reverseGeocode } from '../utils/geocoding';
 import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+import { supabase } from '../utils/supabase';
 import { GoogleGenAI } from "@google/genai";
 
 export const ReportRubbish = () => {
@@ -184,8 +185,18 @@ export const ReportRubbish = () => {
 
   useEffect(() => {
     loadReports();
-    const interval = setInterval(loadReports, 30000);
-    return () => clearInterval(interval);
+    
+    // Subscribe to real-time report inserts
+    const channel = supabase
+      .channel('public:reports')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
+        loadReports();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
@@ -461,7 +472,7 @@ export const ReportRubbish = () => {
           </div>
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Sydney Heat Map</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Live Rubbish Heat Map</h2>
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} />
           </div>
         </div>
