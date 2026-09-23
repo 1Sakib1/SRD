@@ -294,10 +294,41 @@ export const ReportRubbish = () => {
     if (file) {
       try {
         const compressedBase64 = await compressImage(file);
-        setPhoto(compressedBase64);
+        
+        // Show uploading state
+        const toastId = toast.loading('Uploading image to secure storage...');
+        
+        // Convert Base64 back to Blob for Supabase Storage
+        const res = await fetch(compressedBase64);
+        const blob = await res.blob();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+        
+        const { data, error } = await supabase.storage
+          .from('report-images')
+          .upload(fileName, blob, { contentType: 'image/jpeg' });
+          
+        if (error) {
+          console.error('Storage upload error:', error);
+          toast.error('Failed to upload image securely', { id: toastId });
+          // Fallback to base64 if storage fails
+          setPhoto(compressedBase64);
+        } else {
+          // Get the public URL
+          const { data: urlData } = supabase.storage
+            .from('report-images')
+            .getPublicUrl(fileName);
+            
+          toast.success('Image uploaded successfully!', { id: toastId });
+          
+          // Set the photo to the lightweight public URL
+          setPhoto(urlData.publicUrl);
+        }
+        
+        // Let AI analyze the base64 version
         detectRubbishWithAI(compressedBase64);
       } catch (err) {
         toast.error("Failed to process image");
+        console.error(err);
       }
     }
   };
