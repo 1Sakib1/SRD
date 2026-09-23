@@ -472,7 +472,13 @@ export const ReportRubbish = () => {
           </div>
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Live Rubbish Heat Map</h2>
+            <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Live Rubbish Heat Map</h2>
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </div>
+              </div>
               <p className="text-sm text-gray-600 mb-4">Live community reports showing rubbish density hotspots</p>
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} />
           </div>
@@ -481,7 +487,7 @@ export const ReportRubbish = () => {
         {/* Research Disclaimer */}
         <div className="mt-12 text-center text-sm text-gray-500 pb-8">
           <p>
-            This uploaded data might be used for research purposes later on for ML prediction.
+            The data and images uploaded in this report may be used for future machine learning research purposes to help predict and categorize rubbish data more accurately.
           </p>
         </div>
       </div>
