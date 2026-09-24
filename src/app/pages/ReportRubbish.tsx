@@ -396,7 +396,7 @@ export const ReportRubbish = () => {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                from: 'LitterPin <onboarding@resend.dev>',
+                from: 'LitterPin <noreply@litterpin.org>',
                 to: [user.email],
                 subject: 'Report Submitted Successfully! - LitterPin',
                 html: `
