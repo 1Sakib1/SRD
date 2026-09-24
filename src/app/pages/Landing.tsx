@@ -1,3 +1,4 @@
+import React from 'react';
 import { ContextualInfo } from '../components/ContextualInfo';
 import { InteractiveGlobe } from '../components/InteractiveGlobe';
 import { LitterPinLogo } from '../components/LitterPinLogo';
@@ -17,6 +18,7 @@ const heroImageFallback = 'https://images.unsplash.com/photo-1506973035872-a4ec1
 
 export const Landing = () => {
   const stats = getUserStats();
+    const [focusLocation, setFocusLocation] = React.useState<{lat: number, lng: number} | null>(null);
   
   const globalCities = [
     {
@@ -137,7 +139,7 @@ export const Landing = () => {
               className="relative order-first lg:order-last"
             >
               <div className="absolute -inset-4 bg-gradient-to-r from-green-400 to-emerald-400 rounded-2xl blur-2xl opacity-30" />
-              <InteractiveGlobe />
+              <InteractiveGlobe focusLocation={focusLocation} />
             </motion.div>
           </div>
         </div>
@@ -182,7 +184,10 @@ export const Landing = () => {
             <Slider {...sliderSettings}>
               {globalCities.map((city, index) => (
                 <div key={index} className="px-3">
-                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300">
+                  <div className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer" onClick={() => {
+    setFocusLocation({ lat: city.lat, lng: city.lng });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }}>
                     <div className="aspect-[4/3] relative">
                       <img
                         src={city.image}

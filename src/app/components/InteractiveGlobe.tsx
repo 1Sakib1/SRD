@@ -14,7 +14,7 @@ interface ReportPoint {
   created_at: string;
 }
 
-export const InteractiveGlobe = () => {
+export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: number, lng: number } | null }) => {
   const globeEl = useRef<any>();
   const [reports, setReports] = useState<ReportPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,6 +111,30 @@ export const InteractiveGlobe = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [loading]);
 
+  
+  useEffect(() => {
+    if (focusLocation && globeEl.current) {
+      globeEl.current.controls().autoRotate = false;
+      globeEl.current.pointOfView({ lat: focusLocation.lat, lng: focusLocation.lng, altitude: 0.6 }, 1500);
+    }
+  }, [focusLocation]);
+
+  
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        if (globeEl.current) {
+          globeEl.current.controls().autoRotate = true;
+          // Optionally return to default orbit
+          globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 1500);
+        }
+        setSelectedPoint(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleInteract = () => {
     if (globeEl.current) {
       globeEl.current.controls().autoRotate = false;
@@ -194,7 +218,7 @@ export const InteractiveGlobe = () => {
         
         <div className="bg-white/5 backdrop-blur-xl rounded-lg p-2.5 border border-white/10 text-white shadow-2xl">
           <div className="flex items-center gap-1.5 mb-0.5">
-            <Activity size={12} className="text-[#00B150]" />
+            <div className="w-1.5 h-1.5 bg-[#00B150] rounded-full animate-pulse" />
             <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-300">Live Network</span>
           </div>
           <motion.div 
