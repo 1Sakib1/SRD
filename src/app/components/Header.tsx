@@ -27,8 +27,8 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center space-x-2">
               <LitterPinLogo className="w-10 h-10 drop-shadow-md" />
-              <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">Litter<span className="text-[#00B150]">Pin</span></span>
-              <span className="text-lg font-semibold text-[#333333] sm:hidden">Litter<span className="text-[#00B150]">Pin</span></span>
+              <div className="relative hidden sm:inline-block"><div className="absolute inset-0 bg-gradient-to-r from-green-300 to-[#00B150] blur-[10px] opacity-30 rounded-full"></div><span className="relative text-lg sm:text-xl font-semibold text-[#333333]">Litter<span className="text-[#00B150]">Pin</span></span></div>
+              <div className="relative sm:hidden"><div className="absolute inset-0 bg-gradient-to-r from-green-300 to-[#00B150] blur-[10px] opacity-30 rounded-full"></div><span className="relative text-lg font-semibold text-[#333333]">Litter<span className="text-[#00B150]">Pin</span></span></div>
             </Link>
             
             <div className="flex items-center space-x-2 sm:space-x-4">
@@ -69,8 +69,8 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <LitterPinLogo className="w-10 h-10 drop-shadow-md" />
-            <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">Litter<span className="text-[#00B150]">Pin</span></span>
-            <span className="text-lg font-semibold text-[#333333] sm:hidden">Litter<span className="text-[#00B150]">Pin</span></span>
+            <div className="relative hidden sm:inline-block"><div className="absolute inset-0 bg-gradient-to-r from-green-300 to-[#00B150] blur-[10px] opacity-30 rounded-full"></div><span className="relative text-lg sm:text-xl font-semibold text-[#333333]">Litter<span className="text-[#00B150]">Pin</span></span></div>
+            <div className="relative sm:hidden"><div className="absolute inset-0 bg-gradient-to-r from-green-300 to-[#00B150] blur-[10px] opacity-30 rounded-full"></div><span className="relative text-lg font-semibold text-[#333333]">Litter<span className="text-[#00B150]">Pin</span></span></div>
           </Link>
           
           {isAuthenticated && (
