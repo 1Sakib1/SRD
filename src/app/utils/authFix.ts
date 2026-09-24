@@ -3,7 +3,7 @@
  * Calls server API instead of directly accessing KV store
  */
 
-import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { User } from './cloudStorage';
 
 interface StorageError {
