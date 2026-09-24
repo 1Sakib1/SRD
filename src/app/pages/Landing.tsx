@@ -1,3 +1,4 @@
+import { ContextualInfo } from '../components/ContextualInfo';
 import { InteractiveGlobe } from '../components/InteractiveGlobe';
 import { LitterPinLogo } from '../components/LitterPinLogo';
 import { Link } from 'react-router';
@@ -145,49 +146,7 @@ export const Landing = () => {
       {/* Stats Section */}
       <section className="py-12 sm:py-16 bg-white border-y border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 lg:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <Users className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
-              </div>
-              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.totalMembers.toLocaleString()}+</div>
-              <div className="text-sm sm:text-base text-gray-600">Community Members</div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <FileCheck className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
-              </div>
-              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.totalReports.toLocaleString()}+</div>
-              <div className="text-sm sm:text-base text-gray-600">Rubbish Reports</div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <TrendingUp className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
-              </div>
-              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.satisfaction}%</div>
-              <div className="text-sm sm:text-base text-gray-600">Satisfaction Rate</div>
-            </motion.div>
-          </div>
+          <ContextualInfo />
         </div>
       </section>
       
