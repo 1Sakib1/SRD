@@ -3,22 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/litterpin-logo-transparent.png" />
+    <link rel="apple-touch-icon" href="/litterpin-logo-transparent.png" />
+    <link rel="canonical" href="https://admin.litterpin.org/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="LitterPin - Sydney. A comprehensive web application for reporting and managing rubbish issues in Sydney through community engagement and innovative technology." />
-    <meta name="keywords" content="Sydney, Rubbish, Waste Management, Environment, Community, Sustainability" />
-    <meta name="author" content="LitterPin Team" />
+    <meta name="theme-color" content="#00B150" />
+    
+    <!-- Primary Meta Tags -->
+    <title>LitterPin | AI-Powered Environmental Tracking & Community Rewards</title>
+    <meta name="title" content="LitterPin | AI-Powered Environmental Tracking & Community Rewards" />
+    <meta name="description" content="LitterPin empowers communities to track, report, and analyze environmental waste in real-time. Earn eco-points, leverage AI waste classification, and visualize global pollution hotspots on our interactive 3D globe." />
+    <meta name="keywords" content="LitterPin, Waste Management, Environmental Tracking, AI Waste Classification, Eco-Points, Sustainability, Interactive Globe, Community Cleanup, Rubbish Reporting, Sydney" />
+    <meta name="author" content="LitterPin" />
+    <meta name="robots" content="index, follow" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="LitterPin - Sydney" />
-    <meta property="og:description" content="Making Sydney cleaner through community engagement and innovative technology." />
+    <meta property="og:url" content="https://admin.litterpin.org/" />
+    <meta property="og:title" content="LitterPin | AI-Powered Environmental Tracking" />
+    <meta property="og:description" content="Track, report, and analyze environmental waste in real-time. Earn eco-points and leverage AI waste classification with LitterPin." />
+    <meta property="og:image" content="https://admin.litterpin.org/litterpin-logo-transparent.png" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="LitterPin" />
-    <meta property="twitter:description" content="Making Sydney cleaner through community engagement and innovative technology." />
-    
-    <title>LitterPin - Urban Mapping & Community Rewards</title>
+    <meta property="twitter:url" content="https://admin.litterpin.org/" />
+    <meta property="twitter:title" content="LitterPin | AI-Powered Environmental Tracking" />
+    <meta property="twitter:description" content="Track, report, and analyze environmental waste in real-time. Earn eco-points and leverage AI waste classification." />
+    <meta property="twitter:image" content="https://admin.litterpin.org/litterpin-logo-transparent.png" />
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -27,9 +37,6 @@
     
     <!-- GitHub Pages SPA redirect script -->
     <script>
-      // Single Page Apps for GitHub Pages
-      // https://github.com/rafgraph/spa-github-pages
-      // This script checks if a redirect is present in the query string
       (function(l) {
         if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
