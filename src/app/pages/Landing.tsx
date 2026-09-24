@@ -1,3 +1,4 @@
+import { LitterPinLogo } from '../components/LitterPinLogo';
 import { Link } from 'react-router';
 import { Header } from '../components/Header';
 import { MapPin, Award, TrendingUp, Users, FileCheck, Zap, ArrowRight, Leaf, Recycle, DollarSign, Globe } from 'lucide-react';
@@ -418,7 +419,7 @@ export const Landing = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <img src="/litterpin-logo.png" alt="LitterPin Logo" className="w-8 h-8 object-contain" />
+                <LitterPinLogo className="w-10 h-10 drop-shadow-md" />
                 <span className="font-semibold text-white">Litter<span className="text-[#00B150]">Pin</span></span>
               </div>
               <p className="text-sm">

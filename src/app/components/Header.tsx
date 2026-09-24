@@ -1,3 +1,4 @@
+import { LitterPinLogo } from './LitterPinLogo';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { Leaf, LogOut, LayoutDashboard, FileText, BookOpen, Recycle, DollarSign, Menu, X, Trophy } from 'lucide-react';
@@ -25,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center space-x-2">
-              <img src="/litterpin-logo.png" alt="LitterPin Logo" className="w-8 h-8 object-contain" />
+              <LitterPinLogo className="w-10 h-10 drop-shadow-md" />
               <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">Litter<span className="text-[#00B150]">Pin</span></span>
               <span className="text-lg font-semibold text-[#333333] sm:hidden">Litter<span className="text-[#00B150]">Pin</span></span>
             </Link>
@@ -67,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <img src="/litterpin-logo.png" alt="LitterPin Logo" className="w-8 h-8 object-contain" />
+            <LitterPinLogo className="w-10 h-10 drop-shadow-md" />
             <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">Litter<span className="text-[#00B150]">Pin</span></span>
             <span className="text-lg font-semibold text-[#333333] sm:hidden">Litter<span className="text-[#00B150]">Pin</span></span>
           </Link>
