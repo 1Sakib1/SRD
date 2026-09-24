@@ -22,42 +22,42 @@ export const Landing = () => {
   
   const globalCities = [
     {
-      name: 'New York City',
+      name: 'New York City', lat: 40.7128, lng: -74.006,
       country: 'USA',
       image: 'https://images.unsplash.com/photo-1500632907344-a073709b2448?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxOZXclMjBZb3JrJTIwQ2l0eSUyMHNreWxpbmUlMjBuaWdodxlbnwxfHx8fDE3NzI1NjkxNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'London',
+      name: 'London', lat: 51.5074, lng: -0.1278,
       country: 'United Kingdom',
       image: 'https://images.unsplash.com/photo-1672243681582-cebc8c8466e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxMb25kb24lMjBCaWclMjBCZW4lMjBjaXR5c2NhcGV8ZW58MXx8fHwxNzcyNjI1NDQ4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Tokyo',
+      name: 'Tokyo', lat: 35.6762, lng: 139.6503,
       country: 'Japan',
       image: 'https://images.unsplash.com/photo-1657728509574-c14afd8a9ab3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxUb2t5byUyMEphcGFuJTIwc2t5bGluZSUyMG5pZ2h0fGVufDF8fHx8MTc3MjYyNTQ0OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Paris',
+      name: 'Paris', lat: 48.8566, lng: 2.3522,
       country: 'France',
       image: 'https://images.unsplash.com/photo-1659003505996-d5d7ca66bb25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxQYXJpcyUyMEVpZmZlbCUyMFRvd2VyJTIwY2l0eXNjYXBlfGVufDF8fHx8MTc3MjYyNTQ0OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Dubai',
+      name: 'Dubai', lat: 25.2048, lng: 55.2708,
       country: 'UAE',
       image: 'https://images.unsplash.com/photo-1651063820152-d3e7a27b4d2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxEdWJhaSUyMHNreWxpbmUlMjBCdXJqJTIwS2hhbGlmYXxlbnwxfHx8fDE3NzI2MDU2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Singapore',
+      name: 'Singapore', lat: 1.3521, lng: 103.8198,
       country: 'Singapore',
       image: 'https://images.unsplash.com/photo-1526797433728-1b6d12a06ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTaW5nYXBvcmUlMjBNYXJpbmElMjBCYXklMjBjaXR5c2NhcGV8ZW58MXx8fHwxNzcyNjI1NDUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Hong Kong',
+      name: 'Hong Kong', lat: 22.3193, lng: 114.1694,
       country: 'China',
       image: 'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIb25nJTIwS29uZyUyMFZpY3RvcmlhJTIwSGFyYm9yJTIwbmlnaHR8ZW58MXx8fHwxNzcyNjI1NDUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      name: 'Toronto',
+      name: 'Toronto', lat: 43.651, lng: -79.347,
       country: 'Canada',
       image: 'https://images.unsplash.com/photo-1668882698355-923d532fa985?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxUb3JvbnRvJTIwQ2FuYWRhJTIwc2t5bGluZXxlbnwxfHx8fDE3NzI2MjU0NTF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
