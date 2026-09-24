@@ -115,7 +115,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   useEffect(() => {
     if (focusLocation && globeEl.current) {
       globeEl.current.controls().autoRotate = false;
-      globeEl.current.pointOfView({ lat: focusLocation.lat, lng: focusLocation.lng, altitude: 0.6 }, 1500);
+      globeEl.current.pointOfView({ lat: focusLocation.lat, lng: focusLocation.lng, altitude: 1.2 }, 1500);
     }
   }, [focusLocation]);
 
