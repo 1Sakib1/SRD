@@ -362,8 +362,8 @@ export const Auth = () => {
               onClick={() => setActiveTab('login')}
               className={`flex-1 py-4 px-4 text-sm sm:text-base font-medium transition-colors min-h-[52px] ${
                 activeTab === 'login'
-                  ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-[#00B150] border-b-2 border-[#00B150] bg-green-50'
+                  : 'text-gray-600 hover:text-[#333333] hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -375,8 +375,8 @@ export const Auth = () => {
               onClick={() => setActiveTab('register')}
               className={`flex-1 py-4 px-4 text-sm sm:text-base font-medium transition-colors min-h-[52px] ${
                 activeTab === 'register'
-                  ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-[#00B150] border-b-2 border-[#00B150] bg-green-50'
+                  : 'text-gray-600 hover:text-[#333333] hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -390,7 +390,7 @@ export const Auth = () => {
           <div className="p-6 sm:p-8">
             {activeTab === 'login' ? (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-6">Welcome Back</h2>
                 
 
                 
@@ -439,7 +439,7 @@ export const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setActiveTab('forgot')}
-                      className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
+                      className="text-sm text-[#00B150] hover:text-green-700 hover:underline font-medium"
                     >
                       Forgot Password?
                     </button>
@@ -448,7 +448,7 @@ export const Auth = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3 rounded-lg font-medium transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200"
+                    className="w-full py-3 rounded-lg font-medium transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-[#00B150] text-white hover:bg-green-700 shadow-lg shadow-green-200"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -498,7 +498,7 @@ export const Auth = () => {
               </div>
             ) : activeTab === 'forgot' ? (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Forgot Password</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-4">Forgot Password</h2>
                 <p className="text-gray-600 mb-6">Enter your email address and we'll send you a reset code.</p>
                 
                 <form onSubmit={handleForgotPassword} className="space-y-5">
@@ -524,7 +524,7 @@ export const Auth = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? 'Generating Code...' : 'Get Reset Code'}
                   </button>
@@ -532,7 +532,7 @@ export const Auth = () => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('login')}
-                    className="w-full py-3 text-gray-700 hover:text-gray-900 font-medium"
+                    className="w-full py-3 text-gray-700 hover:text-[#333333] font-medium"
                   >
                     ← Back to Login
                   </button>
@@ -540,7 +540,7 @@ export const Auth = () => {
               </div>
             ) : activeTab === 'reset' ? (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Reset Password</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-4">Reset Password</h2>
                 <p className="text-gray-600 mb-6">
                   Check your email for the 6-digit reset code. The code expires in 15 minutes.
                 </p>
@@ -608,7 +608,7 @@ export const Auth = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? 'Resetting Password...' : 'Reset Password'}
                   </button>
@@ -616,7 +616,7 @@ export const Auth = () => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('login')}
-                    className="w-full py-3 text-gray-700 hover:text-gray-900 font-medium"
+                    className="w-full py-3 text-gray-700 hover:text-[#333333] font-medium"
                   >
                     ← Back to Login
                   </button>
@@ -624,7 +624,7 @@ export const Auth = () => {
               </div>
             ) : (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Create Account</h2>
+                <h2 className="text-2xl font-bold text-[#333333] mb-6">Create Account</h2>
                 
                 <form onSubmit={handleRegister} className="space-y-5">
                   <div>
@@ -709,7 +709,7 @@ export const Auth = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full py-3 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -756,7 +756,7 @@ export const Auth = () => {
               Don't have an account?{' '}
               <button
                 onClick={() => setActiveTab('register')}
-                className="text-green-600 font-medium hover:text-green-700 hover:underline"
+                className="text-[#00B150] font-medium hover:text-green-700 hover:underline"
               >
                 Sign up
               </button>
@@ -766,7 +766,7 @@ export const Auth = () => {
               Already have an account?{' '}
               <button
                 onClick={() => setActiveTab('login')}
-                className="text-green-600 font-medium hover:text-green-700 hover:underline"
+                className="text-[#00B150] font-medium hover:text-green-700 hover:underline"
               >
                 Sign in
               </button>

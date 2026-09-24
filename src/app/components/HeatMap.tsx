@@ -89,7 +89,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
     return (
       <div className="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100 flex items-center justify-center" style={{ height }}>
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <div className="w-8 h-8 border-4 border-[#00B150] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
           <p className="text-sm text-gray-600">Loading map...</p>
         </div>
       </div>
@@ -128,7 +128,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
           >
             <Popup>
               <div className="p-2">
-                <h3 className="font-semibold text-gray-900 mb-1">{location.address}</h3>
+                <h3 className="font-semibold text-[#333333] mb-1">{location.address}</h3>
                 <p className="text-sm text-gray-600">
                   <strong>{location.reports}</strong> reports
                 </p>
@@ -163,7 +163,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
       
       {/* Legend */}
       <div className="absolute bottom-4 right-4 bg-white p-3 rounded-lg shadow-md border border-gray-200 z-[1000]">
-        <h4 className="text-xs font-semibold text-gray-900 mb-2">Report Density</h4>
+        <h4 className="text-xs font-semibold text-[#333333] mb-2">Report Density</h4>
         <div className="space-y-1">
           {[
             { label: 'Very High', color: '#ef4444' },

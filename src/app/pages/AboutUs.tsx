@@ -69,7 +69,7 @@ const techStack = [
     name: 'Leaflet', 
     logo: 'https://leafletjs.com/docs/images/logo.png',
     bgColor: 'bg-slate-800',
-    borderColor: 'border-green-600/30',
+    borderColor: 'border-[#00B150]/30',
     hoverBorder: 'hover:border-green-500',
     url: 'https://leafletjs.com/'
   },
@@ -170,7 +170,7 @@ export const AboutUs = () => {
                   
                   <div className="border-l-4 border-green-500 pl-4 py-2 bg-slate-800/50 rounded-r">
                     <p className="text-slate-300 leading-relaxed">
-                      Building a next-generation global Smart Rubbish Detection System for major cities worldwide with passion, 
+                      Building a next-generation global LitterPin for major cities worldwide with passion, 
                       innovation, and cutting-edge web technologies. This project is developed as part of 
                       our IT Capstone Project at <span className="text-green-400 font-semibold">Victoria University Sydney</span>.
                     </p>
@@ -389,7 +389,7 @@ export const AboutUs = () => {
                 </div>
 
                 <p>
-                  The <span className="text-green-400 font-semibold">Smart Rubbish Detection System</span> is a comprehensive 
+                  The <span className="text-green-400 font-semibold">LitterPin</span> is a comprehensive 
                   web application designed to empower urban citizens worldwide to actively participate in keeping their cities clean. 
                   Through innovative technology and community engagement, we're building a transparent and efficient platform 
                   for reporting and managing rubbish issues across major cities globally.

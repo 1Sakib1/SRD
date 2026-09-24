@@ -48,7 +48,7 @@ const countryData = {
         color: 'green',
         bgColor: 'bg-green-50',
         borderColor: 'border-green-200',
-        boxColor: 'bg-green-600',
+        boxColor: 'bg-[#00B150]',
         name: 'Green Lid - Organics',
         description: 'Food scraps and garden waste',
         items: ['Fruit & vegetable scraps', 'Garden clippings & leaves', 'Coffee grounds & tea bags', 'Small amounts of paper towel']
@@ -168,7 +168,7 @@ const countryData = {
         color: 'green',
         bgColor: 'bg-green-50',
         borderColor: 'border-green-200',
-        boxColor: 'bg-green-600',
+        boxColor: 'bg-[#00B150]',
         name: 'Green/Brown - Garden Waste',
         description: 'Organic garden materials',
         items: ['Grass clippings', 'Leaves', 'Twigs & branches', 'Plant cuttings']
@@ -415,9 +415,9 @@ export const Awareness = () => {
           className="text-center mb-12"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4">
-            <Globe className="w-8 h-8 text-green-600" />
+            <Globe className="w-8 h-8 text-[#00B150]" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#333333] mb-4">
             Global Waste Management Awareness
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
@@ -428,8 +428,8 @@ export const Awareness = () => {
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-green-100">
               <div className="flex items-center gap-3 mb-4">
-                <MapPin className="w-5 h-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Select Your Region</h3>
+                <MapPin className="w-5 h-5 text-[#00B150]" />
+                <h3 className="text-lg font-semibold text-[#333333]">Select Your Region</h3>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {Object.entries(countryData).map(([key, country]) => (
@@ -438,7 +438,7 @@ export const Awareness = () => {
                     onClick={() => setSelectedCountry(key as keyof typeof countryData)}
                     className={`p-4 rounded-xl border-2 transition-all font-medium text-sm ${
                       selectedCountry === key
-                        ? 'bg-green-600 border-green-600 text-white shadow-lg scale-105'
+                        ? 'bg-[#00B150] border-[#00B150] text-white shadow-lg scale-105'
                         : 'bg-white border-gray-200 text-gray-700 hover:border-green-300 hover:shadow-md'
                     }`}
                   >
@@ -496,8 +496,8 @@ export const Awareness = () => {
           className="bg-white rounded-xl shadow-sm p-8 mb-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Leaf className="w-8 h-8 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">{data.name} - Bin System</h2>
+            <Leaf className="w-8 h-8 text-[#00B150]" />
+            <h2 className="text-2xl font-bold text-[#333333]">{data.name} - Bin System</h2>
           </div>
           
           <div className={`grid gap-6 ${data.bins.length === 2 ? 'md:grid-cols-2' : data.bins.length === 3 ? 'md:grid-cols-3' : data.bins.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
@@ -510,7 +510,7 @@ export const Awareness = () => {
                 className={`${bin.bgColor} border-2 ${bin.borderColor} rounded-lg p-6 hover:shadow-lg transition-shadow`}
               >
                 <div className={`w-12 h-12 ${bin.boxColor} rounded-lg mb-4`} />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{bin.name}</h3>
+                <h3 className="text-lg font-semibold text-[#333333] mb-2">{bin.name}</h3>
                 <p className="text-sm text-gray-600 mb-3">{bin.description}</p>
                 <ul className="text-sm text-gray-700 space-y-1">
                   {bin.items.map((item, i) => (
@@ -530,46 +530,46 @@ export const Awareness = () => {
           className="bg-white rounded-xl shadow-sm p-8 mb-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Recycle className="w-8 h-8 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Proper Waste Disposal</h2>
+            <Recycle className="w-8 h-8 text-[#00B150]" />
+            <h2 className="text-2xl font-bold text-[#333333]">Proper Waste Disposal</h2>
           </div>
           
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-[#333333] flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-[#00B150]" />
                 DO's
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Separate recyclables according to local guidelines</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Rinse containers before recycling to prevent contamination</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Compost organic waste when facilities are available</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Dispose of e-waste at designated collection points</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Take hazardous waste to proper facilities</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-green-600 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-[#00B150] rounded-full mt-2" />
                   <span className="text-gray-700">Break down cardboard boxes to save space</span>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[#333333] flex items-center gap-2">
                 <XCircle className="w-5 h-5 text-red-600" />
                 DON'Ts
               </h3>
@@ -612,8 +612,8 @@ export const Awareness = () => {
           className="bg-white rounded-xl shadow-sm p-8 mb-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <Scale className="w-8 h-8 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Environmental Laws & Penalties</h2>
+            <Scale className="w-8 h-8 text-[#00B150]" />
+            <h2 className="text-2xl font-bold text-[#333333]">Environmental Laws & Penalties</h2>
           </div>
           
           <div className="space-y-6">
@@ -629,14 +629,14 @@ export const Awareness = () => {
                   'border-amber-500'
                 } pl-6 py-2`}
               >
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{law.title}</h3>
+                <h3 className="text-lg font-semibold text-[#333333] mb-2">{law.title}</h3>
                 <p className="text-gray-700 mb-2">{law.description}</p>
                 <div className={`${
                   law.color === 'red' ? 'bg-red-50' : 
                   law.color === 'orange' ? 'bg-orange-50' : 
                   'bg-amber-50'
                 } p-4 rounded-lg`}>
-                  <p className="text-sm text-gray-900 font-semibold mb-1">Penalties:</p>
+                  <p className="text-sm text-[#333333] font-semibold mb-1">Penalties:</p>
                   <ul className="text-sm text-gray-700 space-y-1">
                     {law.penalties.map((penalty, i) => (
                       <li key={i}>• {penalty}</li>
@@ -657,13 +657,13 @@ export const Awareness = () => {
           className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-8 mb-8"
         >
           <div className="flex items-center gap-3 mb-6">
-            <ShieldAlert className="w-8 h-8 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Report Environmental Violations</h2>
+            <ShieldAlert className="w-8 h-8 text-[#00B150]" />
+            <h2 className="text-2xl font-bold text-[#333333]">Report Environmental Violations</h2>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">When to Report:</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-4">When to Report:</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
@@ -685,18 +685,18 @@ export const Awareness = () => {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information:</h3>
+              <h3 className="text-lg font-semibold text-[#333333] mb-4">Contact Information:</h3>
               <div className="space-y-4">
                 {data.emergencyNumbers.map((contact, index) => (
                   <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
                     <p className="text-sm text-gray-600 mb-1">{contact.name}</p>
-                    <p className="text-lg font-semibold text-green-600">{contact.number}</p>
+                    <p className="text-lg font-semibold text-[#00B150]">{contact.number}</p>
                     <p className="text-xs text-gray-500">{contact.description}</p>
                   </div>
                 ))}
                 <div className="bg-white p-4 rounded-lg shadow-sm border-2 border-green-200">
                   <p className="text-sm text-gray-600 mb-1">Online Reporting</p>
-                  <p className="text-sm text-green-600 font-medium">Use this app's Report Rubbish feature!</p>
+                  <p className="text-sm text-[#00B150] font-medium">Use this app's Report Rubbish feature!</p>
                   <p className="text-xs text-gray-500">Fast, easy, and trackable</p>
                 </div>
               </div>
@@ -713,8 +713,8 @@ export const Awareness = () => {
             className="bg-white rounded-xl shadow-sm p-8 mb-8"
           >
             <div className="flex items-center gap-3 mb-6">
-              <FileText className="w-8 h-8 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Additional Resources & Partners</h2>
+              <FileText className="w-8 h-8 text-[#00B150]" />
+              <h2 className="text-2xl font-bold text-[#333333]">Additional Resources & Partners</h2>
             </div>
             
             <div className="grid md:grid-cols-3 gap-6">
@@ -722,7 +722,7 @@ export const Awareness = () => {
                 href="https://www.epa.nsw.gov.au/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-green-600 hover:shadow-lg transition-all"
+                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-[#00B150] hover:shadow-lg transition-all"
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-4">
                   <img
@@ -734,7 +734,7 @@ export const Awareness = () => {
                     }}
                   />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">NSW Environment Protection Authority</h3>
+                <h3 className="font-semibold text-[#333333] mb-2 group-hover:text-[#00B150] transition-colors text-lg">NSW Environment Protection Authority</h3>
                 <p className="text-sm text-gray-600 mb-3">Official government environmental agency</p>
                 <p className="text-xs text-gray-500">Access environmental guidelines, regulations, and pollution reporting services</p>
               </a>
@@ -743,7 +743,7 @@ export const Awareness = () => {
                 href="https://www.cityofsydney.nsw.gov.au/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-green-600 hover:shadow-lg transition-all"
+                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-[#00B150] hover:shadow-lg transition-all"
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-50 rounded-lg p-4">
                   <img
@@ -755,7 +755,7 @@ export const Awareness = () => {
                     }}
                   />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">City of Sydney Council</h3>
+                <h3 className="font-semibold text-[#333333] mb-2 group-hover:text-[#00B150] transition-colors text-lg">City of Sydney Council</h3>
                 <p className="text-sm text-gray-600 mb-3">Local government services</p>
                 <p className="text-xs text-gray-500">Council services, waste collection schedules, cleanup programs, and community initiatives</p>
               </a>
@@ -764,7 +764,7 @@ export const Awareness = () => {
                 href="https://www.recyclingnearyou.com.au/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-green-600 hover:shadow-lg transition-all"
+                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-[#00B150] hover:shadow-lg transition-all"
               >
                 <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
                   <img
@@ -776,7 +776,7 @@ export const Awareness = () => {
                     }}
                   />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors text-lg">Recycling Near You</h3>
+                <h3 className="font-semibold text-[#333333] mb-2 group-hover:text-[#00B150] transition-colors text-lg">Recycling Near You</h3>
                 <p className="text-sm text-gray-600 mb-3">National recycling directory</p>
                 <p className="text-xs text-gray-500">Find recycling locations, learn what can be recycled, and access recycling guides</p>
               </a>

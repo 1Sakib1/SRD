@@ -16,8 +16,8 @@ const ReportCard = ({ report, getStatusColor, onDelete }: { report: any; getStat
     <div className="border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-shadow bg-white flex flex-col mb-4">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h3 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
-            <MapPin size={16} className="text-green-600"/>
+          <h3 className="font-semibold text-[#333333] mb-1 flex items-center gap-2">
+            <MapPin size={16} className="text-[#00B150]"/>
             {report.type || 'Rubbish Report'}
           </h3>
           <p className="text-sm text-gray-600 mb-2">{report.description || "No description provided."}</p>
@@ -261,7 +261,7 @@ export const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Welcome Section */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#333333] mb-2">
             Welcome back, {user?.name}!
           </h1>
           <p className="text-sm sm:text-base text-gray-600">Here's your impact on {cityName}'s cleanliness</p>
@@ -272,12 +272,12 @@ export const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-[#00B150]" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{user?.ecoPoints || 0}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-[#333333] mb-1">{user?.ecoPoints || 0}</div>
             <div className="text-xs sm:text-sm text-gray-600">Eco-Points</div>
-            <div className="mt-2 text-xs text-green-600">
+            <div className="mt-2 text-xs text-[#00B150]">
               {100 - ((user?.ecoPoints || 0) % 100)} pts to $1
             </div>
           </div>
@@ -288,7 +288,7 @@ export const Dashboard = () => {
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">${((user?.ecoPoints || 0) * 0.01).toFixed(2)}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-[#333333] mb-1">${((user?.ecoPoints || 0) * 0.01).toFixed(2)}</div>
             <div className="text-xs sm:text-sm text-gray-600">AUD Credits</div>
             <div className="mt-2 text-xs text-emerald-600">
               From {user?.ecoPoints || 0} pts
@@ -301,7 +301,7 @@ export const Dashboard = () => {
                 <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{userReports.length}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-[#333333] mb-1">{userReports.length}</div>
             <div className="text-xs sm:text-sm text-gray-600">Total Reports</div>
           </div>
           
@@ -311,7 +311,7 @@ export const Dashboard = () => {
                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+            <div className="text-2xl sm:text-3xl font-bold text-[#333333] mb-1">
               {userReports.filter(r => r.status === 'resolved').length}
             </div>
             <div className="text-xs sm:text-sm text-gray-600">Resolved</div>
@@ -325,7 +325,7 @@ export const Dashboard = () => {
               <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-base sm:text-lg font-semibold text-[#333333] mb-2">
                 Earn Real Rewards for Your Impact!
               </h3>
               <p className="text-sm sm:text-base text-gray-700 mb-3">
@@ -333,7 +333,7 @@ export const Dashboard = () => {
               </p>
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg border border-emerald-200">
-                  <Leaf className="w-4 h-4 text-green-600" />
+                  <Leaf className="w-4 h-4 text-[#00B150]" />
                   <span className="font-medium text-gray-700">1 report = 10 pts</span>
                 </div>
                 <div className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg border border-emerald-200">
@@ -349,7 +349,7 @@ export const Dashboard = () => {
         <div className="mb-8">
           <Link
             to="/report"
-            className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm hover:shadow-md"
+            className="inline-flex items-center px-6 py-3 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm hover:shadow-md"
           >
             <Plus className="w-5 h-5 mr-2" />
             Report New Rubbish
@@ -360,7 +360,7 @@ export const Dashboard = () => {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Recent Reports */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Recent Reports</h2>
+            <h2 className="text-xl font-semibold text-[#333333] mb-6">Your Recent Reports</h2>
             
             {userReports.length === 0 ? (
               <div className="text-center py-12">
@@ -368,7 +368,7 @@ export const Dashboard = () => {
                 <p className="text-gray-600 mb-4">No reports yet</p>
                 <Link
                   to="/report"
-                  className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
+                  className="inline-flex items-center text-[#00B150] hover:text-green-700 font-medium"
                 >
                   Submit your first report
                   <Plus className="w-4 h-4 ml-1" />
@@ -386,7 +386,7 @@ export const Dashboard = () => {
           {/* Heat Map */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Live Rubbish Heat Map</h2>
+                <h2 className="text-xl font-semibold text-[#333333]">Live Rubbish Heat Map</h2>
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
@@ -442,7 +442,7 @@ export const Dashboard = () => {
                            `#${index + 1}`}
                         </div>
                         <div>
-                          <div className="font-semibold text-gray-900 flex items-center">
+                          <div className="font-semibold text-[#333333] flex items-center">
                             {topUser.name}
                             {isCurrentUser && <span className="ml-2 text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-medium">You</span>}
                           </div>
@@ -451,7 +451,7 @@ export const Dashboard = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Star className={`w-5 h-5 ${isTop3 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                        <span className="font-bold text-gray-900 text-lg">{topUser.ecoPoints}</span>
+                        <span className="font-bold text-[#333333] text-lg">{topUser.ecoPoints}</span>
                         <span className="text-sm text-gray-500 hidden sm:inline">pts</span>
                       </div>
                     </li>

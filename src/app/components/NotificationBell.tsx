@@ -55,7 +55,7 @@ export const NotificationBell = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-700 hover:text-green-600 transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+        className="relative p-2 text-gray-700 hover:text-[#00B150] transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label="Notifications"
       >
         <Bell className="w-6 h-6" />
@@ -78,12 +78,12 @@ export const NotificationBell = () => {
           <div className="fixed lg:absolute inset-x-4 top-20 lg:inset-x-auto lg:right-0 lg:top-full lg:mt-2 w-auto lg:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[calc(100vh-6rem)] lg:max-h-[500px] flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">Notifications</h3>
+              <h3 className="font-semibold text-[#333333]">Notifications</h3>
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllAsRead}
-                    className="text-xs text-green-600 hover:text-green-700 font-medium min-h-[44px] px-3"
+                    className="text-xs text-[#00B150] hover:text-green-700 font-medium min-h-[44px] px-3"
                   >
                     Mark all read
                   </button>
@@ -115,7 +115,7 @@ export const NotificationBell = () => {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-gray-900 text-sm mb-1">
+                        <h4 className="font-medium text-[#333333] text-sm mb-1">
                           {notification.title}
                         </h4>
                         <p className="text-sm text-gray-600 mb-2 break-words">
@@ -128,7 +128,7 @@ export const NotificationBell = () => {
                       {!notification.read && (
                         <button
                           onClick={() => handleMarkAsRead(notification.id)}
-                          className="text-green-600 hover:text-green-700 flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                          className="text-[#00B150] hover:text-green-700 flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
                           title="Mark as read"
                           aria-label="Mark as read"
                         >

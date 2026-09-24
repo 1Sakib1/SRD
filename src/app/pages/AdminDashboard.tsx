@@ -263,7 +263,7 @@ export const AdminDashboard = () => {
             <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-[#333333]">Admin Dashboard</h1>
           </div>
           <p className="text-gray-600">Manage and monitor rubbish reports across Sydney</p>
         </div>
@@ -276,7 +276,7 @@ export const AdminDashboard = () => {
                 <FileText className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{reports.length}</div>
+            <div className="text-3xl font-bold text-[#333333] mb-1">{reports.length}</div>
             <div className="text-sm text-gray-600">Total Reports</div>
           </div>
           
@@ -286,7 +286,7 @@ export const AdminDashboard = () => {
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{pendingCount}</div>
+            <div className="text-3xl font-bold text-[#333333] mb-1">{pendingCount}</div>
             <div className="text-sm text-gray-600">Pending Review</div>
           </div>
           
@@ -296,17 +296,17 @@ export const AdminDashboard = () => {
                 <AlertCircle className="w-6 h-6 text-blue-600" />
               </div>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{reviewedCount}</div>
+            <div className="text-3xl font-bold text-[#333333] mb-1">{reviewedCount}</div>
             <div className="text-sm text-gray-600">Reviewed</div>
           </div>
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircle className="w-6 h-6 text-[#00B150]" />
               </div>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{resolvedCount}</div>
+            <div className="text-3xl font-bold text-[#333333] mb-1">{resolvedCount}</div>
             <div className="text-sm text-gray-600">Resolved</div>
           </div>
         </div>
@@ -343,7 +343,7 @@ export const AdminDashboard = () => {
           {/* Reports Management - Takes 2 columns */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Manage Reports</h2>
+              <h2 className="text-xl font-semibold text-[#333333]">Manage Reports</h2>
               
               {/* Filter Tabs */}
               <div className="flex gap-2">
@@ -404,7 +404,7 @@ export const AdminDashboard = () => {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">{report.type}</h3>
+                        <h3 className="font-semibold text-[#333333] mb-1">{report.type}</h3>
                         <p className="text-sm text-gray-600 mb-2">{report.description}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(report.status)}`}>
@@ -457,7 +457,7 @@ export const AdminDashboard = () => {
           
           {/* Heat Map - Takes 1 column */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Heat Map</h2>
+            <h2 className="text-xl font-semibold text-[#333333] mb-4">Heat Map</h2>
             <p className="text-sm text-gray-600 mb-4">
               Visual representation of report density across Sydney
             </p>
@@ -474,22 +474,22 @@ export const AdminDashboard = () => {
                   <Calendar className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-semibold text-gray-900">Weekly Council Report</h2>
+                  <h2 className="text-2xl font-semibold text-[#333333]">Weekly Council Report</h2>
                   <p className="text-sm text-gray-600">Automated data export for City of Sydney Council</p>
                 </div>
               </div>
               
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-[#00B150]" />
                   <span className="text-gray-700">Comprehensive weekly statistics and analytics</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-[#00B150]" />
                   <span className="text-gray-700">Reports by type, location, and contributor</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-[#00B150]" />
                   <span className="text-gray-700">Exportable in CSV or JSON format</span>
                 </div>
               </div>
@@ -498,7 +498,7 @@ export const AdminDashboard = () => {
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-orange-600" />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Next Scheduled Report</p>
+                    <p className="text-sm font-medium text-[#333333]">Next Scheduled Report</p>
                     <p className="text-sm text-gray-600">{getNextSundayDate()}</p>
                   </div>
                 </div>
@@ -552,7 +552,7 @@ export const AdminDashboard = () => {
               </p>
               <button
                 onClick={() => navigate('/debug-users')}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm hover:shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm hover:shadow-md"
               >
                 <Users className="w-5 h-5" />
                 <span>Open User Management</span>

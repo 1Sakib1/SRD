@@ -114,12 +114,12 @@ export const Landing = () => {
                 <span className="text-green-200">Our Cities Clean</span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl text-green-50 mb-6 sm:mb-8 leading-relaxed">
-                Join a global community reporting rubbish, earning rewards, and making a real difference in urban cleanliness across major cities worldwide.
+                Citizen-Led Urban Mapping & Community Rewards.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   to="/report"
-                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-green-600 rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#00B150] rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
                 >
                   <span>Report Litter</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -160,9 +160,9 @@ export const Landing = () => {
               className="text-center"
             >
               <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <Users className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />
+                <Users className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
               </div>
-              <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stats.totalMembers.toLocaleString()}+</div>
+              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.totalMembers.toLocaleString()}+</div>
               <div className="text-sm sm:text-base text-gray-600">Community Members</div>
             </motion.div>
             
@@ -174,9 +174,9 @@ export const Landing = () => {
               className="text-center"
             >
               <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <FileCheck className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />
+                <FileCheck className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
               </div>
-              <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stats.totalReports.toLocaleString()}+</div>
+              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.totalReports.toLocaleString()}+</div>
               <div className="text-sm sm:text-base text-gray-600">Rubbish Reports</div>
             </motion.div>
             
@@ -188,9 +188,9 @@ export const Landing = () => {
               className="text-center"
             >
               <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full mb-4">
-                <TrendingUp className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />
+                <TrendingUp className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
               </div>
-              <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stats.satisfaction}%</div>
+              <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.satisfaction}%</div>
               <div className="text-sm sm:text-base text-gray-600">Satisfaction Rate</div>
             </motion.div>
           </div>
@@ -208,10 +208,10 @@ export const Landing = () => {
             className="text-center mb-12"
           >
             <div className="inline-flex items-center gap-2 bg-green-100 px-4 py-2 rounded-full mb-4">
-              <Globe className="w-5 h-5 text-green-600" />
+              <Globe className="w-5 h-5 text-[#00B150]" />
               <span className="text-green-700 font-medium text-sm">Available Globally</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#333333] mb-4">
               Serving Major Cities Worldwide
             </h2>
             <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
@@ -266,7 +266,7 @@ export const Landing = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Powerful Features</h2>
+            <h2 className="text-4xl font-bold text-[#333333] mb-4">Powerful Features</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Everything you need to make a real impact in your community
             </p>
@@ -281,9 +281,9 @@ export const Landing = () => {
               className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <MapPin className="w-6 h-6 text-green-600" />
+                <MapPin className="w-6 h-6 text-[#00B150]" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">GPS Tracking</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">GPS Tracking</h3>
               <p className="text-gray-600">
                 Automatically detect your location or manually pin exact coordinates for precise reporting.
               </p>
@@ -297,9 +297,9 @@ export const Landing = () => {
               className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <Award className="w-6 h-6 text-green-600" />
+                <Award className="w-6 h-6 text-[#00B150]" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Eco-Points Rewards</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">Eco-Points Rewards</h3>
               <p className="text-gray-600">
                 Earn points for every report and convert them to real AUD credits! Every 100 eco-points = $1 AUD.
               </p>
@@ -313,9 +313,9 @@ export const Landing = () => {
               className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                <Zap className="w-6 h-6 text-green-600" />
+                <Zap className="w-6 h-6 text-[#00B150]" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Real-Time Analytics</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">Real-Time Analytics</h3>
               <p className="text-gray-600">
                 View heat maps and insights showing rubbish hotspots across your city in real-time.
               </p>
@@ -328,7 +328,7 @@ export const Landing = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <h2 className="text-4xl font-bold text-[#333333] mb-4">How It Works</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Get started in three simple steps
             </p>
@@ -342,10 +342,10 @@ export const Landing = () => {
               transition={{ duration: 0.5 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-[#00B150] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 1
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Sign Up</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">Sign Up</h3>
               <p className="text-gray-600">
                 Create your free account in seconds and join our growing community of eco-warriors.
               </p>
@@ -358,10 +358,10 @@ export const Landing = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-[#00B150] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 2
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Report Rubbish</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">Report Rubbish</h3>
               <p className="text-gray-600">
                 Spot rubbish? Take a photo, add location details, and submit your report instantly.
               </p>
@@ -374,10 +374,10 @@ export const Landing = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-center"
             >
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-[#00B150] text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 3
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Earn Rewards</h3>
+              <h3 className="text-xl font-semibold text-[#333333] mb-3">Earn Rewards</h3>
               <p className="text-gray-600">
                 Collect eco-points, track your impact, and help make your city cleaner every day.
               </p>
@@ -403,7 +403,7 @@ export const Landing = () => {
             </p>
             <Link
               to="/report"
-              className="inline-flex items-center px-8 py-4 bg-white text-green-600 rounded-lg text-lg font-medium hover:bg-gray-50 transition-all shadow-lg"
+              className="inline-flex items-center px-8 py-4 bg-white text-[#00B150] rounded-lg text-lg font-medium hover:bg-gray-50 transition-all shadow-lg"
             >
               Report Litter
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -418,8 +418,8 @@ export const Landing = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                  <Recycle className="w-5 h-5 text-white" />
+                <div className="w-8 h-8 bg-[#00B150] rounded-lg flex items-center justify-center">
+                  <svg viewBox="0 0 100 120" className="w-5 h-5 text-white" fill="currentColor"><path d="M50,0 C22.4,0 0,22.4 0,50 C0,75 50,120 50,120 C50,120 100,75 100,50 C100,22.4 77.6,0 50,0 Z" fill="#00B150"/><circle cx="50" cy="45" r="25" fill="white"/><path d="M50,25 L58,45 L42,45 Z" fill="#00B150"/><path d="M35,35 L45,52 L28,48 Z" fill="#00B150"/><path d="M65,35 L72,48 L55,52 Z" fill="#00B150"/><path d="M35,55 L45,38 L28,42 Z" fill="#00B150"/><path d="M65,55 L72,42 L55,38 Z" fill="#00B150"/><path d="M50,65 L42,45 L58,45 Z" fill="#00B150"/></svg>
                 </div>
                 <span className="font-semibold text-white">Smart Rubbish</span>
               </div>
@@ -457,7 +457,7 @@ export const Landing = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-            <p>&copy; 2026 Smart Rubbish Detection System. All rights reserved.</p>
+            <p>&copy; 2026 LitterPin.</p>
           </div>
         </div>
       </footer>

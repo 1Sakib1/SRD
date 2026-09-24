@@ -42,7 +42,7 @@ export const Leaderboard = () => {
       <Header variant={user ? 'authenticated' : 'landing'} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Eco-Champions Leaderboard</h1>
+          <h1 className="text-4xl font-bold text-[#333333] mb-4">Eco-Champions Leaderboard</h1>
           <p className="text-lg text-gray-600">See who is making the biggest impact in keeping Sydney clean.</p>
         </div>
 
@@ -98,7 +98,7 @@ export const Leaderboard = () => {
                            `#${index + 1}`}
                         </div>
                         <div>
-                          <div className="font-bold text-gray-900 flex items-center text-lg">
+                          <div className="font-bold text-[#333333] flex items-center text-lg">
                             {topUser.name}
                             {isCurrentUser && <span className="ml-3 text-xs bg-amber-200 text-amber-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide">You</span>}
                           </div>
@@ -107,7 +107,7 @@ export const Leaderboard = () => {
                       </div>
                       <div className="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
                         <Star className={`w-5 h-5 ${isTop3 ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
-                        <span className="font-bold text-gray-900 text-xl">{topUser.ecoPoints}</span>
+                        <span className="font-bold text-[#333333] text-xl">{topUser.ecoPoints}</span>
                         <span className="text-sm text-gray-500 font-medium hidden sm:inline">pts</span>
                       </div>
                     </li>
