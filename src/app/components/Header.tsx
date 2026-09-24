@@ -46,12 +46,6 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 Leaderboard
               </Link>
               <Link
-                to="/about-us"
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors hidden sm:inline-block"
-              >
-                About
-              </Link>
-              <Link
                 to="/auth"
                 className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors"
               >
