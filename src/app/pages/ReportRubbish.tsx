@@ -67,15 +67,20 @@ export const ReportRubbish = () => {
         Type: [Category Name or "None"]
         Description: [Your description]`;
 
-      const interaction = await ai.interactions.create({
-        model: "gemini-1.5-flash",
-        input: [
-          { type: "text", text: prompt },
-          { type: "image", data: base64Photo.split(',')[1], mime_type: "image/jpeg" }
-        ]
-      });
-      
-      const responseText = interaction.output_text || "";
+      const response = await ai.models.generateContent({
+          model: "gemini-1.5-flash",
+          contents: [
+            prompt,
+            {
+              inlineData: {
+                data: base64Photo.split(',')[1],
+                mimeType: "image/jpeg"
+              }
+            }
+          ]
+        });
+        
+        const responseText = response.text || "";
       
       const typeMatch = responseText.match(/Type:\s*(.*)/i);
       const descMatch = responseText.match(/Description:\s*(.*)/i);
