@@ -102,8 +102,8 @@ export const InteractiveGlobe = () => {
       globeEl.current.controls().autoRotateSpeed = 1.2;
       
       // Limit zoom so the high-res texture doesn't get pixelated
-      globeEl.current.controls().minDistance = 140; // Prevent zooming into blurry surface
-      globeEl.current.controls().maxDistance = 400; 
+      
+       
       
       globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 0);
     }
@@ -208,44 +208,29 @@ export const InteractiveGlobe = () => {
           <div className="text-[9px] text-gray-400 leading-tight">Total Active Reports</div>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-xl rounded-lg p-2.5 border border-white/10 text-white shadow-2xl flex flex-col gap-2">
-          <div className="text-[9px] font-semibold uppercase tracking-wider text-gray-300 border-b border-white/10 pb-1.5 flex items-center gap-1.5">
-            <Clock size={12} className="text-[#00B150]" />
-            Latest Activity
-          </div>
-          <div className="space-y-2">
-            <AnimatePresence>
-              {recentReports.map(report => (
-                <motion.div 
-                  key={report.id} 
-                  initial={{ opacity: 0, height: 0, x: -20 }}
-                  animate={{ opacity: 1, height: 'auto', x: 0 }}
-                  className="flex flex-col gap-0.5 relative pl-2 border-l-[1.5px] border-[#00B150]/60 overflow-hidden"
-                >
-                  <div className="text-[10px] font-semibold text-gray-200 leading-tight whitespace-nowrap overflow-hidden">
-                    <motion.div
-                      animate={{ x: [0, -100] }}
-                      transition={{ repeat: Infinity, duration: 6, ease: "linear", delay: 2 }}
-                      className="inline-block"
-                    >
-                      {report.type}
-                    </motion.div>
-                  </div>
-                  <div className="text-[9px] text-gray-400 leading-tight whitespace-nowrap overflow-hidden">
-                    <motion.div
-                      animate={{ x: [0, -150] }}
-                      transition={{ repeat: Infinity, duration: 8, ease: "linear", delay: 1 }}
-                      className="inline-block"
-                    >
-                      {report.location_address}
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+        </div>
+
+      
+      <style dangerouslySetInnerHTML={{ __html: `\n        @keyframes ticker {\n          0% { transform: translateX(100vw); }\n          100% { transform: translateX(-100%); }\n        }\n        .animate-ticker {\n          animation: ticker 25s linear infinite;\n          display: inline-flex;\n          white-space: nowrap;\n        }\n      ` }} />
+
+      {/* Bottom Scrolling Ticker */}
+      <div className="absolute bottom-0 left-0 w-full bg-white/5 backdrop-blur-xl border-t border-white/10 py-1.5 overflow-hidden flex items-center pointer-events-none rounded-b-2xl">
+        <div className="bg-[#0a1118]/90 px-4 py-1.5 absolute left-0 z-10 h-full flex items-center gap-2 border-r border-white/10 shadow-[15px_0_20px_rgba(0,0,0,0.8)]">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00B150] animate-pulse" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-200">Latest</span>
         </div>
         
+        <div className="w-full overflow-hidden flex items-center pl-24">
+          <div className="animate-ticker flex items-center gap-8">
+             {reports.slice(0, 15).map(report => (
+               <div key={report.id} className="flex items-center gap-2 text-[10px]">
+                 <span className="text-[#00B150] font-bold tracking-wide">{report.type}</span>
+                 <span className="text-gray-500">•</span>
+                 <span className="text-gray-300">{report.location_address}</span>
+               </div>
+             ))}
+          </div>
+        </div>
       </div>
 
       {selectedPoint && (
