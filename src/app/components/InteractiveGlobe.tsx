@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Globe from 'react-globe.gl';
 import { supabase } from '../utils/supabase';
 import { X, MapPin, AlertTriangle, Activity, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface ReportPoint {
   id: string;
@@ -18,11 +19,8 @@ export const InteractiveGlobe = () => {
   const [reports, setReports] = useState<ReportPoint[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Dimensions
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Selected Point state
   const [selectedPoint, setSelectedPoint] = useState<ReportPoint | null>(null);
 
   useEffect(() => {
@@ -58,7 +56,6 @@ export const InteractiveGlobe = () => {
 
     fetchReports();
 
-    // Setup Realtime
     const channel = supabase.channel('globe_reports')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
         const r = payload.new as any;
@@ -75,7 +72,6 @@ export const InteractiveGlobe = () => {
           
           setReports(prev => [newReport, ...prev]);
           
-          // Optionally pan to the new report
           if (globeEl.current) {
             globeEl.current.pointOfView({ lat: newReport.lat, lng: newReport.lng, altitude: 1.5 }, 1500);
           }
@@ -104,6 +100,11 @@ export const InteractiveGlobe = () => {
     if (globeEl.current) {
       globeEl.current.controls().autoRotate = true;
       globeEl.current.controls().autoRotateSpeed = 1.2;
+      
+      // Limit zoom so the high-res texture doesn't get pixelated
+      globeEl.current.controls().minDistance = 140; // Prevent zooming into blurry surface
+      globeEl.current.controls().maxDistance = 400; 
+      
       globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 0);
     }
     
@@ -114,6 +115,13 @@ export const InteractiveGlobe = () => {
     if (globeEl.current) {
       globeEl.current.controls().autoRotate = false;
     }
+  };
+
+  const getHexColor = (weight: number) => {
+    if (weight < 2) return 'rgba(0, 177, 80, 0.7)'; // Primary Green
+    if (weight < 5) return 'rgba(132, 204, 22, 0.8)'; // Lime
+    if (weight < 10) return 'rgba(234, 179, 8, 0.9)'; // Yellow
+    return 'rgba(239, 68, 68, 0.9)'; // Red
   };
 
   const recentReports = reports.slice(0, 3);
@@ -139,25 +147,29 @@ export const InteractiveGlobe = () => {
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           
-          // Realtime pulsing rings
+          // Flat colored heatmap layer!
+          hexBinPointsData={reports}
+          hexBinPointWeight={() => 1}
+          hexBinResolution={4}
+          hexMargin={0.2}
+          hexTopColor={d => getHexColor(d.sumWeight)}
+          hexSideColor={() => 'rgba(0,0,0,0)'}
+          hexAltitude={0.005} // flat against surface
+          hexBinMerge={false}
+          hexTransitionDuration={1000}
+          
+          // Keep the radar rings for that live tech aesthetic
           ringsData={reports}
           ringColor={() => (t: number) => `rgba(0, 177, 80, ${1 - t})`}
           ringMaxRadius={2}
           ringPropagationSpeed={1.5}
           ringRepeatPeriod={1500}
           
-          // Solid points
-          pointsData={reports}
-          pointColor={() => '#10b981'}
-          pointAltitude={0.01}
-          pointRadius={0.15}
-          pointsMerge={true}
-          
           // Interactivity via invisible labels
           labelsData={reports}
           labelLat={d => (d as ReportPoint).lat}
           labelLng={d => (d as ReportPoint).lng}
-          labelText={() => ''} // invisible
+          labelText={() => ''}
           labelSize={1.5}
           labelDotRadius={0.5}
           labelColor={() => 'rgba(255,255,255,0)'}
@@ -178,38 +190,64 @@ export const InteractiveGlobe = () => {
         />
       )}
 
-      {/* Floating Real-Time Info Panel */}
-      <div className="absolute top-4 left-4 flex flex-col gap-2 max-w-[150px] sm:max-w-[180px] pointer-events-none">
+      <div className="absolute top-4 left-4 flex flex-col gap-2 max-w-[130px] sm:max-w-[150px] pointer-events-none">
         
-        {/* Total Stat */}
         <div className="bg-white/5 backdrop-blur-xl rounded-lg p-2.5 border border-white/10 text-white shadow-2xl">
           <div className="flex items-center gap-1.5 mb-0.5">
             <Activity size={12} className="text-[#00B150]" />
             <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-300">Live Network</span>
           </div>
-          <div className="text-2xl font-black text-white leading-none mb-1">{reports.length}</div>
+          <motion.div 
+            key={reports.length}
+            initial={{ scale: 1.5, color: '#00B150' }}
+            animate={{ scale: 1, color: '#ffffff' }}
+            className="text-2xl font-black text-white leading-none mb-1"
+          >
+            {reports.length}
+          </motion.div>
           <div className="text-[9px] text-gray-400 leading-tight">Total Active Reports</div>
         </div>
 
-        {/* Recent Feed */}
         <div className="bg-white/5 backdrop-blur-xl rounded-lg p-2.5 border border-white/10 text-white shadow-2xl flex flex-col gap-2">
           <div className="text-[9px] font-semibold uppercase tracking-wider text-gray-300 border-b border-white/10 pb-1.5 flex items-center gap-1.5">
             <Clock size={12} className="text-[#00B150]" />
             Latest Activity
           </div>
           <div className="space-y-2">
-            {recentReports.map(report => (
-              <div key={report.id} className="flex flex-col gap-0.5 relative pl-2 border-l-[1.5px] border-[#00B150]/60">
-                <div className="text-[10px] font-semibold text-gray-200 line-clamp-1 leading-tight">{report.type}</div>
-                <div className="text-[9px] text-gray-400 line-clamp-1 leading-tight">{report.location_address}</div>
-              </div>
-            ))}
+            <AnimatePresence>
+              {recentReports.map(report => (
+                <motion.div 
+                  key={report.id} 
+                  initial={{ opacity: 0, height: 0, x: -20 }}
+                  animate={{ opacity: 1, height: 'auto', x: 0 }}
+                  className="flex flex-col gap-0.5 relative pl-2 border-l-[1.5px] border-[#00B150]/60 overflow-hidden"
+                >
+                  <div className="text-[10px] font-semibold text-gray-200 leading-tight whitespace-nowrap overflow-hidden">
+                    <motion.div
+                      animate={{ x: [0, -100] }}
+                      transition={{ repeat: Infinity, duration: 6, ease: "linear", delay: 2 }}
+                      className="inline-block"
+                    >
+                      {report.type}
+                    </motion.div>
+                  </div>
+                  <div className="text-[9px] text-gray-400 leading-tight whitespace-nowrap overflow-hidden">
+                    <motion.div
+                      animate={{ x: [0, -150] }}
+                      transition={{ repeat: Infinity, duration: 8, ease: "linear", delay: 1 }}
+                      className="inline-block"
+                    >
+                      {report.location_address}
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </div>
         
       </div>
 
-      {/* Details Modal on Point Click */}
       {selectedPoint && (
         <div className="absolute bottom-4 right-4 max-w-[280px] w-full bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl p-4 border border-white z-20 animate-in fade-in slide-in-from-bottom-8 duration-300 pointer-events-auto">
           <div className="flex justify-between items-start mb-3">
