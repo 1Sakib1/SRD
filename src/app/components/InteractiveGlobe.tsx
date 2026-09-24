@@ -14,6 +14,34 @@ interface ReportPoint {
   created_at: string;
 }
 
+
+const MAJOR_CITIES = [
+  { name: 'New York', lat: 40.7128, lng: -74.0060, country: 'USA' },
+  { name: 'London', lat: 51.5074, lng: -0.1278, country: 'UK' },
+  { name: 'Tokyo', lat: 35.6762, lng: 139.6503, country: 'Japan' },
+  { name: 'Paris', lat: 48.8566, lng: 2.3522, country: 'France' },
+  { name: 'Dubai', lat: 25.2048, lng: 55.2708, country: 'UAE' },
+  { name: 'Singapore', lat: 1.3521, lng: 103.8198, country: 'Singapore' },
+  { name: 'Hong Kong', lat: 22.3193, lng: 114.1694, country: 'China' },
+  { name: 'Toronto', lat: 43.6510, lng: -79.3470, country: 'Canada' },
+  { name: 'Sydney', lat: -33.8688, lng: 151.2093, country: 'Australia' },
+  { name: 'São Paulo', lat: -23.5505, lng: -46.6333, country: 'Brazil' },
+  { name: 'Cairo', lat: 30.0444, lng: 31.2357, country: 'Egypt' },
+  { name: 'Mumbai', lat: 19.0760, lng: 72.8777, country: 'India' },
+  { name: 'Moscow', lat: 55.7558, lng: 37.6173, country: 'Russia' },
+  { name: 'Beijing', lat: 39.9042, lng: 116.4074, country: 'China' },
+  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, country: 'USA' },
+  { name: 'Cape Town', lat: -33.9249, lng: 18.4241, country: 'South Africa' },
+  { name: 'Berlin', lat: 52.5200, lng: 13.4050, country: 'Germany' },
+  { name: 'Buenos Aires', lat: -34.6037, lng: -58.3816, country: 'Argentina' },
+  { name: 'Mexico City', lat: 19.4326, lng: -99.1332, country: 'Mexico' },
+  { name: 'Seoul', lat: 37.5665, lng: 126.9780, country: 'South Korea' },
+  { name: 'Jakarta', lat: -6.2088, lng: 106.8456, country: 'Indonesia' },
+  { name: 'Rome', lat: 41.9028, lng: 12.4964, country: 'Italy' },
+  { name: 'Lagos', lat: 6.5244, lng: 3.3792, country: 'Nigeria' },
+  { name: 'Istanbul', lat: 41.0082, lng: 28.9784, country: 'Turkey' }
+];
+
 export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: number, lng: number } | null }) => {
   const globeEl = useRef<any>();
   const [reports, setReports] = useState<ReportPoint[]>([]);
