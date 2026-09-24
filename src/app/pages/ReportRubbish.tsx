@@ -68,7 +68,7 @@ export const ReportRubbish = () => {
         Description: [Your description]`;
 
       const interaction = await ai.interactions.create({
-        model: "gemini-3.5-flash-lite",
+        model: "gemini-1.5-flash",
         input: [
           { type: "text", text: prompt },
           { type: "image", data: base64Photo.split(',')[1], mime_type: "image/jpeg" }
@@ -296,6 +296,9 @@ export const ReportRubbish = () => {
       try {
         const compressedBase64 = await compressImage(file);
         
+        // Let AI analyze the base64 version IMMEDIATELY (in parallel)
+        detectRubbishWithAI(compressedBase64);
+        
         // Show uploading state
         const toastId = toast.loading('Uploading image to secure storage...');
         
@@ -324,9 +327,6 @@ export const ReportRubbish = () => {
           // Set the photo to the lightweight public URL
           setPhoto(urlData.publicUrl);
         }
-        
-        // Let AI analyze the base64 version
-        detectRubbishWithAI(compressedBase64);
       } catch (err) {
         toast.error("Failed to process image");
         console.error(err);
