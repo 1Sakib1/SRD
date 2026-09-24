@@ -1,3 +1,4 @@
+import { InteractiveGlobe } from '../components/InteractiveGlobe';
 import { LitterPinLogo } from '../components/LitterPinLogo';
 import { Link } from 'react-router';
 import { Header } from '../components/Header';
@@ -135,15 +136,7 @@ export const Landing = () => {
               className="relative order-first lg:order-last"
             >
               <div className="absolute -inset-4 bg-gradient-to-r from-green-400 to-emerald-400 rounded-2xl blur-2xl opacity-30" />
-              <img
-                src={sydneyHeroImage}
-                alt="Sydney Harbour and Opera House"
-                className="rounded-2xl shadow-2xl relative border-4 border-white/20 w-full h-auto"
-                onError={(e) => {
-                  // Fallback to Unsplash if custom image not found
-                  e.currentTarget.src = heroImageFallback;
-                }}
-              />
+              <InteractiveGlobe />
             </motion.div>
           </div>
         </div>
