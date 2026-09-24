@@ -18,6 +18,7 @@ export const ReportRubbish = () => {
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
   const [isDetecting, setIsDetecting] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form fields
   const [type, setType] = useState('');
@@ -344,6 +345,8 @@ export const ReportRubbish = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     if (!type || !description || !latitude) {
       toast.error('Please fill in all required fields');
       return;
@@ -496,8 +499,9 @@ export const ReportRubbish = () => {
                 {address && <p className="text-xs text-gray-500 italic bg-gray-50 p-2 rounded border">{address}</p>}
               </div>
 
-              <button type="submit" className="w-full py-4 bg-[#00B150] text-white rounded-lg font-bold hover:bg-green-700 flex items-center justify-center gap-2 shadow-lg">
-                <Send size={18} /> Submit Report
+              <button type="submit" disabled={isSubmitting} className={`w-full py-4 bg-[#00B150] text-white rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg transition-all ${isSubmitting ? 'opacity-75 cursor-not-allowed' : 'hover:bg-green-700'}`}>
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send size={18} />}
+                {isSubmitting ? 'Submitting...' : 'Submit Report'}
               </button>
             </form>
           </div>
