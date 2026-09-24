@@ -131,11 +131,13 @@ export const AuthCallback = () => {
               console.log('✅ Existing Google user logged in:', user);
               login(user);
               toast.success(`Welcome back, ${user.name}!`);
-              if (sessionStorage.getItem('pendingReportData')) {
-                navigate('/report');
-              } else {
-                navigate('/dashboard');
-              }
+              setTimeout(() => {
+                if (sessionStorage.getItem('pendingReportData')) {
+                  navigate('/report');
+                } else {
+                  navigate('/dashboard');
+                }
+              }, 150);
               return;
             }
           }
@@ -149,11 +151,13 @@ export const AuthCallback = () => {
         // Log the user in
         login(user);
         toast.success(`Welcome, ${user.name}!`);
-        if (sessionStorage.getItem('pendingReportData')) {
-          navigate('/report');
-        } else {
-          navigate('/dashboard');
-        }
+        setTimeout(() => {
+          if (sessionStorage.getItem('pendingReportData')) {
+            navigate('/report');
+          } else {
+            navigate('/dashboard');
+          }
+        }, 150);
 
       } catch (error) {
         console.error('💥 OAuth callback error:', error);

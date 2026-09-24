@@ -1,4 +1,5 @@
-import { createBrowserRouter, Outlet } from 'react-router';
+import { createBrowserRouter, Outlet, useLocation, useNavigate } from 'react-router';
+import { useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
 import { Landing } from './pages/Landing';
@@ -16,6 +17,18 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Root layout component that provides auth context
 const RootLayout = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // If Supabase redirected us to the root but with an access_token hash, 
+    // we need to manually route it to our callback handler
+    if (window.location.hash.includes('access_token=') && location.pathname !== '/auth/callback') {
+      console.log('Intercepted Supabase OAuth hash on route', location.pathname);
+      navigate(`/auth/callback${window.location.hash}`, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <AuthProvider>
       <Outlet />
