@@ -68,7 +68,7 @@ export const ReportRubbish = () => {
         Description: [Your description]`;
 
       const interaction = await ai.interactions.create({
-          model: "gemini-3.8-flash",
+          model: "gemini-2.5-flash",
           input: [
             { type: "text", text: prompt },
             {
@@ -79,7 +79,10 @@ export const ReportRubbish = () => {
           ]
         });
         
-        const responseText = interaction.output_text || "";
+        const responseText = (interaction.outputs || [])
+          .filter((out: any) => out.type === 'text')
+          .map((out: any) => out.text)
+          .join('\n');
       
       const typeMatch = responseText.match(/Type:\s*(.*)/i);
       const descMatch = responseText.match(/Description:\s*(.*)/i);
@@ -453,9 +456,17 @@ export const ReportRubbish = () => {
                   <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" id="photo-upload" />
                   <label htmlFor="photo-upload" className={`flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg cursor-pointer transition-all ${photo ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-500'}`}>
                     {isAIAnalyzing ? (
-                      <div className="flex flex-col items-center py-2">
-                        <Loader2 className="w-10 h-10 text-[#00B150] animate-spin mb-2" />
-                        <span className="text-green-700 font-semibold animate-pulse">Analyzing...</span>
+                      <div className="flex flex-col items-center py-6 relative overflow-hidden w-full">
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-400/20 to-transparent animate-pulse blur-md" style={{ backgroundSize: '100% 200%' }}></div>
+                        <div className="relative flex items-center justify-center w-20 h-20 mb-4">
+                          <div className="absolute inset-0 rounded-full border-4 border-green-200 opacity-20 animate-ping shadow-lg shadow-green-500/50"></div>
+                          <div className="absolute inset-2 rounded-full border-4 border-green-300 opacity-40 animate-pulse"></div>
+                          <div className="absolute inset-4 rounded-full border-2 border-green-400 opacity-60"></div>
+                          <Sparkles className="w-8 h-8 text-[#00B150] animate-bounce relative z-10" />
+                        </div>
+                        <span className="text-green-700 font-bold tracking-widest uppercase text-sm animate-pulse relative z-10 bg-white/90 px-4 py-2 rounded-full shadow-sm border border-green-200">
+                          AI Scanning Image...
+                        </span>
                       </div>
                     ) : (
                       <>
