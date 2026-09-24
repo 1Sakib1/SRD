@@ -211,27 +211,48 @@ export const InteractiveGlobe = () => {
         </div>
 
       
-      <style dangerouslySetInnerHTML={{ __html: `\n        @keyframes ticker {\n          0% { transform: translateX(100vw); }\n          100% { transform: translateX(-100%); }\n        }\n        .animate-ticker {\n          animation: ticker 25s linear infinite;\n          display: inline-flex;\n          white-space: nowrap;\n        }\n      ` }} />
+      
 
-      {/* Bottom Scrolling Ticker */}
-      <div className="absolute bottom-0 left-0 w-full bg-white/5 backdrop-blur-xl border-t border-white/10 py-1.5 overflow-hidden flex items-center pointer-events-none rounded-b-2xl">
-        <div className="bg-[#0a1118]/90 px-4 py-1.5 absolute left-0 z-10 h-full flex items-center gap-2 border-r border-white/10 shadow-[15px_0_20px_rgba(0,0,0,0.8)]">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#00B150] animate-pulse" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-200">Latest</span>
+      
+      {/* Technical Event Log Overlay */}
+      <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 pointer-events-none w-[220px]">
+        <div className="text-[#00B150] font-mono text-[9px] uppercase tracking-widest mb-1 flex items-center gap-1.5 opacity-80">
+          <Activity size={10} />
+          <span>System Event Log</span>
         </div>
-        
-        <div className="w-full overflow-hidden flex items-center pl-24">
-          <div className="animate-ticker flex items-center gap-8">
-             {reports.slice(0, 15).map(report => (
-               <div key={report.id} className="flex items-center gap-2 text-[10px]">
-                 <span className="text-[#00B150] font-bold tracking-wide">{report.type}</span>
-                 <span className="text-gray-500">•</span>
-                 <span className="text-gray-300">{report.location_address}</span>
-               </div>
-             ))}
-          </div>
+        <div className="flex flex-col gap-1.5 relative h-[120px] overflow-hidden">
+          <AnimatePresence>
+            {recentReports.slice(0, 3).map((report, idx) => (
+              <motion.div
+                key={report.id}
+                initial={{ opacity: 0, x: -20, height: 0 }}
+                animate={{ 
+                  opacity: 1 - (idx * 0.25), 
+                  x: 0, 
+                  height: 'auto',
+                  scale: 1 - (idx * 0.05)
+                }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4, type: 'spring', bounce: 0.2 }}
+                className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left"
+              >
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <span className="text-[#00B150] font-mono text-[9px] font-bold uppercase truncate">
+                    &gt; {report.type}
+                  </span>
+                  <span className="text-gray-500 font-mono text-[8px] shrink-0">
+                    ID:{report.id.substring(0, 4)}
+                  </span>
+                </div>
+                <div className="text-gray-300 font-mono text-[8px] truncate opacity-80">
+                  {report.location_address}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
+
 
       {selectedPoint && (
         <div className="absolute bottom-4 right-4 max-w-[280px] w-full bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl p-4 border border-white z-20 animate-in fade-in slide-in-from-bottom-8 duration-300 pointer-events-auto">
