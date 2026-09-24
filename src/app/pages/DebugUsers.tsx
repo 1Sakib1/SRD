@@ -131,7 +131,7 @@ export const DebugUsers = () => {
         {/* Back Button */}
         <button
           onClick={() => navigate('/admin')}
-          className="mb-6 flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-lg transition-all shadow-sm"
+          className="mb-6 flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-[#333333] hover:bg-white rounded-lg transition-all shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span className="font-medium">Back to Admin Dashboard</span>
@@ -145,7 +145,7 @@ export const DebugUsers = () => {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+                <h1 className="text-3xl font-bold text-[#333333]">User Management</h1>
                 <p className="text-gray-600 mt-1">Monitor and manage all registered users</p>
               </div>
             </div>
@@ -169,7 +169,7 @@ export const DebugUsers = () => {
                 <Users className="w-5 h-5 text-blue-600" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+            <div className="text-2xl font-bold text-[#333333]">{stats.total}</div>
             <div className="text-sm text-gray-600">Total Users</div>
           </div>
 
@@ -179,17 +179,17 @@ export const DebugUsers = () => {
                 <Shield className="w-5 h-5 text-purple-600" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-gray-900">{stats.admins}</div>
+            <div className="text-2xl font-bold text-[#333333]">{stats.admins}</div>
             <div className="text-sm text-gray-600">Administrators</div>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-green-600" />
+                <User className="w-5 h-5 text-[#00B150]" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-gray-900">{stats.members}</div>
+            <div className="text-2xl font-bold text-[#333333]">{stats.members}</div>
             <div className="text-sm text-gray-600">Community Members</div>
           </div>
 
@@ -199,7 +199,7 @@ export const DebugUsers = () => {
                 <Award className="w-5 h-5 text-orange-600" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-gray-900">{stats.totalEcoPoints.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-[#333333]">{stats.totalEcoPoints.toLocaleString()}</div>
             <div className="text-sm text-gray-600">Total Eco Points</div>
           </div>
 
@@ -209,7 +209,7 @@ export const DebugUsers = () => {
                 <TrendingUp className="w-5 h-5 text-teal-600" />
               </div>
             </div>
-            <div className="text-2xl font-bold text-gray-900">${stats.totalCredits.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-[#333333]">${stats.totalCredits.toFixed(2)}</div>
             <div className="text-sm text-gray-600">Total Credits</div>
           </div>
         </div>
@@ -249,7 +249,7 @@ export const DebugUsers = () => {
                 <button
                   onClick={handleExportCSV}
                   disabled={filteredUsers.length === 0}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Download className="w-4 h-4" />
                   <span>Export CSV</span>
@@ -259,7 +259,7 @@ export const DebugUsers = () => {
 
             {/* Results Count */}
             <div className="mt-4 text-sm text-gray-600">
-              Showing <span className="font-semibold text-gray-900">{filteredUsers.length}</span> of <span className="font-semibold text-gray-900">{users.length}</span> users
+              Showing <span className="font-semibold text-[#333333]">{filteredUsers.length}</span> of <span className="font-semibold text-[#333333]">{users.length}</span> users
             </div>
           </div>
 
@@ -334,7 +334,7 @@ export const DebugUsers = () => {
                               )}
                             </div>
                             <div>
-                              <div className="text-sm font-semibold text-gray-900">{user.name}</div>
+                              <div className="text-sm font-semibold text-[#333333]">{user.name}</div>
                               <div className="text-sm text-gray-500">{user.email}</div>
                             </div>
                           </div>
@@ -361,11 +361,11 @@ export const DebugUsers = () => {
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
                             <Award className="w-4 h-4 text-orange-500" />
-                            <span className="text-sm font-semibold text-gray-900">{user.ecoPoints.toLocaleString()}</span>
+                            <span className="text-sm font-semibold text-[#333333]">{user.ecoPoints.toLocaleString()}</span>
                           </div>
                         </td>
                         <td className="px-4 py-4">
-                          <span className="text-sm font-semibold text-green-600">${user.credits.toFixed(2)} AUD</span>
+                          <span className="text-sm font-semibold text-[#00B150]">${user.credits.toFixed(2)} AUD</span>
                         </td>
                         <td className="px-4 py-4">
                           <div className="text-sm text-gray-700">

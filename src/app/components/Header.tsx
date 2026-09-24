@@ -25,35 +25,35 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                <Recycle className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-[#00B150] rounded-lg flex items-center justify-center">
+                <svg viewBox="0 0 100 120" className="w-5 h-5 text-white" fill="currentColor"><path d="M50,0 C22.4,0 0,22.4 0,50 C0,75 50,120 50,120 C50,120 100,75 100,50 C100,22.4 77.6,0 50,0 Z" fill="#00B150"/><circle cx="50" cy="45" r="25" fill="white"/><path d="M50,25 L58,45 L42,45 Z" fill="#00B150"/><path d="M35,35 L45,52 L28,48 Z" fill="#00B150"/><path d="M65,35 L72,48 L55,52 Z" fill="#00B150"/><path d="M35,55 L45,38 L28,42 Z" fill="#00B150"/><path d="M65,55 L72,42 L55,38 Z" fill="#00B150"/><path d="M50,65 L42,45 L58,45 Z" fill="#00B150"/></svg>
               </div>
-              <span className="text-lg sm:text-xl font-semibold text-gray-900 hidden sm:inline">Smart Rubbish Detection</span>
-              <span className="text-lg font-semibold text-gray-900 sm:hidden">SRD</span>
+              <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">LitterPin</span>
+              <span className="text-lg font-semibold text-[#333333] sm:hidden">LitterPin</span>
             </Link>
             
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Link
                 to="/awareness"
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors hidden sm:inline-block"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-[#00B150] transition-colors hidden sm:inline-block"
               >
                 Awareness
               </Link>
               <Link
                 to="/leaderboard"
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors hidden sm:inline-block"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-[#00B150] transition-colors hidden sm:inline-block"
               >
                 Leaderboard
               </Link>
               <Link
                 to="/auth"
-                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-green-600 transition-colors"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 hover:text-[#00B150] transition-colors"
               >
                 Login
               </Link>
               <Link
                 to="/auth?tab=register"
-                className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors active:scale-95"
+                className="px-4 sm:px-6 py-2 text-sm sm:text-base bg-[#00B150] text-white rounded-lg hover:bg-green-700 transition-colors active:scale-95"
               >
                 Register
               </Link>
@@ -69,11 +69,11 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-              <Recycle className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-[#00B150] rounded-lg flex items-center justify-center">
+              <svg viewBox="0 0 100 120" className="w-5 h-5 text-white" fill="currentColor"><path d="M50,0 C22.4,0 0,22.4 0,50 C0,75 50,120 50,120 C50,120 100,75 100,50 C100,22.4 77.6,0 50,0 Z" fill="#00B150"/><circle cx="50" cy="45" r="25" fill="white"/><path d="M50,25 L58,45 L42,45 Z" fill="#00B150"/><path d="M35,35 L45,52 L28,48 Z" fill="#00B150"/><path d="M65,35 L72,48 L55,52 Z" fill="#00B150"/><path d="M35,55 L45,38 L28,42 Z" fill="#00B150"/><path d="M65,55 L72,42 L55,38 Z" fill="#00B150"/><path d="M50,65 L42,45 L58,45 Z" fill="#00B150"/></svg>
             </div>
-            <span className="text-lg sm:text-xl font-semibold text-gray-900 hidden sm:inline">Smart Rubbish Detection</span>
-            <span className="text-lg font-semibold text-gray-900 sm:hidden">SRD</span>
+            <span className="text-lg sm:text-xl font-semibold text-[#333333] hidden sm:inline">LitterPin</span>
+            <span className="text-lg font-semibold text-[#333333] sm:hidden">LitterPin</span>
           </Link>
           
           {isAuthenticated && (
@@ -83,12 +83,12 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 {!isAdmin && (
                   <div className="flex items-center space-x-2 px-3 py-2 bg-green-50 rounded-lg border border-green-200">
                     <div className="flex items-center space-x-1">
-                      <Leaf className="w-4 h-4 text-green-600" />
+                      <Leaf className="w-4 h-4 text-[#00B150]" />
                       <span className="text-sm font-medium text-green-700">{user?.ecoPoints || 0}</span>
                     </div>
                     <div className="w-px h-4 bg-green-300" />
                     <div className="flex items-center space-x-1">
-                      <DollarSign className="w-4 h-4 text-green-600" />
+                      <DollarSign className="w-4 h-4 text-[#00B150]" />
                       <span className="text-sm font-medium text-green-700">{((user?.ecoPoints || 0) * 0.01).toFixed(2)}</span>
                     </div>
                   </div>
@@ -105,21 +105,21 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                   <>
                     <Link
                       to="/dashboard"
-                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-[#00B150] transition-colors"
                     >
                       <LayoutDashboard className="w-4 h-4" />
                       <span>Dashboard</span>
                     </Link>
                     <Link
                       to="/report"
-                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-[#00B150] transition-colors"
                     >
                       <FileText className="w-4 h-4" />
                       <span>Report</span>
                     </Link>
                     <Link
                       to="/leaderboard"
-                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-600 transition-colors"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-[#00B150] transition-colors"
                     >
                       <Trophy className="w-4 h-4" />
                       <span>Leaderboard</span>
@@ -140,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
               <div className="flex lg:hidden items-center space-x-3">
                 {!isAdmin && (
                   <div className="flex items-center space-x-2 px-2 py-1.5 bg-green-50 rounded-lg border border-green-200">
-                    <Leaf className="w-4 h-4 text-green-600" />
+                    <Leaf className="w-4 h-4 text-[#00B150]" />
                     <span className="text-xs font-medium text-green-700">{user?.ecoPoints || 0}</span>
                   </div>
                 )}
@@ -151,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 {/* Hamburger Menu Button */}
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="p-2 text-gray-700 hover:text-green-600 transition-colors active:scale-95"
+                  className="p-2 text-gray-700 hover:text-[#00B150] transition-colors active:scale-95"
                   aria-label="Toggle menu"
                 >
                   {isMobileMenuOpen ? (
@@ -172,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
           <div className="px-4 py-4 space-y-1">
             {/* User Info */}
             <div className="px-4 py-3 bg-gray-50 rounded-lg mb-2">
-              <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+              <p className="text-sm font-medium text-[#333333]">{user?.name}</p>
               <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
             
@@ -181,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors active:scale-95"
+                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-[#00B150] rounded-lg transition-colors active:scale-95"
                 >
                   <LayoutDashboard className="w-5 h-5" />
                   <span className="font-medium">Dashboard</span>
@@ -189,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 <Link
                   to="/report"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors active:scale-95"
+                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-[#00B150] rounded-lg transition-colors active:scale-95"
                 >
                   <FileText className="w-5 h-5" />
                   <span className="font-medium">Report Rubbish</span>
@@ -197,7 +197,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 <Link
                   to="/leaderboard"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors active:scale-95"
+                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-[#00B150] rounded-lg transition-colors active:scale-95"
                 >
                   <Trophy className="w-5 h-5" />
                   <span className="font-medium">Leaderboard</span>
@@ -207,17 +207,17 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 <div className="px-4 py-3 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <Leaf className="w-5 h-5 text-green-600" />
+                      <Leaf className="w-5 h-5 text-[#00B150]" />
                       <span className="text-sm font-medium text-gray-700">Eco Points</span>
                     </div>
-                    <span className="text-sm font-bold text-green-600">{user?.ecoPoints || 0}</span>
+                    <span className="text-sm font-bold text-[#00B150]">{user?.ecoPoints || 0}</span>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center space-x-2">
-                      <DollarSign className="w-5 h-5 text-green-600" />
+                      <DollarSign className="w-5 h-5 text-[#00B150]" />
                       <span className="text-sm font-medium text-gray-700">Credits</span>
                     </div>
-                    <span className="text-sm font-bold text-green-600">{((user?.ecoPoints || 0) * 0.01).toFixed(2)} AUD</span>
+                    <span className="text-sm font-bold text-[#00B150]">{((user?.ecoPoints || 0) * 0.01).toFixed(2)} AUD</span>
                   </div>
                 </div>
               </>

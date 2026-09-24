@@ -396,9 +396,9 @@ export const ReportRubbish = () => {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                from: 'Smart Rubbish Detection <onboarding@resend.dev>',
+                from: 'LitterPin <onboarding@resend.dev>',
                 to: [user.email],
-                subject: 'Report Submitted Successfully! - Smart Rubbish Detection',
+                subject: 'Report Submitted Successfully! - LitterPin',
                 html: `
                   <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
                     <h2 style="color: #10b981;">Report Submitted Successfully! 🌍</h2>
@@ -431,13 +431,13 @@ export const ReportRubbish = () => {
       <Header variant={user ? 'authenticated' : 'landing'} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Report Rubbish</h1>
+          <h1 className="text-3xl font-bold text-[#333333]">Report Rubbish</h1>
           <p className="text-gray-600">Snap a photo for AI categorization.</p>
         </div>
         
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Report Details</h2>
+            <h2 className="text-xl font-semibold text-[#333333] mb-6">Report Details</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div>
@@ -447,7 +447,7 @@ export const ReportRubbish = () => {
                   <label htmlFor="photo-upload" className={`flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg cursor-pointer transition-all ${photo ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-500'}`}>
                     {isAIAnalyzing ? (
                       <div className="flex flex-col items-center py-2">
-                        <Loader2 className="w-10 h-10 text-green-600 animate-spin mb-2" />
+                        <Loader2 className="w-10 h-10 text-[#00B150] animate-spin mb-2" />
                         <span className="text-green-700 font-semibold animate-pulse">Analyzing...</span>
                       </div>
                     ) : (
@@ -477,12 +477,12 @@ export const ReportRubbish = () => {
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700">Location</label>
                 <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
-                  <button type="button" onClick={() => setLocationMode('auto')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'auto' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'}`}>Auto Detect</button>
-                  <button type="button" onClick={() => setLocationMode('manual')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'manual' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-600'}`}>Manual Pin</button>
+                  <button type="button" onClick={() => setLocationMode('auto')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'auto' ? 'bg-white text-[#00B150] shadow-sm' : 'text-gray-600'}`}>Auto Detect</button>
+                  <button type="button" onClick={() => setLocationMode('manual')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'manual' ? 'bg-white text-[#00B150] shadow-sm' : 'text-gray-600'}`}>Manual Pin</button>
                 </div>
                 
                 {locationMode === 'auto' ? (
-                  <button type="button" onClick={handleAutoDetect} disabled={isDetecting} className="w-full py-3 bg-green-600 text-white rounded-lg flex justify-center items-center gap-2 hover:bg-green-700">
+                  <button type="button" onClick={handleAutoDetect} disabled={isDetecting} className="w-full py-3 bg-[#00B150] text-white rounded-lg flex justify-center items-center gap-2 hover:bg-green-700">
                     {isDetecting ? <Loader2 className="animate-spin" /> : <Navigation size={18} />}
                     {isDetecting ? 'Detecting...' : 'Get Current Location'}
                   </button>
@@ -496,7 +496,7 @@ export const ReportRubbish = () => {
                 {address && <p className="text-xs text-gray-500 italic bg-gray-50 p-2 rounded border">{address}</p>}
               </div>
 
-              <button type="submit" className="w-full py-4 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 flex items-center justify-center gap-2 shadow-lg">
+              <button type="submit" className="w-full py-4 bg-[#00B150] text-white rounded-lg font-bold hover:bg-green-700 flex items-center justify-center gap-2 shadow-lg">
                 <Send size={18} /> Submit Report
               </button>
             </form>
@@ -504,7 +504,7 @@ export const ReportRubbish = () => {
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Live Rubbish Heat Map</h2>
+                <h2 className="text-xl font-semibold text-[#333333]">Live Rubbish Heat Map</h2>
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>

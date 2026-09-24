@@ -179,11 +179,11 @@ export const AuthCallback = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Authentication Failed</h2>
+          <h2 className="text-2xl font-bold text-[#333333] mb-2">Authentication Failed</h2>
           <p className="text-gray-600 mb-6">{errorMessage}</p>
           <button
             onClick={() => navigate('/auth')}
-            className="w-full py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all"
+            className="w-full py-3 bg-[#00B150] text-white rounded-lg font-medium hover:bg-green-700 transition-all"
           >
             Return to Sign In
           </button>
@@ -195,8 +195,8 @@ export const AuthCallback = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-8 text-center">
-        <Loader2 className="w-16 h-16 text-green-600 animate-spin mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Completing Sign In</h2>
+        <Loader2 className="w-16 h-16 text-[#00B150] animate-spin mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-[#333333] mb-2">Completing Sign In</h2>
         <p className="text-gray-600">Please wait while we set up your account...</p>
       </div>
     </div>
