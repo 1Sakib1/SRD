@@ -84,7 +84,7 @@ export const ReportRubbish = () => {
           ]
         });
         
-        const responseText = response.text();
+        const responseText = response.text || "";
       
       let detectedTypeText = "";
       let descText = "";
