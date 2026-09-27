@@ -139,7 +139,181 @@ export const ReportRubbish = () => {
     }
   };
 
-const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  /**
+   * Heatmap data processing
+   */
+  const loadReports = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('reports')
+        .select('id, location_lat, location_lng, type, status');
+        
+      if (error) {
+        console.error('Error fetching reports from Supabase:', error);
+        return;
+      }
+      
+      if (data) {
+        // Map Supabase rows to LocationPoint format
+        // Group reports by approximate location to create density hotspots (like the dashboard)
+          const locationGroups: { [key: string]: any[] } = {};
+          
+          data.forEach(r => {
+            if (!r.location_lat || !r.location_lng) return;
+            const lat = parseFloat(r.location_lat.toFixed(3));
+            const lng = parseFloat(r.location_lng.toFixed(3));
+            const key = `${lat},${lng}`;
+            if (!locationGroups[key]) locationGroups[key] = [];
+            locationGroups[key].push(r);
+          });
+          
+          const groupedLocations: LocationPoint[] = Object.entries(locationGroups).map(([key, group]) => {
+            const [lat, lng] = key.split(',').map(Number);
+            return {
+              id: `grouped-${key}`,
+              lat,
+              lng,
+              address: group[0].type || 'Rubbish Report',
+                reports: group.length,
+                intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
+                photo: group[0].image_url,
+                type: group[0].type,
+                date: group[0].created_at
+            };
+          });
+          
+          setMapLocations(groupedLocations);
+      }
+    } catch (error) {
+      console.error('Error loading reports:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Automatically detect user's location on page load
+    getCurrentLocation().then(position => {
+      setMapCenter([position.lat, position.lng]);
+    }).catch(err => {
+      console.log('Auto location on mount failed', err);
+    });
+
+    loadReports();
+    
+    // Subscribe to real-time report inserts
+    const channel = supabase
+      .channel('public:reports')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
+        const newReport = payload.new;
+        if (newReport.location_lat && newReport.location_lng) {
+          const newLocationPoint: LocationPoint = {
+            id: newReport.id,
+            lat: newReport.location_lat,
+            lng: newReport.location_lng,
+            address: newReport.type || 'Rubbish Report',
+            reports: 1,
+            intensity: 0.8 // pending
+          };
+          setMapLocations(prev => [...prev, newLocationPoint]);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  useEffect(() => {
+    const pendingDataStr = sessionStorage.getItem('pendingReportData');
+    if (pendingDataStr) {
+      try {
+        const pendingData = JSON.parse(pendingDataStr);
+        if (pendingData.type) setType(pendingData.type);
+        if (pendingData.description) setDescription(pendingData.description);
+        if (pendingData.photo) setPhoto(pendingData.photo);
+        if (pendingData.latitude) setLatitude(pendingData.latitude);
+        if (pendingData.longitude) setLongitude(pendingData.longitude);
+        if (pendingData.address) setAddress(pendingData.address);
+        if (pendingData.locationMode) setLocationMode(pendingData.locationMode);
+        
+        if (pendingData.latitude && pendingData.longitude) {
+           const lat = parseFloat(pendingData.latitude);
+           const lng = parseFloat(pendingData.longitude);
+           setMapCenter([lat, lng]);
+           setSelectedLocation([lat, lng]);
+        }
+        
+        sessionStorage.removeItem('pendingReportData');
+        toast.info('Report data recovered. Please submit again.');
+      } catch (err) {
+        console.error('Error parsing pending report data:', err);
+      }
+    }
+  }, []);
+
+  const handleAutoDetect = async () => {
+    setIsDetecting(true);
+    try {
+      const position = await getCurrentLocation();
+      setLatitude(position.lat.toFixed(6));
+      setLongitude(position.lng.toFixed(6));
+      setMapCenter([position.lat, position.lng]);
+      setAddress(await reverseGeocode(position.lat, position.lng));
+      toast.success('Location detected!');
+    } catch (error) {
+      toast.error("Could not detect location.");
+    } finally {
+      setIsDetecting(false);
+    }
+  };
+
+  const handleManualLocation = async () => {
+    if (!latitude || !longitude) return;
+    const lat = parseFloat(latitude);
+    const lng = parseFloat(longitude);
+    setMapCenter([lat, lng]);
+    setAddress(await reverseGeocode(lat, lng));
+    toast.success('Location pinned!');
+  };
+
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1024;
+          const MAX_HEIGHT = 1024;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       try {
