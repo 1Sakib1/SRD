@@ -159,7 +159,7 @@ export const ReportRubbish = () => {
     try {
       const { data, error } = await supabase
         .from('reports')
-        .select('id, location_lat, location_lng, type, status, photo, created_at, still_there_votes, not_there_votes');
+        .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes');
         
       if (error) {
         console.error('Error fetching reports from Supabase:', error);
@@ -187,7 +187,7 @@ export const ReportRubbish = () => {
               originalReportId: group[0].id,
               lat,
               lng,
-              address: group[0].type || 'Rubbish Report',
+              address: group[0].location_address || 'Sydney, NSW',
               reports: group.length,
               intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
               photo: group[0].photo || group[0].image_url,
@@ -241,7 +241,7 @@ export const ReportRubbish = () => {
             id: newReport.id,
             lat: newReport.location_lat,
             lng: newReport.location_lng,
-            address: newReport.type || 'Rubbish Report',
+            address: newReport.location_address || 'Sydney, NSW',
             reports: 1,
             intensity: 0.8 // pending
           };

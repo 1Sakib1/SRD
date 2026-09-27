@@ -229,13 +229,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
                       </button>
                     </div>
                     
-                    {(location.stillThere !== undefined) && (
-                      <div className="flex justify-between text-[10px] text-gray-400 mt-3 pt-3 border-t border-gray-200">
-                        <span>Still there: {location.stillThere || 0}</span>
-                        <span>Gone: {location.gone || 0}</span>
-                        <span>Cleaned: {location.cleaned || 0}</span>
-                      </div>
-                    )}
+
                   </div>
                 </div>
               </Popup>
