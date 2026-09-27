@@ -63,30 +63,28 @@ export const ReportRubbish = () => {
       Respond STRICTLY in this exact JSON format, with no markdown, no backticks, and no extra text:
       {"type": "Category Name or 'None'", "description": "1-sentence description"}`;
 
-      const interaction = await ai.interactions.create({
+      const response = await ai.models.generateContent({
           model: "gemini-3.6-flash",
-          response_format: {
-            type: "object",
-            properties: {
-              type: { type: "string" },
-              description: { type: "string" }
-            },
-            required: ["type", "description"]
+          config: {
+            responseMimeType: "application/json"
           },
-          input: [
-            { type: "text", text: prompt },
+          contents: [
             {
-              type: "image",
-              data: base64Photo.split(',')[1],
-              mime_type: "image/jpeg"
+              role: "user",
+              parts: [
+                { text: prompt },
+                {
+                  inlineData: {
+                    data: base64Photo.split(',')[1],
+                    mimeType: "image/jpeg"
+                  }
+                }
+              ]
             }
           ]
         });
         
-        const responseText = (interaction.outputs || [])
-          .filter((out: any) => out.type === 'text')
-          .map((out: any) => out.text)
-          .join('\n');
+        const responseText = response.text();
       
       let detectedTypeText = "";
       let descText = "";
