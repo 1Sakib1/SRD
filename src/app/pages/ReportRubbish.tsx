@@ -65,7 +65,6 @@ export const ReportRubbish = () => {
 
       const interaction = await ai.interactions.create({
           model: "gemini-3.6-flash",
-          response_mime_type: "application/json",
           input: [
             { type: "text", text: prompt },
             {
