@@ -1,3 +1,4 @@
+import { publicAnonKey } from '../../utils/supabase/info';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { Header } from '../components/Header';
@@ -452,7 +453,8 @@ export const ReportRubbish = () => {
               fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${publicAnonKey}`
                 },
                 body: JSON.stringify({
                   to: user.email,

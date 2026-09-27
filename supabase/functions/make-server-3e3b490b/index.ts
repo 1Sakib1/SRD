@@ -83,10 +83,10 @@ async function sendPasswordResetEmail(email: string, resetCode: string, userName
     }
     
     console.log('📧 Attempting to send email to:', email);
-    console.log('📧 From address: LitterPin <noreply@admin.litterpin.org>');
+    console.log('📧 From address: LitterPin <onboarding@resend.dev>');
     
     const { data, error } = await resend.emails.send({
-      from: 'LitterPin <noreply@admin.litterpin.org>',
+      from: 'LitterPin <onboarding@resend.dev>',
       to: [email],
       subject: 'Reset Your Password - Smart Rubbish Detection System',
       html: `
@@ -347,7 +347,7 @@ app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
     if (!apiKey) return c.json({ error: 'No Resend API Key' }, 500);
 
     const { data, error } = await resend.emails.send({
-      from: 'LitterPin <noreply@admin.litterpin.org>',
+      from: 'LitterPin <onboarding@resend.dev>',
       to: [to],
       subject: 'Report Submitted Successfully! - LitterPin',
       html: `
@@ -368,7 +368,7 @@ app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
     return c.json({ success: true, data }, 200);
   } catch (err) {
     console.error('Email send failed:', err);
-    return c.json({ error: String(err) }, 500);
+    return c.json({ error: err.message || JSON.stringify(err) }, 500);
   }
 });
 
