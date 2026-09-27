@@ -12,35 +12,35 @@ A comprehensive, production-ready web application that empowers communities worl
 
 ---
 
-## ?? Quick Links
+## 🚀 Quick Links
 
-- **?? Live Application:** [litterpin.org](https://litterpin.org/)
-- **?? User Manual:** [Read the Guide](USER_MANUAL.md)
-- **??? Deployment Guide:** [Build & Deploy Guide](DEPLOYMENT.md)
-- **?? Report Issues:** [GitHub Issues](https://github.com/1Sakib1/SRD/issues)
+- **🌐 Live Application:** [litterpin.org](https://litterpin.org/)
+- **📖 User Manual:** [Read the Guide](USER_MANUAL.md)
+- **🛠️ Deployment Guide:** [Build & Deploy Guide](DEPLOYMENT.md)
+- **🐛 Report Issues:** [GitHub Issues](https://github.com/1Sakib1/SRD/issues)
 
 ---
 
-## ?? Key Features
+## 🌟 Key Features
 
 | Feature | Description |
 |---------|-------------|
 | **AI Integration** | Intelligent AI assistant for rapid support and dynamic issue categorization |
 | **Interactive Heat Maps** | Real-time global visualizations updating seamlessly across the network |
-| **Eco Points Economy** | Gamified rewards system: 1 Report = 10 points. 1,000 points = .00 AUD |
+| **Eco Points Economy** | Gamified rewards system: 1 Report = 10 points. 1,000 points = $1.00 AUD |
 | **Community Voting** | Verify cleanup status via crowdsourced "Still there" or "Gone" voting |
 | **Dual Authentication** | Secure role-based login systems for community members and administrators |
 | **Cloud Infrastructure** | High-performance Supabase PostgreSQL and Edge Functions backend |
 | **Responsive Design** | Pixel-perfect fluid UI optimized for desktop, tablet, and mobile browsers |
 
-### ??? Real-Time Community Map
+### 🗺️ Real-Time Community Map
 - Real-time visualization of global rubbish reports
 - Dynamic clustering and intensity-based heat markers
 - In-map photo previews for visual evidence
 - Interactive popup voting system to maintain accurate map state
 - Fluid transition between dedicated full-screen map mode and dashboard widgets
 
-### ?? Dashboards
+### 📊 Dashboards
 
 **Community Member Dashboard:**
 - Track personal impact (reports submitted, eco points earned, credits unlocked)
@@ -49,13 +49,13 @@ A comprehensive, production-ready web application that empowers communities worl
 
 **Admin Dashboard:**
 - Complete oversight of system-wide analytics
-- Streamlined report management workflow (Pending ? Reviewed ? Resolved)
+- Streamlined report management workflow (Pending → Reviewed → Resolved)
 - User statistics, growth metrics, and behavior analytics
 - Automated CSV/JSON weekly report generation
 
 ---
 
-## ?? Tech Stack
+## 💻 Tech Stack
 
 ### Frontend
 - **React 18.3.1** & **TypeScript**
@@ -74,7 +74,7 @@ A comprehensive, production-ready web application that empowers communities worl
 
 ---
 
-## ?? Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 - **Node.js** v18 or higher
@@ -83,7 +83,7 @@ A comprehensive, production-ready web application that empowers communities worl
 
 ### Local Development
 
-\\\ash
+```bash
 # 1. Clone the repository
 git clone https://github.com/1Sakib1/SRD.git
 cd SRD
@@ -93,33 +93,33 @@ npm install
 
 # 3. Start development server
 npm run dev
-\\\
-The application will be available at \http://localhost:5173\.
+```
+The application will be available at `http://localhost:5173`.
 
 ### Environment Setup
 
-Create a \.env\ file in the root directory:
-\\\env
+Create a `.env` file in the root directory:
+```env
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 RESEND_API_KEY=your-resend-api-key
-\\\
+```
 
 ---
 
-## ?? Eco Points System
+## 💰 Eco Points System
 
 LitterPin rewards users for keeping their communities clean.
 
 - **1 Report Submitted** = 10 Eco Points
-- **100 Reports Submitted** = 1,000 Eco Points = **.00 AUD Credit**
+- **100 Reports Submitted** = 1,000 Eco Points = **$1.00 AUD Credit**
 
 *Credits can be tracked directly from the dashboard and leaderboard.*
 
 ---
 
-## ?? License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-� 2026 LitterPin. All rights reserved.
+© 2026 LitterPin. All rights reserved.

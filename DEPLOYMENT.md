@@ -392,16 +392,16 @@ Password: Test123!
 
 **Admin Accounts:**
 ```
-Email: adminsrd1@srd.com.au
+Email: admin@litterpin.org
 Password: Admin@123
 
-Email: adminsrd2@srd.com.au
+Email: admin@litterpin.org
 Password: Admin@123
 
-Email: adminsrd3@srd.com.au
+Email: admin@litterpin.org
 Password: Admin@123
 
-Email: adminsrd4@srd.com.au
+Email: admin@litterpin.org
 Password: Admin@123
 ```
 
@@ -519,7 +519,7 @@ If you encounter issues:
 2. Review browser console errors
 3. Verify Supabase connectivity
 4. Create GitHub issue
-5. Email: nazmus@litterpin.org
+5. Email: team@litterpin.org
 
 ---
 
@@ -537,4 +537,4 @@ Once deployed successfully:
 
 ---
 
-© 2026 LitterPin
+© 2026 LitterPin - IT Capstone Project

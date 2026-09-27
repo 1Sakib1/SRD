@@ -58,10 +58,10 @@ export const Auth = () => {
     
     try {
       const ADMIN_EMAILS = [
-        'adminsrd1@srd.com.au',
-        'adminsrd2@srd.com.au',
-        'adminsrd3@srd.com.au',
-        'adminsrd4@srd.com.au',
+        'admin@litterpin.org',
+        'admin@litterpin.org',
+        'admin@litterpin.org',
+        'admin@litterpin.org',
       ];
       
       const normalizedEmail = email.toLowerCase().trim();

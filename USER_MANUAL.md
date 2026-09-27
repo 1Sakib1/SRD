@@ -57,10 +57,10 @@ Use any of these pre-configured admin accounts:
 
 | Email | Password |
 |-------|----------|
-| `adminsrd1@srd.com.au` | `Admin@123` |
-| `adminsrd2@srd.com.au` | `Admin@123` |
-| `adminsrd3@srd.com.au` | `Admin@123` |
-| `adminsrd4@srd.com.au` | `Admin@123` |
+| `admin@litterpin.org` | `Admin@123` |
+| `admin@litterpin.org` | `Admin@123` |
+| `admin@litterpin.org` | `Admin@123` |
+| `admin@litterpin.org` | `Admin@123` |
 
 ---
 
@@ -434,8 +434,6 @@ A: Status can be changed but deletion is not available (data integrity).
 ---
 
 ## 🎓 Project Information
-
-
 
 **Year:** 2026  
 **Project Type:** Group Project

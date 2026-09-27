@@ -294,7 +294,7 @@ const planetArkLogo = '/images/partners/planet-ark-official.png';
 - **Unsplash:** https://unsplash.com
 
 ### Contact
-- **Email:** nazmus@litterpin.org
+- **Email:** team@litterpin.org
 - **GitHub Issues:** https://github.com/1Sakib1/SRD/issues
 
 ---
@@ -307,4 +307,4 @@ All pre-deployment checks passed. The application is ready for production deploy
 
 ---
 
-© 2026 LitterPin
+© 2026 LitterPin - IT Capstone Project

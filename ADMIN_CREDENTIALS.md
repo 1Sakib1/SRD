@@ -11,22 +11,22 @@ This document contains the official administrator credentials for the Smart Rubb
 The system includes **4 pre-configured administrator accounts** with full system access:
 
 ### Admin Account 1
-- **Email**: `adminsrd1@srd.com.au`
+- **Email**: `admin@litterpin.org`
 - **Password**: `Admin@123`
 - **Name**: Admin SRD One
 
 ### Admin Account 2
-- **Email**: `adminsrd2@srd.com.au`
+- **Email**: `admin@litterpin.org`
 - **Password**: `Admin@123`
 - **Name**: Admin SRD Two
 
 ### Admin Account 3
-- **Email**: `adminsrd3@srd.com.au`
+- **Email**: `admin@litterpin.org`
 - **Password**: `Admin@123`
 - **Name**: Admin SRD Three
 
 ### Admin Account 4
-- **Email**: `adminsrd4@srd.com.au`
+- **Email**: `admin@litterpin.org`
 - **Password**: `Admin@123`
 - **Name**: Admin SRD Four
 
@@ -35,7 +35,7 @@ The system includes **4 pre-configured administrator accounts** with full system
 ## 🔐 Security Notes
 
 - **All admin accounts share the same password** (`Admin@123`) for convenience during development and demonstration.
-- **Domain**: `srd.com.au` (Smart Rubbish Detection)
+- **Domain**: `litterpin.org` (Smart Rubbish Detection)
 - **Auto-Creation**: Admin accounts are automatically created in the database on first login attempt.
 - **Password Hashing**: Passwords are hashed before storage for security.
 
@@ -117,8 +117,8 @@ For production deployment, consider:
 
 For admin account issues or password resets:
 
-- **Project Leader**: Nazmus Sakib - nazmus@litterpin.org
-- **Technical Support**: Md Abudozana Niloy - niloy@litterpin.org
+- **Project Leader**: Nazmus Sakib - team@litterpin.org
+- **Technical Support**: Md Abudozana Niloy - team@litterpin.org
 
 ---
 
@@ -126,7 +126,7 @@ For admin account issues or password resets:
 
 | Date | Change | Updated By |
 |------|--------|------------|
-| 2026-03-04 | Changed admin emails from admin1-4@sydney.gov.au to adminsrd1-4@srd.com.au | System Update |
+| 2026-03-04 | Changed admin emails from admin1-4@sydney.gov.au to adminsrd1-4@litterpin.org | System Update |
 | 2026-03-04 | Standardized all admin passwords to Admin@123 | System Update |
 
 ---

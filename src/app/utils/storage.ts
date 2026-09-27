@@ -45,10 +45,10 @@ interface StorageError {
 
 // Initialize admin accounts
 const ADMIN_ACCOUNTS = [
-  { email: 'adminsrd1@srd.com.au', password: 'admin1pass', name: 'Admin SRD One' },
-  { email: 'adminsrd2@srd.com.au', password: 'admin2pass', name: 'Admin SRD Two' },
-  { email: 'adminsrd3@srd.com.au', password: 'admin3pass', name: 'Admin SRD Three' },
-  { email: 'adminsrd4@srd.com.au', password: 'admin4pass', name: 'Admin SRD Four' },
+  { email: 'admin@litterpin.org', password: 'admin1pass', name: 'Admin SRD One' },
+  { email: 'admin@litterpin.org', password: 'admin2pass', name: 'Admin SRD Two' },
+  { email: 'admin@litterpin.org', password: 'admin3pass', name: 'Admin SRD Three' },
+  { email: 'admin@litterpin.org', password: 'admin4pass', name: 'Admin SRD Four' },
 ];
 
 // Validation helpers
