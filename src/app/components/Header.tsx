@@ -86,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                     <div className="w-px h-4 bg-green-300" />
                     <div className="flex items-center space-x-1">
                       <DollarSign className="w-4 h-4 text-[#00B150]" />
-                      <span className="text-sm font-medium text-green-700">{((user?.ecoPoints || 0) * 0.01).toFixed(2)}</span>
+                      <span className="text-sm font-medium text-green-700">{((user?.ecoPoints || 0) * 0.001).toFixed(2)}</span>
                     </div>
                   </div>
                 )}
@@ -229,7 +229,7 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                       <DollarSign className="w-5 h-5 text-[#00B150]" />
                       <span className="text-sm font-medium text-gray-700">Credits</span>
                     </div>
-                    <span className="text-sm font-bold text-[#00B150]">{((user?.ecoPoints || 0) * 0.01).toFixed(2)} AUD</span>
+                    <span className="text-sm font-bold text-[#00B150]">{((user?.ecoPoints || 0) * 0.001).toFixed(2)} AUD</span>
                   </div>
                 </div>
               </>

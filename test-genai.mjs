@@ -1,0 +1,1 @@
+import { GoogleGenAI } from "@google/genai"; const ai = new GoogleGenAI({apiKey: "dummy"}); async function test() { try { await ai.models.generateContent({ model: "gemini-3.6-flash", contents: [{role:"user", parts:[{inlineData: {data: "test", mimeType: "image/jpeg"}}]}]}); } catch(e) { console.log(e.message); } }; test();  

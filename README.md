@@ -188,7 +188,7 @@ Submit Report → +10 Eco Points → Accumulate 100 Points → $1 AUD Credit
 ```
 
 **Rewards Structure:**
-- **1 Report** = 10 points = $0.10 credit
+- **1 Report** = 10 points = $0.10.01 credit
 - **10 Reports** = 100 points = $1.00 credit
 - **100 Reports** = 1,000 points = $10.00 credit
 

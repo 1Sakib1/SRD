@@ -376,7 +376,7 @@ export const saveReport = (
       const userIndex = users.findIndex((u: User) => u.id === report.userId);
       if (userIndex !== -1) {
         users[userIndex].ecoPoints += 10;
-        users[userIndex].credits = Math.floor(users[userIndex].ecoPoints / 100);
+        users[userIndex].credits = Math.floor(users[userIndex].ecoPoints / 1000);
         users[userIndex].updatedAt = now;
         safeSetItem(STORAGE_KEYS.USERS, JSON.stringify(users));
       }
@@ -460,7 +460,7 @@ export const getCurrentUser = (userId: string): User | null => {
   
   if (user) {
     // Ensure credits is always calculated based on eco points
-    user.credits = Math.floor(user.ecoPoints / 100);
+    user.credits = Math.floor(user.ecoPoints / 1000);
     const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
@@ -479,7 +479,7 @@ export const updateCurrentUser = (userId: string): User | null => {
   const userIndex = users.findIndex((u: User) => u.id === userId);
   
   if (userIndex !== -1) {
-    users[userIndex].credits = Math.floor(users[userIndex].ecoPoints / 100);
+    users[userIndex].credits = Math.floor(users[userIndex].ecoPoints / 1000);
     users[userIndex].updatedAt = new Date().toISOString();
     safeSetItem(STORAGE_KEYS.USERS, JSON.stringify(users));
     

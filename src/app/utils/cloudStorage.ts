@@ -379,7 +379,7 @@ export const getCurrentAuthUser = async (): Promise<User | null> => {
       name: userData.name,
       role: userData.role as 'user' | 'admin',
       ecoPoints: userData.eco_points,
-      credits: Math.floor(userData.eco_points / 100),
+      credits: Math.floor(userData.eco_points / 1000),
       createdAt: userData.created_at,
       updatedAt: userData.updated_at,
     };
@@ -579,7 +579,7 @@ export const getAllUsers = async (): Promise<User[]> => {
       name: u.name,
       role: u.role as 'user' | 'admin',
       ecoPoints: u.eco_points,
-      credits: Math.floor(u.eco_points / 100),
+      credits: Math.floor(u.eco_points / 1000),
       createdAt: u.created_at,
       updatedAt: u.updated_at,
     }));
@@ -610,7 +610,7 @@ export const getCurrentUser = async (userId: string): Promise<User | null> => {
       name: data.name,
       role: data.role as 'user' | 'admin',
       ecoPoints: data.eco_points,
-      credits: Math.floor(data.eco_points / 100),
+      credits: Math.floor(data.eco_points / 1000),
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };

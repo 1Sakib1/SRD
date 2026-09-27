@@ -259,7 +259,7 @@ Developer-focused design showcasing technical expertise.
    - Future implementation: Redeem for rewards
 
 ### Example:
-- Submit 1 report → 10 points → $0.10
+- Submit 1 report → 10 points → $0.10.01
 - Submit 10 reports → 100 points → $1.00
 - Submit 100 reports → 1,000 points → $10.00
 
