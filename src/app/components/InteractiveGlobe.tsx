@@ -50,6 +50,14 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPoint, setSelectedPoint] = useState<ReportPoint | null>(null);
+  const [countries, setCountries] = useState({ features: [] });
+
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/vasturiano/react-globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
+      .then(res => res.json())
+      .then(setCountries)
+      .catch(err => console.error("Could not load countries geojson", err));
+  }, []);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -237,29 +245,45 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           ringPropagationSpeed={1.5}
           ringRepeatPeriod={1500}
           
-          // Interactivity via invisible labels
-          labelsData={reports}
-          labelLat={d => (d as ReportPoint).lat}
-          labelLng={d => (d as ReportPoint).lng}
-          labelText={() => ''}
-          labelSize={1.5}
-          labelDotRadius={0.5}
-          labelColor={() => 'rgba(255,255,255,0)'}
-          labelResolution={2}
-          onLabelClick={(d) => {
-            const point = d as ReportPoint;
-            handleInteract();
-            if (globeEl.current) {
-              globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.8 }, 1000);
-            }
-            setSelectedPoint(point);
-          }}
-          onLabelHover={(d) => {
-            if (containerRef.current) {
-                containerRef.current.style.cursor = d ? 'pointer' : 'grab';
-            }
-          }}
-        />
+          // Country Borders
+            polygonsData={countries.features}
+            polygonAltitude={0.005}
+            polygonCapColor={() => 'rgba(0, 0, 0, 0)'}
+            polygonSideColor={() => 'rgba(0, 0, 0, 0)'}
+            polygonStrokeColor={() => 'rgba(255, 255, 255, 0.3)'}
+            polygonsTransitionDuration={300}
+
+            // City & Country Names
+            labelsData={MAJOR_CITIES}
+            labelLat={(d: any) => d.lat}
+            labelLng={(d: any) => d.lng}
+            labelText={(d: any) => `${d.name}, ${d.country}`}
+            labelSize={0.8}
+            labelDotRadius={0.2}
+            labelColor={() => 'rgba(255, 255, 255, 0.7)'}
+            labelResolution={2}
+            labelAltitude={0.01}
+
+            // Interactivity via invisible points
+            pointsData={reports}
+            pointLat={(d: any) => d.lat}
+            pointLng={(d: any) => d.lng}
+            pointRadius={1.5}
+            pointColor={() => 'rgba(255,255,255,0)'}
+            onPointClick={(d) => {
+              const point = d as ReportPoint;
+              handleInteract();
+              if (globeEl.current) {
+                globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.8 }, 1000);
+              }
+              setSelectedPoint(point);
+            }}
+            onPointHover={(d) => {
+              if (containerRef.current) {
+                  containerRef.current.style.cursor = d ? 'pointer' : 'grab';
+              }
+            }}
+          />
       )}
 
       <div className="absolute top-4 left-4 flex flex-col gap-2 max-w-[130px] sm:max-w-[150px] pointer-events-none">
