@@ -130,11 +130,11 @@ export const MapPage: React.FC = () => {
             <span className="hidden sm:inline">Close Map</span>
           </Link>
         </div>
-        <div className="flex-1 w-full relative min-h-[600px]">
+        <div className="flex-1 w-full relative">
           <HeatMap 
             locations={mapLocations} 
             center={mapCenter} 
-            height="100%" 
+            height="calc(100vh - 130px)" 
             selectedLocation={selectedLocation} 
             onVote={handleVote} 
           />

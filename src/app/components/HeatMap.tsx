@@ -158,7 +158,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
             box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
             margin-top: -8px !important;
             margin-right: -8px !important;
-            display: flex !important;
+            position: absolute !important; display: flex !important;
             align-items: center;
             justify-content: center;
           }
