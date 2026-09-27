@@ -287,55 +287,55 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
 
       
       {/* Technical Event Log Overlay */}
-      <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 pointer-events-none w-[220px] z-10">
+      <div className="absolute bottom-4 left-4 flex flex-col gap-1 sm:gap-1.5 pointer-events-none w-[160px] sm:w-[220px] z-10">
         <div className="text-[#00B150] font-mono text-[9px] uppercase tracking-widest mb-1 flex items-center gap-1.5 opacity-80">
           <Activity size={10} />
           <span>Recent Activity</span>
         </div>
-        <div className="flex flex-col gap-1.5 relative h-[120px] overflow-hidden">
-          <AnimatePresence>
-            {recentReports.map((report, idx) => (
-              <motion.div
-                key={report.id}
-                initial={{ opacity: 0, x: -20, height: 0 }}
-                animate={{ 
-                  opacity: 1 - (idx * 0.25), 
-                  x: 0, 
-                  height: 'auto',
-                  scale: 1 - (idx * 0.05)
-                }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4, type: 'spring', bounce: 0.2 }}
-                className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left"
-              >
-                <div className="flex items-center justify-between gap-2 mb-0.5">
-                  <span className="text-[#00B150] font-mono text-[9px] font-bold uppercase truncate">
-                    &gt; {report.type}
-                  </span>
-                  <span className="text-gray-500 font-mono text-[8px] shrink-0">
-                    ID:{report.id.substring(0, 4)}
-                  </span>
-                </div>
-                <div className="text-gray-300 font-mono text-[8px] truncate opacity-80">
-                  {report.location_address}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+        <div className="flex flex-col gap-1.5 relative h-[70px] sm:h-[120px] overflow-hidden">
+          <AnimatePresence initial={false}>
+              {recentReports.map((report, idx) => (
+                <motion.div
+                  layout
+                  key={report.id}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ 
+                    opacity: 1 - (idx * 0.25), 
+                    y: 0, 
+                    scale: 1 - (idx * 0.03)
+                  }}
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-1.5 sm:p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left shrink-0"
+                >
+                  <div className="flex items-center justify-between gap-1 sm:gap-2 mb-0.5">
+                    <span className="text-[#00B150] font-mono text-[8px] sm:text-[9px] font-bold uppercase truncate">
+                      &gt; {report.type}
+                    </span>
+                    <span className="text-gray-500 font-mono text-[7px] sm:text-[8px] shrink-0">
+                      ID:{report.id.substring(0, 4)}
+                    </span>
+                  </div>
+                  <div className="text-gray-300 font-mono text-[7px] sm:text-[8px] truncate opacity-80">
+                    {report.location_address}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
         </div>
       </div>
 
 
             {/* Heat Gradient Legend */}
-      <div className="absolute bottom-4 right-4 sm:right-6 flex flex-col gap-1.5 bg-[#0a1118]/80 backdrop-blur-md p-3 rounded-xl border border-white/10 pointer-events-none shadow-2xl z-10">
+      <div className="absolute bottom-4 right-4 sm:right-6 flex flex-col gap-1 sm:gap-1.5 bg-[#0a1118]/80 backdrop-blur-md p-2 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 pointer-events-none shadow-2xl z-10">
         <span className="text-[9px] font-semibold text-gray-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
           <Activity size={10} className="text-[#00B150]" />
           Area Density
         </span>
         <div className="flex items-center gap-2">
-          <div className="w-24 sm:w-32 h-2 rounded-full bg-gradient-to-r from-[#00B150] via-[#84cc16] via-[#eab308] to-[#ef4444]"></div>
+          <div className="w-20 sm:w-32 h-1.5 sm:h-2 rounded-full bg-gradient-to-r from-[#00B150] via-[#84cc16] via-[#eab308] to-[#ef4444]"></div>
         </div>
-        <div className="flex justify-between w-24 sm:w-32 text-[8px] text-gray-400 font-mono">
+        <div className="flex justify-between w-20 sm:w-32 text-[7px] sm:text-[8px] text-gray-400 font-mono">
           <span>Low</span>
           <span>High</span>
         </div>
