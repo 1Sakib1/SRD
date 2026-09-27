@@ -142,13 +142,31 @@ export const ReportRubbish = () => {
         return false;
       }
 
-    } catch (error: any) {
-      console.error("AI Error:", error);
-      toast.error("AI Analysis failed", {
-        description: error.message || "Please enter details manually."
-      });
-      return true;
-    } finally {
+    }       } catch (error: any) {
+        console.error("AI Error:", error);
+        
+        let displayMessage = "Please enter details manually.";
+        if (error.message) {
+          try {
+            // Attempt to parse if it's a JSON array string like Google API errors sometimes return
+            const parsed = JSON.parse(error.message);
+            if (Array.isArray(parsed) && parsed[0]?.error?.message) {
+              displayMessage = parsed[0].error.message + " Please enter details manually.";
+            } else if (parsed.error?.message) {
+              displayMessage = parsed.error.message + " Please enter details manually.";
+            } else {
+              displayMessage = error.message;
+            }
+          } catch (e) {
+            displayMessage = error.message;
+          }
+        }
+        
+        toast.error("AI Analysis Unavailable", {
+          description: displayMessage
+        });
+        return true;
+      } finally {
       setIsAIAnalyzing(false);
     }
   };
