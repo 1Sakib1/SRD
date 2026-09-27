@@ -176,7 +176,27 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
     return 'rgba(239, 68, 68, 0.9)'; // Red
   };
 
-  const recentReports = reports.slice(0, 3);
+    const [tickerItems, setTickerItems] = useState<ReportPoint[]>([]);
+
+  useEffect(() => {
+    setTickerItems(reports.slice(0, 10));
+  }, [reports]);
+
+  useEffect(() => {
+    if (tickerItems.length <= 1) return;
+    const timer = setInterval(() => {
+      setTickerItems(prev => {
+        if (prev.length <= 1) return prev;
+        const next = [...prev];
+        const first = next.shift();
+        if (first) next.push(first);
+        return next;
+      });
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [tickerItems.length]);
+
+  const recentReports = tickerItems.slice(0, 3);
 
   return (
     <div 
@@ -267,14 +287,14 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
 
       
       {/* Technical Event Log Overlay */}
-      <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 pointer-events-none w-[220px]">
+      <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 pointer-events-none w-[220px] z-10">
         <div className="text-[#00B150] font-mono text-[9px] uppercase tracking-widest mb-1 flex items-center gap-1.5 opacity-80">
           <Activity size={10} />
-          <span>System Event Log</span>
+          <span>Recent Activity</span>
         </div>
         <div className="flex flex-col gap-1.5 relative h-[120px] overflow-hidden">
           <AnimatePresence>
-            {recentReports.slice(0, 3).map((report, idx) => (
+            {recentReports.map((report, idx) => (
               <motion.div
                 key={report.id}
                 initial={{ opacity: 0, x: -20, height: 0 }}
