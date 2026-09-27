@@ -321,13 +321,13 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
             pointsData={reports}
             pointLat={(d: any) => d.lat}
             pointLng={(d: any) => d.lng}
-            pointRadius={1.5}
-            pointColor={() => 'rgba(255,255,255,0)'}
+            pointRadius={(d: any) => d.id === selectedPoint?.id ? 0.8 : 0.4}
+            pointColor={(d: any) => d.id === selectedPoint?.id ? 'rgba(0,255,115,1)' : 'rgba(0,177,80,0.5)'}
             onPointClick={(d) => {
               const point = d as ReportPoint;
               handleInteract();
               if (globeEl.current) {
-                globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.8 }, 1000);
+                globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.4 }, 1200);
               }
               setSelectedPoint(point);
               setHighlightedCountry(resolveCountryName(point.lat, point.lng));
@@ -387,7 +387,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
                   onClick={() => {
                     handleInteract();
                     if (globeEl.current) {
-                      globeEl.current.pointOfView({ lat: report.lat, lng: report.lng, altitude: 0.8 }, 1000);
+                      globeEl.current.pointOfView({ lat: report.lat, lng: report.lng, altitude: 0.4 }, 1200);
                     }
                     setSelectedPoint(report);
                     setHighlightedCountry(resolveCountryName(report.lat, report.lng));
