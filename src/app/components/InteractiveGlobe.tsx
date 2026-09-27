@@ -290,11 +290,11 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           
           // Country Borders
             polygonsData={countries.features}
-            polygonAltitude={0.005}
-            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.35)' : 'rgba(0, 0, 0, 0)'}
-            polygonSideColor={() => 'rgba(0, 0, 0, 0)'}
-            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.15)'}
-            polygonsTransitionDuration={300}
+            polygonAltitude={(d: any) => d.properties.ADMIN === highlightedCountry ? 0.05 : 0.005}
+            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.6)' : 'rgba(0, 0, 0, 0)'}
+            polygonSideColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.4)' : 'rgba(0, 0, 0, 0)'}
+            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.2)'}
+            polygonsTransitionDuration={500}
 
             // Combine Countries and Cities into HTML elements for professional map styling
             htmlElementsData={[
