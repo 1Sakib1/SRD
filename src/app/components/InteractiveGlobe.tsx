@@ -15,6 +15,26 @@ interface ReportPoint {
 }
 
 
+const MAJOR_COUNTRIES = [
+  { name: 'UNITED STATES', lat: 39.8283, lng: -98.5795 },
+  { name: 'CANADA', lat: 56.1304, lng: -106.3468 },
+  { name: 'BRAZIL', lat: -14.2350, lng: -51.9253 },
+  { name: 'UNITED KINGDOM', lat: 55.3781, lng: -3.4360 },
+  { name: 'FRANCE', lat: 46.2276, lng: 2.2137 },
+  { name: 'GERMANY', lat: 51.1657, lng: 10.4515 },
+  { name: 'RUSSIA', lat: 61.5240, lng: 105.3188 },
+  { name: 'CHINA', lat: 35.8617, lng: 104.1954 },
+  { name: 'JAPAN', lat: 36.2048, lng: 138.2529 },
+  { name: 'AUSTRALIA', lat: -25.2744, lng: 133.7751 },
+  { name: 'INDIA', lat: 20.5937, lng: 78.9629 },
+  { name: 'SOUTH AFRICA', lat: -30.5595, lng: 22.9375 },
+  { name: 'ARGENTINA', lat: -38.4161, lng: -63.6167 },
+  { name: 'MEXICO', lat: 23.6345, lng: -102.5528 },
+  { name: 'INDONESIA', lat: -0.7893, lng: 113.9213 },
+  { name: 'SAUDI ARABIA', lat: 23.8859, lng: 45.0792 },
+  { name: 'NIGERIA', lat: 9.0820, lng: 8.6753 }
+];
+
 const MAJOR_CITIES = [
   { name: 'New York', lat: 40.7128, lng: -74.0060, country: 'USA' },
   { name: 'London', lat: 51.5074, lng: -0.1278, country: 'UK' },
@@ -253,16 +273,26 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
             polygonStrokeColor={() => 'rgba(255, 255, 255, 0.3)'}
             polygonsTransitionDuration={300}
 
-            // City & Country Names
-            labelsData={MAJOR_CITIES}
-            labelLat={(d: any) => d.lat}
-            labelLng={(d: any) => d.lng}
-            labelText={(d: any) => `${d.name}, ${d.country}`}
-            labelSize={0.8}
-            labelDotRadius={0.2}
-            labelColor={() => 'rgba(255, 255, 255, 0.7)'}
-            labelResolution={2}
-            labelAltitude={0.01}
+            // Combine Countries and Cities into HTML elements for professional map styling
+            htmlElementsData={[
+              ...MAJOR_COUNTRIES.map(c => ({ ...c, type: 'country' })),
+              ...MAJOR_CITIES.map(c => ({ ...c, type: 'city' }))
+            ]}
+            htmlElement={(d: any) => {
+              const el = document.createElement('div');
+              if (d.type === 'country') {
+                el.innerHTML = `<div style="color: rgba(255, 255, 255, 0.4); font-family: monospace; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; text-align: center; text-shadow: 0px 0px 4px rgba(0,0,0,0.8); pointer-events: none; transform: translate(-50%, -50%);">${d.name}</div>`;
+              } else {
+                el.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, 0); pointer-events: none;">
+                  <div style="width: 4px; height: 4px; background: rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 4px rgba(255,255,255,0.5);"></div>
+                  <div style="color: rgba(255,255,255,0.8); font-family: sans-serif; font-size: 8px; font-weight: 600; margin-top: 2px; text-shadow: 1px 1px 2px rgba(0,0,0,0.9); text-align: center;">${d.name}</div>
+                </div>`;
+              }
+              return el;
+            }}
+            htmlLat={(d: any) => d.lat}
+            htmlLng={(d: any) => d.lng}
+            htmlAltitude={0.02}
 
             // Interactivity via invisible points
             pointsData={reports}
