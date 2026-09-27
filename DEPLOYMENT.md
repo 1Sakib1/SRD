@@ -393,16 +393,16 @@ Password: Test123!
 **Admin Accounts:**
 ```
 Email: admin@litterpin.org
-Password: Admin@123
+Password: *Set by VITE_ADMIN_PASSWORD*
 
 Email: admin@litterpin.org
-Password: Admin@123
+Password: *Set by VITE_ADMIN_PASSWORD*
 
 Email: admin@litterpin.org
-Password: Admin@123
+Password: *Set by VITE_ADMIN_PASSWORD*
 
 Email: admin@litterpin.org
-Password: Admin@123
+Password: *Set by VITE_ADMIN_PASSWORD*
 ```
 
 ---

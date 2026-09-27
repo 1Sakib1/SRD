@@ -58,7 +58,7 @@ const ADMIN_EMAILS = [
   'admin@litterpin.org',
 ];
 
-const ADMIN_PASSWORD = 'Admin@123';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 // Validation helpers
 const isValidEmail = (email: string): boolean => {

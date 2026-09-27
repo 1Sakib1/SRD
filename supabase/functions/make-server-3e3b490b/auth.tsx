@@ -23,7 +23,7 @@ const ADMIN_EMAILS = [
   'admin@litterpin.org',
 ];
 
-const ADMIN_PASSWORD = 'Admin@123';
+const ADMIN_PASSWORD = Deno.env.get('ADMIN_PASSWORD');
 
 /**
  * Simple password hashing

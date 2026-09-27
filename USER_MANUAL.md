@@ -57,10 +57,10 @@ Use any of these pre-configured admin accounts:
 
 | Email | Password |
 |-------|----------|
-| `admin@litterpin.org` | `Admin@123` |
-| `admin@litterpin.org` | `Admin@123` |
-| `admin@litterpin.org` | `Admin@123` |
-| `admin@litterpin.org` | `Admin@123` |
+| `admin1@litterpin.org` | *Set by Admin* |
+| `admin1@litterpin.org` | *Set by Admin* |
+| `admin1@litterpin.org` | *Set by Admin* |
+| `admin1@litterpin.org` | *Set by Admin* |
 
 ---
 

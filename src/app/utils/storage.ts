@@ -45,10 +45,10 @@ interface StorageError {
 
 // Initialize admin accounts
 const ADMIN_ACCOUNTS = [
-  { email: 'admin@litterpin.org', password: 'admin1pass', name: 'Admin SRD One' },
-  { email: 'admin@litterpin.org', password: 'admin2pass', name: 'Admin SRD Two' },
-  { email: 'admin@litterpin.org', password: 'admin3pass', name: 'Admin SRD Three' },
-  { email: 'admin@litterpin.org', password: 'admin4pass', name: 'Admin SRD Four' },
+  { email: 'admin1@litterpin.org', password: import.meta.env.VITE_ADMIN_PASSWORD, name: 'Admin One' },
+  { email: 'admin2@litterpin.org', password: import.meta.env.VITE_ADMIN_PASSWORD, name: 'Admin Two' },
+  { email: 'admin3@litterpin.org', password: import.meta.env.VITE_ADMIN_PASSWORD, name: 'Admin Three' },
+  { email: 'admin4@litterpin.org', password: import.meta.env.VITE_ADMIN_PASSWORD, name: 'Admin Four' },
 ];
 
 // Validation helpers
