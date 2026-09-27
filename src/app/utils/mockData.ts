@@ -7,6 +7,12 @@ export interface LocationPoint {
   address: string;
   reports: number;
   intensity: number; // 0-1 for heat map coloring
+  photo?: string;
+  type?: string;
+  date?: string;
+  stillThere?: number;
+  gone?: number;
+  cleaned?: number;
 }
 
 export const SYDNEY_LOCATIONS: LocationPoint[] = [
