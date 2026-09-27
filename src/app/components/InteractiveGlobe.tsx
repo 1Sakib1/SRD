@@ -205,8 +205,8 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           hexBinResolution={4}
           hexMargin={0.2}
           hexTopColor={d => getHexColor(d.sumWeight)}
-          hexSideColor={() => 'rgba(0,0,0,0)'}
-          hexAltitude={0.005} // flat against surface
+          hexSideColor={d => getHexColor(d.sumWeight)}
+          hexAltitude={d => Math.min(d.sumWeight * 0.08, 0.6)} // 3D Bar effect based on report count
           hexBinMerge={false}
           hexTransitionDuration={1000}
           
@@ -306,8 +306,23 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
       </div>
 
 
+            {/* Heat Gradient Legend */}
+      <div className="absolute bottom-4 right-4 sm:right-6 flex flex-col gap-1.5 bg-[#0a1118]/80 backdrop-blur-md p-3 rounded-xl border border-white/10 pointer-events-none shadow-2xl z-10">
+        <span className="text-[9px] font-semibold text-gray-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+          <Activity size={10} className="text-[#00B150]" />
+          Area Density
+        </span>
+        <div className="flex items-center gap-2">
+          <div className="w-24 sm:w-32 h-2 rounded-full bg-gradient-to-r from-[#00B150] via-[#84cc16] via-[#eab308] to-[#ef4444]"></div>
+        </div>
+        <div className="flex justify-between w-24 sm:w-32 text-[8px] text-gray-400 font-mono">
+          <span>Low</span>
+          <span>High</span>
+        </div>
+      </div>
+
       {selectedPoint && (
-        <div className="absolute bottom-4 right-4 max-w-[280px] w-full bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl p-4 border border-white z-20 animate-in fade-in slide-in-from-bottom-8 duration-300 pointer-events-auto">
+        <div className="absolute bottom-24 right-4 max-w-[280px] w-full bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl p-4 border border-white z-20 animate-in fade-in slide-in-from-bottom-8 duration-300 pointer-events-auto">
           <div className="flex justify-between items-start mb-3">
             <h3 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
               <MapPin size={16} className="text-[#00B150]" />
