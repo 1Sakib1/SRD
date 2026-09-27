@@ -151,7 +151,7 @@ A: Not directly. `figma:asset` only works in Figma Make. Upload your images to `
 A: Yes! Only the images changed. All functionality is identical.
 
 **Q: What if the deployment fails?**  
-A: Check [DEPLOYMENT.md](DEPLOYMENT.md) troubleshooting section or contact s8116515@live.vu.edu.au
+A: Check [DEPLOYMENT.md](DEPLOYMENT.md) troubleshooting section or contact nazmus@litterpin.org
 
 ---
 
@@ -165,4 +165,4 @@ Everything is configured correctly. Your app will deploy successfully to Vercel.
 
 **Good luck with your deployment!** 🚀
 
-© 2026 Victoria University Sydney - IT Capstone Project
+© 2026 LitterPin

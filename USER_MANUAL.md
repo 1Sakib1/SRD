@@ -1,6 +1,6 @@
 # 📘 Smart Rubbish Detection System - User Manual
 
-**Victoria University Sydney - IT Capstone Project 2026**
+**LitterPin - AI-Powered Environmental Clean-up Platform**
 
 ---
 
@@ -232,7 +232,7 @@ Educational content about waste management:
 
 Meet the development team:
 - 👨‍💻 Team member profiles
-- 🎓 VU Sydney IT Capstone Project 2026
+
 - 🛠️ Technology stack information
 - 📧 Contact details
 
@@ -419,8 +419,8 @@ A: Status can be changed but deletion is not available (data integrity).
 ### Contact Information
 
 **Development Team:**
-- Victoria University Sydney
-- IT Capstone Project 2026
+
+
 
 **Technical Issues:**
 - Check the console for error messages
@@ -435,8 +435,8 @@ A: Status can be changed but deletion is not available (data integrity).
 
 ## 🎓 Project Information
 
-**Institution:** Victoria University Sydney  
-**Course:** NIT3004 - IT Capstone Project  
+
+
 **Year:** 2026  
 **Project Type:** Group Project
 
@@ -501,8 +501,8 @@ Creative Commons CC
 
 ## 🙏 Acknowledgments
 
-- Victoria University Sydney faculty
-- Capstone project supervisors
+ faculty
+
 - Open-source community
 - Unsplash for images
 - OpenStreetMap contributors

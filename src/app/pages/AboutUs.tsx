@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 const teamMembers = [
   {
     name: 'Nazmus Sakib',
-    email: 's8116515@live.vu.edu.au',
+    email: 'nazmus@litterpin.org',
     role: 'Project Leader',
     github: 'https://github.com/1Sakib1',
     avatar: '/images/team/nazmus.jpg',
@@ -16,7 +16,7 @@ const teamMembers = [
   },
   {
     name: 'Md Abudozana Niloy',
-    email: 's8138202@live.vu.edu.au',
+    email: 'niloy@litterpin.org',
     role: 'Full Stack Developer',
     github: null,
     avatar: '/images/team/niloy.jpg',
@@ -24,7 +24,7 @@ const teamMembers = [
   },
   {
     name: 'Suvekshya Shrestha',
-    email: 's8103527@live.vu.edu.au',
+    email: 'team1@litterpin.org',
     role: 'UI/UX Designer & Developer',
     github: null,
     avatar: '/images/team/suvekshya.jpg',
@@ -32,7 +32,7 @@ const teamMembers = [
   },
   {
     name: 'Bisesta Shah',
-    email: 's8103504@live.vu.edu.au',
+    email: 'team2@litterpin.org',
     role: 'Backend Developer',
     github: null,
     avatar: '/images/team/bisesta.jpg',
@@ -163,7 +163,7 @@ export const AboutUs = () => {
                         About Our Development Team
                       </h1>
                       <p className="text-sm sm:text-base text-green-400">
-                        # Victoria University Sydney - IT Capstone Project 2026
+                        # LitterPin Global Team
                       </p>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ export const AboutUs = () => {
                     <p className="text-slate-300 leading-relaxed">
                       Building a next-generation global LitterPin for major cities worldwide with passion, 
                       innovation, and cutting-edge web technologies. This project is developed as part of 
-                      our IT Capstone Project at <span className="text-green-400 font-semibold">Victoria University Sydney</span>.
+                      the LitterPin core team.
                     </p>
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export const AboutUs = () => {
               </h2>
             </div>
             <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-mono">
-              // Victoria University Sydney Students
+              // Core Team
             </p>
           </div>
 
@@ -381,7 +381,7 @@ export const AboutUs = () => {
                 <div className="bg-slate-900/50 p-4 rounded-lg border-l-4 border-green-500">
                   <p className="text-green-400 mb-2">// Academic Information</p>
                   <p className="text-white font-semibold mb-1">
-                    📚 Victoria University Sydney - IT Capstone Project
+                    ?? LitterPin Operations
                   </p>
                   <p className="text-slate-400 text-sm">
                     Group Project | 2026 | Information Technology
@@ -450,7 +450,7 @@ export const AboutUs = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
               <a
-                href="mailto:nazmus.sakib@live.vu.edu.au"
+                href="mailto:contact@litterpin.org"
                 className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-medium hover:from-green-500 hover:to-emerald-500 transition-all shadow-lg hover:shadow-green-500/50 active:scale-95 min-h-[48px] border border-green-400/30"
               >
                 <Mail className="w-5 h-5" />
@@ -459,15 +459,15 @@ export const AboutUs = () => {
               </a>
             </div>
             <p className="mt-4 text-sm text-slate-400 font-mono">
-              nazmus.sakib@live.vu.edu.au
+              contact@litterpin.org
             </p>
           </div>
         </motion.section>
 
         {/* Footer Attribution */}
         <div className="mt-12 text-center text-slate-500 text-sm font-mono border-t border-slate-800 pt-8">
-          <p>Built with 💚 by Victoria University Sydney Students</p>
-          <p className="mt-2 text-slate-600">IT Capstone Project 2026</p>
+          <p>Built with 💚 by the LitterPin Team</p>
+          <p className="mt-2 text-slate-600">LitterPin 2026</p>
         </div>
       </div>
     </div>

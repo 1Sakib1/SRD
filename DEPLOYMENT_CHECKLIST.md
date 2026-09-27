@@ -294,7 +294,7 @@ const planetArkLogo = '/images/partners/planet-ark-official.png';
 - **Unsplash:** https://unsplash.com
 
 ### Contact
-- **Email:** s8116515@live.vu.edu.au
+- **Email:** nazmus@litterpin.org
 - **GitHub Issues:** https://github.com/1Sakib1/SRD/issues
 
 ---
@@ -307,4 +307,4 @@ All pre-deployment checks passed. The application is ready for production deploy
 
 ---
 
-© 2026 Victoria University Sydney - IT Capstone Project
+© 2026 LitterPin

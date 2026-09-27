@@ -154,7 +154,7 @@ async function sendPasswordResetEmail(email: string, resetCode: string, userName
                   <tr>
                     <td style="padding: 30px 40px; background-color: #f9fafb; border-radius: 0 0 8px 8px; text-align: center;">
                       <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
-                        Victoria University Sydney IT Capstone Project 2026
+                        LitterPin
                       </p>
                       <p style="margin: 0; color: #9ca3af; font-size: 12px;">
                         Building a cleaner, greener future together 🌍

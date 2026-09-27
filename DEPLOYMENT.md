@@ -519,7 +519,7 @@ If you encounter issues:
 2. Review browser console errors
 3. Verify Supabase connectivity
 4. Create GitHub issue
-5. Email: s8116515@live.vu.edu.au
+5. Email: nazmus@litterpin.org
 
 ---
 
@@ -537,4 +537,4 @@ Once deployed successfully:
 
 ---
 
-© 2026 Victoria University Sydney - IT Capstone Project
+© 2026 LitterPin

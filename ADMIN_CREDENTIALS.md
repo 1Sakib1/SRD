@@ -117,8 +117,8 @@ For production deployment, consider:
 
 For admin account issues or password resets:
 
-- **Project Leader**: Nazmus Sakib - s8116515@live.vu.edu.au
-- **Technical Support**: Md Abudozana Niloy - s8138202@live.vu.edu.au
+- **Project Leader**: Nazmus Sakib - nazmus@litterpin.org
+- **Technical Support**: Md Abudozana Niloy - niloy@litterpin.org
 
 ---
 
@@ -131,6 +131,6 @@ For admin account issues or password resets:
 
 ---
 
-**Victoria University Sydney IT Capstone Project 2026**
+**LitterPin**
 
 *Building a cleaner, greener future together*  🌍
