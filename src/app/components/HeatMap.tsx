@@ -135,7 +135,32 @@ export const HeatMap: React.FC<HeatMapProps> = (({
           }
           .leaflet-popup-content {
             margin: 0;
-            width: 320px !important;
+            width: 100% !important;
+            min-width: 250px;
+            max-width: 320px !important;
+          }
+          @media (max-width: 640px) {
+            .leaflet-popup-content {
+              max-width: 280px !important;
+            }
+          }
+          /* Make the default X close button bigger and more touch-friendly on mobile */
+          .leaflet-popup-close-button {
+            padding: 10px !important;
+            width: 36px !important;
+            height: 36px !important;
+            font-size: 26px !important;
+            line-height: 16px !important;
+            color: #4b5563 !important;
+            z-index: 50;
+            background: white !important;
+            border-radius: 50% !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+            margin-top: -8px !important;
+            margin-right: -8px !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
           }
         `}
       </style>
@@ -229,7 +254,12 @@ export const HeatMap: React.FC<HeatMapProps> = (({
                       </button>
                     </div>
                     
-
+                    <button 
+                      onClick={() => document.querySelector<HTMLElement>('.leaflet-popup-close-button')?.click()}
+                      className="w-full mt-3 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-sm font-semibold transition-colors sm:hidden shadow-sm"
+                    >
+                      Close Map View
+                    </button>
                   </div>
                 </div>
               </Popup>
