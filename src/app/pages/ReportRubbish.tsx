@@ -40,10 +40,8 @@ export const ReportRubbish = () => {
   const detectRubbishWithAI = async (base64Photo: string): Promise<boolean> => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
     if (!apiKey) {
-      toast.error("API Key missing", {
-        description: "Please set VITE_GEMINI_API_KEY in your .env file or Vercel settings."
-      });
-      return;
+      toast.error("API Key missing", { description: "Please set VITE_GEMINI_API_KEY in your .env file or Vercel settings." });
+      return false;
     }
 
     setIsAIAnalyzing(true);
@@ -54,21 +52,22 @@ export const ReportRubbish = () => {
       const ai = new GoogleGenAI({ apiKey });
       
       const prompt = `Analyze this image for public waste/rubbish.
-        
-        VALID CATEGORIES: ${RUBBISH_TYPES.join(', ')}.
+      
+      VALID CATEGORIES: ${RUBBISH_TYPES.join(', ')}.
 
-        CRITICAL INSTRUCTIONS:
-        1. If the image clearly shows one of the categories above, return the Type and a 1-sentence Description.
-        2. If the image DOES NOT contain rubbish, or the rubbish doesn't fit the categories, or the image is blurry/unclear, you MUST return:
-           Type: None
-           Description: No valid rubbish detected.
+      CRITICAL INSTRUCTIONS:
+      1. If the image shows rubbish, assign the most appropriate VALID CATEGORY.
+      2. Even if it is a bit ambiguous, categorize it into one of the valid categories. (e.g. boxes -> Paper & Cardboard; plastic bags -> Plastic Waste).
+      3. Only return "None" if the image absolutely DOES NOT contain any rubbish at all.
 
-        STRICT RETURN FORMAT:
-        Type: [Category Name or "None"]
-        Description: [Your description]`;
+      Respond strictly with a raw JSON object with no markdown formatting:
+      {"type": "Category Name or 'None'", "description": "1-sentence description"}`;
 
       const interaction = await ai.interactions.create({
           model: "gemini-3.6-flash",
+          config: {
+            responseMimeType: "application/json"
+          },
           input: [
             { type: "text", text: prompt },
             {
@@ -84,36 +83,49 @@ export const ReportRubbish = () => {
           .map((out: any) => out.text)
           .join('\n');
       
-      const typeMatch = responseText.match(/Type:\s*(.*)/i);
-      const descMatch = responseText.match(/Description:\s*(.*)/i);
-
-      const detectedTypeText = typeMatch ? typeMatch[1].trim() : "";
+      let detectedTypeText = "";
+      let descText = "";
+      
+      try {
+        const parsed = JSON.parse(responseText.trim());
+        detectedTypeText = parsed.type || "";
+        descText = parsed.description || "";
+      } catch (e) {
+        console.warn("Failed to parse JSON directly, attempting fallback regex.");
+        const typeMatch = responseText.match(/"type"\s*:\s*"([^"]+)"/i);
+        const descMatch = responseText.match(/"description"\s*:\s*"([^"]+)"/i);
+        if (typeMatch) detectedTypeText = typeMatch[1].trim();
+        if (descMatch) descText = descMatch[1].trim();
+      }
 
       if (detectedTypeText.toLowerCase().includes("none") || !detectedTypeText) {
-        setPhoto(''); // Clear the photo if invalid
+        setPhoto('');
         toast.error("No rubbish detected", {
           description: "Gemini couldn't identify valid waste in this photo. Please try a clearer shot.",
           icon: <XCircle className="text-red-500" />
         });
-        return;
+        return false;
       }
 
       const validatedType = RUBBISH_TYPES.find(t => 
-        detectedTypeText.toLowerCase().includes(t.toLowerCase())
+        detectedTypeText.toLowerCase().includes(t.split(' ')[0].toLowerCase()) || 
+        t.toLowerCase().includes(detectedTypeText.split(' ')[0].toLowerCase())
       );
 
       if (validatedType) {
         setType(validatedType);
-        if (descMatch && descMatch[1]) {
-          setDescription(descMatch[1].trim());
+        if (descText) {
+          setDescription(descText);
         }
         toast.success("AI Analysis complete!", {
           description: "Rubbish identified and fields populated.",
         });
+        return true;
       } else {
         toast.error("Invalid rubbish type", {
           description: "The detected items don't match our reporting categories."
         });
+        return false;
       }
 
     } catch (error: any) {
@@ -121,186 +133,13 @@ export const ReportRubbish = () => {
       toast.error("AI Analysis failed", {
         description: error.message || "Please enter details manually."
       });
+      return true;
     } finally {
       setIsAIAnalyzing(false);
     }
   };
 
-  /**
-   * Heatmap data processing
-   */
-  const loadReports = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('reports')
-        .select('id, location_lat, location_lng, type, status');
-        
-      if (error) {
-        console.error('Error fetching reports from Supabase:', error);
-        return;
-      }
-      
-      if (data) {
-        // Map Supabase rows to LocationPoint format
-        // Group reports by approximate location to create density hotspots (like the dashboard)
-          const locationGroups: { [key: string]: any[] } = {};
-          
-          data.forEach(r => {
-            if (!r.location_lat || !r.location_lng) return;
-            const lat = parseFloat(r.location_lat.toFixed(3));
-            const lng = parseFloat(r.location_lng.toFixed(3));
-            const key = `${lat},${lng}`;
-            if (!locationGroups[key]) locationGroups[key] = [];
-            locationGroups[key].push(r);
-          });
-          
-          const groupedLocations: LocationPoint[] = Object.entries(locationGroups).map(([key, group]) => {
-            const [lat, lng] = key.split(',').map(Number);
-            return {
-              id: `grouped-${key}`,
-              lat,
-              lng,
-              address: group[0].type || 'Rubbish Report',
-                reports: group.length,
-                intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
-                photo: group[0].image_url,
-                type: group[0].type,
-                date: group[0].created_at
-            };
-          });
-          
-          setMapLocations(groupedLocations);
-      }
-    } catch (error) {
-      console.error('Error loading reports:', error);
-    }
-  };
-
-  useEffect(() => {
-    // Automatically detect user's location on page load
-    getCurrentLocation().then(position => {
-      setMapCenter([position.lat, position.lng]);
-    }).catch(err => {
-      console.log('Auto location on mount failed', err);
-    });
-
-    loadReports();
-    
-    // Subscribe to real-time report inserts
-    const channel = supabase
-      .channel('public:reports')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
-        const newReport = payload.new;
-        if (newReport.location_lat && newReport.location_lng) {
-          const newLocationPoint: LocationPoint = {
-            id: newReport.id,
-            lat: newReport.location_lat,
-            lng: newReport.location_lng,
-            address: newReport.type || 'Rubbish Report',
-            reports: 1,
-            intensity: 0.8 // pending
-          };
-          setMapLocations(prev => [...prev, newLocationPoint]);
-        }
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  useEffect(() => {
-    const pendingDataStr = sessionStorage.getItem('pendingReportData');
-    if (pendingDataStr) {
-      try {
-        const pendingData = JSON.parse(pendingDataStr);
-        if (pendingData.type) setType(pendingData.type);
-        if (pendingData.description) setDescription(pendingData.description);
-        if (pendingData.photo) setPhoto(pendingData.photo);
-        if (pendingData.latitude) setLatitude(pendingData.latitude);
-        if (pendingData.longitude) setLongitude(pendingData.longitude);
-        if (pendingData.address) setAddress(pendingData.address);
-        if (pendingData.locationMode) setLocationMode(pendingData.locationMode);
-        
-        if (pendingData.latitude && pendingData.longitude) {
-           const lat = parseFloat(pendingData.latitude);
-           const lng = parseFloat(pendingData.longitude);
-           setMapCenter([lat, lng]);
-           setSelectedLocation([lat, lng]);
-        }
-        
-        sessionStorage.removeItem('pendingReportData');
-        toast.info('Report data recovered. Please submit again.');
-      } catch (err) {
-        console.error('Error parsing pending report data:', err);
-      }
-    }
-  }, []);
-
-  const handleAutoDetect = async () => {
-    setIsDetecting(true);
-    try {
-      const position = await getCurrentLocation();
-      setLatitude(position.lat.toFixed(6));
-      setLongitude(position.lng.toFixed(6));
-      setMapCenter([position.lat, position.lng]);
-      setAddress(await reverseGeocode(position.lat, position.lng));
-      toast.success('Location detected!');
-    } catch (error) {
-      toast.error("Could not detect location.");
-    } finally {
-      setIsDetecting(false);
-    }
-  };
-
-  const handleManualLocation = async () => {
-    if (!latitude || !longitude) return;
-    const lat = parseFloat(latitude);
-    const lng = parseFloat(longitude);
-    setMapCenter([lat, lng]);
-    setAddress(await reverseGeocode(lat, lng));
-    toast.success('Location pinned!');
-  };
-
-  const compressImage = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1024;
-          const MAX_HEIGHT = 1024;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.6));
-        };
-        img.onerror = reject;
-      };
-      reader.onerror = reject;
-    });
-  };
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       try {
