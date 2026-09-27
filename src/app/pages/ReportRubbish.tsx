@@ -57,14 +57,22 @@ export const ReportRubbish = () => {
 
       CRITICAL INSTRUCTIONS:
       1. If the image shows rubbish, assign the most appropriate VALID CATEGORY.
-      2. Even if it is a bit ambiguous, categorize it into one of the valid categories. (e.g. boxes -> Paper & Cardboard; plastic bags -> Plastic Waste).
+      2. Even if it is a bit ambiguous, categorize it into one of the valid categories. (e.g. boxes -> Paper & Cardboard; plastic bags -> Plastic Waste; garbage bags -> General Litter).
       3. Only return "None" if the image absolutely DOES NOT contain any rubbish at all.
 
-      Respond strictly with a raw JSON object with no markdown formatting:
+      Respond STRICTLY in this exact JSON format, with no markdown, no backticks, and no extra text:
       {"type": "Category Name or 'None'", "description": "1-sentence description"}`;
 
       const interaction = await ai.interactions.create({
           model: "gemini-3.6-flash",
+          response_format: {
+            type: "object",
+            properties: {
+              type: { type: "string" },
+              description: { type: "string" }
+            },
+            required: ["type", "description"]
+          },
           input: [
             { type: "text", text: prompt },
             {
@@ -84,7 +92,7 @@ export const ReportRubbish = () => {
       let descText = "";
       
       try {
-        // Strip potential markdown wrappers
+        // Strip potential markdown wrappers just in case
         let cleanText = responseText.trim();
         if (cleanText.startsWith('```json')) cleanText = cleanText.substring(7);
         if (cleanText.startsWith('```')) cleanText = cleanText.substring(3);
@@ -95,10 +103,14 @@ export const ReportRubbish = () => {
         descText = parsed.description || "";
       } catch (e) {
         console.warn("Failed to parse JSON directly, attempting fallback regex.");
-        const typeMatch = responseText.match(/"type"\s*:\s*"([^"]+)"/i);
-        const descMatch = responseText.match(/"description"\s*:\s*"([^"]+)"/i);
-        if (typeMatch) detectedTypeText = typeMatch[1].trim();
-        if (descMatch) descText = descMatch[1].trim();
+        let typeMatch = responseText.match(/"type"\s*:\s*"([^"]+)"/i);
+        if (!typeMatch) typeMatch = responseText.match(/Type:\s*(.*)/i);
+        
+        let descMatch = responseText.match(/"description"\s*:\s*"([^"]+)"/i);
+        if (!descMatch) descMatch = responseText.match(/Description:\s*(.*)/i);
+        
+        if (typeMatch) detectedTypeText = typeMatch[1].replace(/["']/g, '').trim();
+        if (descMatch) descText = descMatch[1].replace(/["']/g, '').trim();
       }
 
       if (detectedTypeText.toLowerCase().includes("none") || !detectedTypeText) {
