@@ -159,7 +159,7 @@ export const ReportRubbish = () => {
     try {
       const { data, error } = await supabase
         .from('reports')
-        .select('id, location_lat, location_lng, type, status');
+        .select('id, location_lat, location_lng, type, status, photo, created_at, still_there_votes, not_there_votes');
         
       if (error) {
         console.error('Error fetching reports from Supabase:', error);
@@ -184,14 +184,17 @@ export const ReportRubbish = () => {
             const [lat, lng] = key.split(',').map(Number);
             return {
               id: `grouped-${key}`,
+              originalReportId: group[0].id,
               lat,
               lng,
               address: group[0].type || 'Rubbish Report',
-                reports: group.length,
-                intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
-                photo: group[0].image_url,
-                type: group[0].type,
-                date: group[0].created_at
+              reports: group.length,
+              intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
+              photo: group[0].photo || group[0].image_url,
+              type: group[0].type,
+              date: group[0].created_at,
+              stillThere: group[0].still_there_votes || 0,
+              gone: group[0].not_there_votes || 0
             };
           });
           
@@ -199,6 +202,22 @@ export const ReportRubbish = () => {
       }
     } catch (error) {
       console.error('Error loading reports:', error);
+    }
+  };
+
+  const handleVote = async (locationId: string, originalReportId: string, voteType: 'still_there' | 'not_there' | 'cleaned') => {
+    try {
+      const { error } = await supabase.rpc('vote_report', {
+        p_report_id: originalReportId,
+        p_vote_type: voteType
+      });
+      if (error) throw error;
+      
+      toast.success('Vote recorded!');
+      loadReports(); // reload to show new counts
+    } catch (error) {
+      console.error('Error recording vote:', error);
+      toast.error('Failed to record vote');
     }
   };
 
@@ -560,7 +579,7 @@ export const ReportRubbish = () => {
                 </div>
               </div>
               <p className="text-sm text-gray-600 mb-4">Live community reports showing rubbish density hotspots</p>
-            <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} />
+            <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} onVote={handleVote} />
           </div>
         </div>
         

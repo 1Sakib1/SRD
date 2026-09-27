@@ -2,6 +2,7 @@
 
 export interface LocationPoint {
   id: string;
+  originalReportId?: string;
   lat: number;
   lng: number;
   address: string;

@@ -15,33 +15,39 @@ L.Icon.Default.mergeOptions({
 });
 
 // Custom Div Icon for the Map
-const createCustomIcon = (intensity: number) => {
+const createCustomIcon = (intensity: number, photoUrl?: string) => {
   const isHigh = intensity > 0.7;
   const color = isHigh ? '#ef4444' : '#00B150';
+  
+  const size = photoUrl ? 40 : 32;
   
   const iconHtml = renderToString(
     <div style={{
       backgroundColor: 'white',
       borderRadius: '50%',
-      padding: '4px',
+      padding: photoUrl ? '2px' : '4px',
       border: `2px solid ${color}`,
       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '32px',
-      height: '32px'
+      width: `${size}px`,
+      height: `${size}px`,
+      overflow: 'hidden',
+      backgroundImage: photoUrl ? `url(${photoUrl})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
     }}>
-      <Leaf size={16} color={color} />
+      {!photoUrl && <Leaf size={16} color={color} />}
     </div>
   );
 
   return L.divIcon({
     html: iconHtml,
     className: 'custom-leaflet-icon',
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    popupAnchor: [0, -16]
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2],
+    popupAnchor: [0, -size/2]
   });
 };
 
@@ -52,6 +58,7 @@ interface HeatMapProps {
   height?: string;
   onMapClick?: (lat: number, lng: number) => void;
   selectedLocation?: [number, number] | null;
+  onVote?: (locationId: string, originalReportId: string, voteType: 'still_there' | 'not_there' | 'cleaned') => void;
 }
 
 const RecenterMap: React.FC<{ center: [number, number] }> = ({ center }) => {
@@ -85,6 +92,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
   height = '600px',
   onMapClick,
   selectedLocation,
+  onVote,
 }) => {
   const [isClient, setIsClient] = useState(false);
   
@@ -162,7 +170,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
             {/* Custom Marker */}
             <Marker 
               position={[location.lat, location.lng]} 
-              icon={createCustomIcon(location.intensity)}
+              icon={createCustomIcon(location.intensity, location.photo)}
             >
               <Popup>
                 <div className="flex flex-col bg-white">
@@ -199,17 +207,25 @@ export const HeatMap: React.FC<HeatMapProps> = (({
                     <p className="text-xs text-gray-500 mb-3">If you pass this spot again, help keep the map current.</p>
                     
                     <div className="flex gap-2">
-                      <button className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-md flex items-center justify-center gap-1 transition-colors text-xs font-medium shadow-sm">
-                        <ThumbsUp size={14} className="text-yellow-500" />
-                        Still there
+                      <button 
+                        onClick={() => onVote && location.originalReportId && onVote(location.id, location.originalReportId, 'still_there')}
+                        className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-md flex flex-col items-center justify-center gap-1 transition-colors text-xs font-medium shadow-sm"
+                      >
+                        <div className="flex items-center gap-1">
+                          <ThumbsUp size={14} className="text-yellow-500" />
+                          <span>Still there</span>
+                        </div>
+                        <span className="text-[10px] text-gray-400">({location.stillThere || 0})</span>
                       </button>
-                      <button className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-md flex items-center justify-center gap-1 transition-colors text-xs font-medium shadow-sm">
-                        <ThumbsDown size={14} className="text-orange-500" />
-                        Gone
-                      </button>
-                      <button className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-md flex items-center justify-center gap-1 transition-colors text-xs font-medium shadow-sm">
-                        <Sparkles size={14} className="text-blue-500" />
-                        Cleaned
+                      <button 
+                        onClick={() => onVote && location.originalReportId && onVote(location.id, location.originalReportId, 'not_there')}
+                        className="flex-1 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 py-2 rounded-md flex flex-col items-center justify-center gap-1 transition-colors text-xs font-medium shadow-sm"
+                      >
+                        <div className="flex items-center gap-1">
+                          <ThumbsDown size={14} className="text-orange-500" />
+                          <span>Gone</span>
+                        </div>
+                        <span className="text-[10px] text-gray-400">({location.gone || 0})</span>
                       </button>
                     </div>
                     
