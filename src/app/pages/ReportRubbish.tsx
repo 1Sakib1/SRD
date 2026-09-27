@@ -37,7 +37,7 @@ export const ReportRubbish = () => {
   /**
    * AI Detection Logic with Rubbish Validation
    */
-  const detectRubbishWithAI = async (base64Photo: string) => {
+  const detectRubbishWithAI = async (base64Photo: string): Promise<boolean> => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
     if (!apiKey) {
       toast.error("API Key missing", {
@@ -304,9 +304,10 @@ export const ReportRubbish = () => {
         const compressedBase64 = await compressImage(file);
         
         // Let AI analyze the base64 version IMMEDIATELY (in parallel)
-        detectRubbishWithAI(compressedBase64);
-        
-        // Show uploading state
+        setPhoto(compressedBase64);
+          const isValid = await detectRubbishWithAI(compressedBase64);
+          if (!isValid) { setPhoto(''); return; }
+          // Show uploading state
         const toastId = toast.loading('Uploading image to secure storage...');
         
         // Convert Base64 back to Blob for Supabase Storage
