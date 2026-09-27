@@ -146,21 +146,26 @@ export const HeatMap: React.FC<HeatMapProps> = (({
           }
           /* Make the default X close button bigger and more touch-friendly on mobile */
           .leaflet-popup-close-button {
-            padding: 10px !important;
-            width: 36px !important;
-            height: 36px !important;
-            font-size: 26px !important;
-            line-height: 16px !important;
+            position: absolute !important;
+            top: 10px !important;
+            right: 10px !important;
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 20px !important;
+            line-height: 20px !important;
             color: #4b5563 !important;
-            z-index: 50;
-            background: white !important;
+            background-color: #f3f4f6 !important;
             border-radius: 50% !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-            margin-top: -8px !important;
-            margin-right: -8px !important;
-            position: absolute !important; display: flex !important;
+            display: flex !important;
             align-items: center;
             justify-content: center;
+            text-decoration: none !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+            z-index: 1000 !important;
+          }
+          .leaflet-popup-close-button:hover {
+            background-color: #e5e7eb !important;
+            color: #1f2937 !important;
           }
         `}
       </style>
