@@ -3,6 +3,7 @@ import Globe from 'react-globe.gl';
 import { supabase } from '../utils/supabase';
 import { X, MapPin, AlertTriangle, Activity, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { geoContains } from 'd3-geo';
 
 interface ReportPoint {
   id: string;
@@ -78,18 +79,15 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   const [countries, setCountries] = useState({ features: [] });
   const [highlightedCountry, setHighlightedCountry] = useState<string | null>(null);
 
-  const resolveCountryName = (address: string) => {
-    if (!address) return null;
-    const addr = address.toLowerCase();
-    if (addr.includes('usa') || addr.includes('united states') || addr.includes('carolina')) return 'United States of America';
-    if (addr.includes('uk') || addr.includes('united kingdom') || addr.includes('london')) return 'United Kingdom';
-    if (addr.includes('bangladesh') || addr.includes('dhaka')) return 'Bangladesh';
-    if (addr.includes('india') || addr.includes('mumbai')) return 'India';
-    if (addr.includes('brazil')) return 'Brazil';
-    if (addr.includes('france')) return 'France';
-    if (addr.includes('japan')) return 'Japan';
-    if (addr.includes('australia')) return 'Australia';
-    const found = (countries.features as any[]).find((f: any) => addr.includes(f.properties.ADMIN.toLowerCase()));
+    const resolveCountryName = (lat: number, lng: number) => {
+    if (!countries.features || countries.features.length === 0) return null;
+    const found = (countries.features as any[]).find((f: any) => {
+      try {
+        return geoContains(f, [lng, lat]);
+      } catch (e) {
+        return false;
+      }
+    });
     return found ? found.properties.ADMIN : null;
   };
 
@@ -293,9 +291,9 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           // Country Borders
             polygonsData={countries.features}
             polygonAltitude={0.005}
-            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 177, 80, 0.2)' : 'rgba(0, 0, 0, 0)'}
+            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.35)' : 'rgba(0, 0, 0, 0)'}
             polygonSideColor={() => 'rgba(0, 0, 0, 0)'}
-            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.3)'}
+            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.15)'}
             polygonsTransitionDuration={300}
 
             // Combine Countries and Cities into HTML elements for professional map styling
@@ -332,7 +330,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
                 globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.8 }, 1000);
               }
               setSelectedPoint(point);
-              setHighlightedCountry(resolveCountryName(point.location_address));
+              setHighlightedCountry(resolveCountryName(point.lat, point.lng));
             }}
             onPointHover={(d) => {
               if (containerRef.current) {
@@ -392,7 +390,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
                       globeEl.current.pointOfView({ lat: report.lat, lng: report.lng, altitude: 0.8 }, 1000);
                     }
                     setSelectedPoint(report);
-                    setHighlightedCountry(resolveCountryName(report.location_address));
+                    setHighlightedCountry(resolveCountryName(report.lat, report.lng));
                   }}
                   className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-1.5 sm:p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left shrink-0 cursor-pointer hover:bg-black/60 transition-colors"
                 >
