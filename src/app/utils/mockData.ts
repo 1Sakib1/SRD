@@ -109,16 +109,17 @@ export const SYDNEY_LOCATIONS: LocationPoint[] = [
 ];
 
 export const RUBBISH_TYPES = [
-  'Plastic Bottles',
-  'Food Waste',
-  'Cigarette Butts',
+  'Plastic Waste (Bottles, Bags, Packaging)',
+  'Food & Organic Waste',
+  'Cigarette Butts & Vapes',
   'Paper & Cardboard',
-  'Glass Bottles',
-  'Metal Cans',
-  'E-Waste',
-  'Furniture',
+  'Glass (Bottles, Broken Glass)',
+  'Metal (Cans, Scrap)',
+  'E-Waste (Electronics, Batteries)',
+  'Large Items (Furniture, Appliances)',
   'Construction Debris',
-  'General Litter',
-  'Organic Waste',
+  'Textiles & Clothing',
+  'Medical / Hazardous Waste',
+  'General Litter / Mixed',
   'Other',
 ];
