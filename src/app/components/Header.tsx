@@ -1,7 +1,7 @@
 import { LitterPinLogo } from './LitterPinLogo';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { Leaf, LogOut, LayoutDashboard, FileText, BookOpen, Recycle, DollarSign, Menu, X, Trophy } from 'lucide-react';
+import { Leaf, LogOut, LayoutDashboard, FileText, BookOpen, Recycle, DollarSign, Menu, X, Trophy, Map as MapIcon } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
 import { useState } from 'react';
 
@@ -115,6 +115,13 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                       <span>Report</span>
                     </Link>
                     <Link
+                      to="/map"
+                      className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-[#00B150] transition-colors"
+                    >
+                      <MapIcon className="w-4 h-4" />
+                      <span>Map</span>
+                    </Link>
+                    <Link
                       to="/leaderboard"
                       className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-[#00B150] transition-colors"
                     >
@@ -190,6 +197,14 @@ export const Header: React.FC<HeaderProps> = ({ variant = 'authenticated' }) => 
                 >
                   <FileText className="w-5 h-5" />
                   <span className="font-medium">Report Rubbish</span>
+                </Link>
+                <Link
+                  to="/map"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-[#00B150] rounded-lg transition-colors active:scale-95"
+                >
+                  <MapIcon className="w-5 h-5" />
+                  <span className="font-medium">Community Map</span>
                 </Link>
                 <Link
                   to="/leaderboard"

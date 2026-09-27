@@ -12,6 +12,7 @@ import { Awareness } from './pages/Awareness';
 import { AboutUs } from './pages/AboutUs';
 import { NotFound } from './pages/NotFound';
 import { Leaderboard } from './pages/Leaderboard';
+import { MapPage } from './pages/MapPage';
 import { DebugUsers } from './pages/DebugUsers';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -127,7 +128,7 @@ export const router = createBrowserRouter([
         element: <ProtectedAdmin />,
       },
       {
-        path: '/leaderboard',
+        path: '/map', element: <MapPage /> }, { path: '/leaderboard',
         element: <Leaderboard />,
       },
       {

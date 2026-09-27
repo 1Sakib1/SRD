@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { useAuth } from '../context/AuthContext';
 import { RUBBISH_TYPES, LocationPoint } from '../utils/mockData';
 import { getCurrentLocation, reverseGeocode } from '../utils/geocoding';
-import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle } from 'lucide-react';
+import { MapPin, Navigation, Camera, Send, Loader2, Sparkles, XCircle, Map } from 'lucide-react';
 import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import { supabase } from '../utils/supabase';
@@ -578,7 +578,7 @@ export const ReportRubbish = () => {
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-4">Live community reports showing rubbish density hotspots</p>
+              <div className="flex justify-between items-center mb-4"><p className="text-sm text-gray-600">Live community reports showing rubbish density hotspots</p><Link to="/map" className="inline-flex items-center text-[#00B150] text-sm font-medium hover:underline"><Map className="w-4 h-4 mr-1" /> View Full Map</Link></div>
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} onVote={handleVote} />
           </div>
         </div>
