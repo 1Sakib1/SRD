@@ -16,6 +16,9 @@ interface ReportPoint {
 
 
 const MAJOR_COUNTRIES = [
+  { name: 'BANGLADESH', lat: 23.6850, lng: 90.3563 },
+  { name: 'SPAIN', lat: 40.4637, lng: -3.7492 },
+  { name: 'ITALY', lat: 41.8719, lng: 12.5674 },
   { name: 'UNITED STATES', lat: 39.8283, lng: -98.5795 },
   { name: 'CANADA', lat: 56.1304, lng: -106.3468 },
   { name: 'BRAZIL', lat: -14.2350, lng: -51.9253 },
@@ -36,6 +39,8 @@ const MAJOR_COUNTRIES = [
 ];
 
 const MAJOR_CITIES = [
+  { name: 'Dhaka', lat: 23.8103, lng: 90.4125, country: 'Bangladesh' },
+  { name: 'Madrid', lat: 40.4168, lng: -3.7038, country: 'Spain' },
   { name: 'New York', lat: 40.7128, lng: -74.0060, country: 'USA' },
   { name: 'London', lat: 51.5074, lng: -0.1278, country: 'UK' },
   { name: 'Tokyo', lat: 35.6762, lng: 139.6503, country: 'Japan' },
@@ -71,6 +76,23 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPoint, setSelectedPoint] = useState<ReportPoint | null>(null);
   const [countries, setCountries] = useState({ features: [] });
+  const [highlightedCountry, setHighlightedCountry] = useState<string | null>(null);
+
+  const resolveCountryName = (address: string) => {
+    if (!address) return null;
+    const addr = address.toLowerCase();
+    if (addr.includes('usa') || addr.includes('united states') || addr.includes('carolina')) return 'United States of America';
+    if (addr.includes('uk') || addr.includes('united kingdom') || addr.includes('london')) return 'United Kingdom';
+    if (addr.includes('bangladesh') || addr.includes('dhaka')) return 'Bangladesh';
+    if (addr.includes('india') || addr.includes('mumbai')) return 'India';
+    if (addr.includes('brazil')) return 'Brazil';
+    if (addr.includes('france')) return 'France';
+    if (addr.includes('japan')) return 'Japan';
+    if (addr.includes('australia')) return 'Australia';
+    const found = (countries.features as any[]).find((f: any) => addr.includes(f.properties.ADMIN.toLowerCase()));
+    return found ? found.properties.ADMIN : null;
+  };
+
 
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/vasturiano/react-globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
@@ -185,6 +207,9 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 1500);
         }
         setSelectedPoint(null);
+          setHighlightedCountry(null);
+                setHighlightedCountry(null);
+          setHighlightedCountry(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -268,9 +293,9 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           // Country Borders
             polygonsData={countries.features}
             polygonAltitude={0.005}
-            polygonCapColor={() => 'rgba(0, 0, 0, 0)'}
+            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 177, 80, 0.2)' : 'rgba(0, 0, 0, 0)'}
             polygonSideColor={() => 'rgba(0, 0, 0, 0)'}
-            polygonStrokeColor={() => 'rgba(255, 255, 255, 0.3)'}
+            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.3)'}
             polygonsTransitionDuration={300}
 
             // Combine Countries and Cities into HTML elements for professional map styling
@@ -307,6 +332,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
                 globeEl.current.pointOfView({ lat: point.lat, lng: point.lng, altitude: 0.8 }, 1000);
               }
               setSelectedPoint(point);
+              setHighlightedCountry(resolveCountryName(point.location_address));
             }}
             onPointHover={(d) => {
               if (containerRef.current) {
@@ -360,7 +386,15 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
                   }}
                   exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-1.5 sm:p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left shrink-0"
+                  onClick={() => {
+                    handleInteract();
+                    if (globeEl.current) {
+                      globeEl.current.pointOfView({ lat: report.lat, lng: report.lng, altitude: 0.8 }, 1000);
+                    }
+                    setSelectedPoint(report);
+                    setHighlightedCountry(resolveCountryName(report.location_address));
+                  }}
+                  className="bg-black/40 backdrop-blur-md border-l-2 border-[#00B150] p-1.5 sm:p-2 rounded-r-md w-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] origin-left shrink-0 cursor-pointer hover:bg-black/60 transition-colors"
                 >
                   <div className="flex items-center justify-between gap-1 sm:gap-2 mb-0.5">
                     <span className="text-[#00B150] font-mono text-[8px] sm:text-[9px] font-bold uppercase truncate">
@@ -406,6 +440,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedPoint(null);
+          setHighlightedCountry(null);
               }}
               className="text-gray-400 hover:text-gray-900 transition-colors p-1"
             >
