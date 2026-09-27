@@ -181,7 +181,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
       
        
       
-      globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 0);
+      globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 0.4 }, 0);
     }
     
     return () => window.removeEventListener('resize', handleResize);
@@ -202,7 +202,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
         if (globeEl.current) {
           globeEl.current.controls().autoRotate = true;
           // Optionally return to default orbit
-          globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 2.2 }, 1500);
+          globeEl.current.pointOfView({ lat: -25.2744, lng: 133.7751, altitude: 0.4 }, 1500);
         }
         setSelectedPoint(null);
           setHighlightedCountry(null);
@@ -267,7 +267,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           width={dimensions.width}
           height={dimensions.height}
           backgroundColor="rgba(0,0,0,0)"
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          globeImageUrl="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_4096.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           
           // Flat colored heatmap layer!
@@ -370,7 +370,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           <Activity size={10} />
           <span>Recent Activity</span>
         </div>
-        <div className="flex flex-col gap-1.5 relative h-[70px] sm:h-[120px] overflow-hidden">
+        <div className="flex flex-col gap-1.5 relative h-[70px] sm:h-[120px] overflow-hidden pointer-events-auto">
           <AnimatePresence initial={false}>
               {recentReports.map((report, idx) => (
                 <motion.div
