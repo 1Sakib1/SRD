@@ -65,9 +65,7 @@ export const ReportRubbish = () => {
 
       const interaction = await ai.interactions.create({
           model: "gemini-3.6-flash",
-          config: {
-            responseMimeType: "application/json"
-          },
+          response_mime_type: "application/json",
           input: [
             { type: "text", text: prompt },
             {
@@ -87,7 +85,13 @@ export const ReportRubbish = () => {
       let descText = "";
       
       try {
-        const parsed = JSON.parse(responseText.trim());
+        // Strip potential markdown wrappers
+        let cleanText = responseText.trim();
+        if (cleanText.startsWith('```json')) cleanText = cleanText.substring(7);
+        if (cleanText.startsWith('```')) cleanText = cleanText.substring(3);
+        if (cleanText.endsWith('```')) cleanText = cleanText.substring(0, cleanText.length - 3);
+        
+        const parsed = JSON.parse(cleanText.trim());
         detectedTypeText = parsed.type || "";
         descText = parsed.description || "";
       } catch (e) {
