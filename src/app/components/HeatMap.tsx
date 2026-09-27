@@ -256,7 +256,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
                     
                     <button 
                       onClick={() => document.querySelector<HTMLElement>('.leaflet-popup-close-button')?.click()}
-                      className="w-full mt-3 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-sm font-semibold transition-colors sm:hidden shadow-sm"
+                      className="w-full mt-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-xs font-semibold transition-colors shadow-sm"
                     >
                       Close Map View
                     </button>

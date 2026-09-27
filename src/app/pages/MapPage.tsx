@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router';
+import { X } from 'lucide-react';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
 import { LocationPoint } from '../utils/mockData';
@@ -112,16 +114,23 @@ export const MapPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-1 flex flex-col w-full h-[calc(100vh-73px)]">
-        <div className="bg-white px-4 py-3 border-b border-gray-200 shadow-sm z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="bg-white px-4 py-3 border-b border-gray-200 shadow-sm z-10 flex items-center justify-between gap-2">
           <div>
             <h1 className="text-lg font-bold text-[#333333] flex items-center">
               Community Map
               <span className="ml-2 w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
             </h1>
-            <p className="text-xs text-gray-500">Live community reports showing rubbish density hotspots</p>
+            <p className="text-xs text-gray-500 hidden sm:block">Live community reports showing rubbish density hotspots</p>
           </div>
+          <Link 
+            to="/report" 
+            className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium transition-colors"
+          >
+            <X className="w-4 h-4" />
+            <span className="hidden sm:inline">Close Map</span>
+          </Link>
         </div>
-        <div className="flex-1 w-full relative h-[600px] lg:h-auto">
+        <div className="flex-1 w-full relative min-h-[600px]">
           <HeatMap 
             locations={mapLocations} 
             center={mapCenter} 
