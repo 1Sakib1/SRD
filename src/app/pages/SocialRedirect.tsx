@@ -37,13 +37,10 @@ export const SocialRedirect = () => {
         // Force Android Chrome via intent
         const intentUrl = `intent://litterpin.org/auth#Intent;scheme=https;package=com.android.chrome;end;`;
         window.location.href = intentUrl;
-        
-        // Fallback if intent fails
-        setTimeout(() => {
-           // Still stay on this page to show instructions
-        }, 2000);
+      } else if (/iPad|iPhone|iPod/.test(ua)) {
+        // Attempt to force Chrome on iOS if it is installed
+        window.location.href = 'googlechromes://litterpin.org/auth';
       }
-      // For iOS, we must rely on user instructions since there's no universal intent to break out.
     } else {
       // If NOT in an in-app browser, redirect to auth immediately
       navigate('/auth', { replace: true });

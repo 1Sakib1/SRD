@@ -142,7 +142,7 @@ export const ReportRubbish = () => {
         return false;
       }
 
-    }       } catch (error: any) {
+    } catch (error: any) {
         console.error("AI Error:", error);
         
         let displayMessage = "Please enter details manually.";
@@ -601,3 +601,4 @@ export const ReportRubbish = () => {
     </div>
   );
 };
+
