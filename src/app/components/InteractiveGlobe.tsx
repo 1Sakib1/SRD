@@ -192,7 +192,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
         if (first) next.push(first);
         return next;
       });
-    }, 3000);
+    }, 4500);
     return () => clearInterval(timer);
   }, [tickerItems.length]);
 
