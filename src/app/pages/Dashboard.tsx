@@ -146,6 +146,9 @@ export const Dashboard = () => {
         address: groupReports[0].location.address || `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
         reports: reportCount,
         intensity,
+        photo: groupReports[0].photo || groupReports[0].image_url,
+        type: groupReports[0].type,
+        date: groupReports[0].created_at || groupReports[0].createdAt || groupReports[0].timestamp
       };
     }).filter((loc): loc is LocationPoint => loc !== null); // Filter out any null entries
   };

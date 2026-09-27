@@ -161,8 +161,11 @@ export const ReportRubbish = () => {
               lat,
               lng,
               address: group[0].type || 'Rubbish Report',
-              reports: group.length,
-              intensity: Math.max(0.3, Math.min(group.length / 10, 1))
+                reports: group.length,
+                intensity: Math.max(0.3, Math.min(group.length / 10, 1)),
+                photo: group[0].image_url,
+                type: group[0].type,
+                date: group[0].created_at
             };
           });
           
