@@ -447,32 +447,20 @@ export const ReportRubbish = () => {
         await loadReports();
         if (user && user.email) {
           toast.success(`Report submitted! A confirmation email is being sent to ${user.email}.`);
-          try {
-            fetch('https://api.resend.com/emails', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                from: 'LitterPin <noreply@admin.litterpin.org>',
-                to: [user.email],
-                subject: 'Report Submitted Successfully! - LitterPin',
-                html: `
-                  <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
-                    <h2 style="color: #10b981;">Report Submitted Successfully! 🌍</h2>
-                    <p>Hi ${user.name || 'there'},</p>
-                    <p>Thank you for submitting a rubbish report! We have successfully received it and it's now marked as pending review.</p>
-                    <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                      <p style="margin: 0; color: #166534; font-weight: bold;">🎉 Reward Earned!</p>
-                      <p style="margin: 5px 0 0 0; color: #15803d;">You have automatically earned <strong>10 eco-points ($0.10)</strong> for your contribution.</p>
-                    </div>
-                    <p>Keep up the great work keeping our environment clean!</p>
-                  </div>
-                `
-              })
-            });
-          } catch (e) {
+          
+            try {
+              fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  to: user.email,
+                  name: user.name || ''
+                })
+              });
+            } catch (e) {
+
             console.error('Failed to send confirmation email', e);
           }
         } else {

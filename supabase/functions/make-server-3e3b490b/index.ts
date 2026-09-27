@@ -83,10 +83,10 @@ async function sendPasswordResetEmail(email: string, resetCode: string, userName
     }
     
     console.log('📧 Attempting to send email to:', email);
-    console.log('📧 From address: Smart Rubbish Detection <onboarding@resend.dev>');
+    console.log('📧 From address: LitterPin <noreply@admin.litterpin.org>');
     
     const { data, error } = await resend.emails.send({
-      from: 'Smart Rubbish Detection <onboarding@resend.dev>',
+      from: 'LitterPin <noreply@admin.litterpin.org>',
       to: [email],
       subject: 'Reset Your Password - Smart Rubbish Detection System',
       html: `
@@ -337,6 +337,41 @@ app.post("/make-server-3e3b490b/auth/google-login", async (c) => {
 });
 
 // Report endpoints
+
+app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
+  try {
+    const { to, name } = await c.req.json();
+    if (!to) return c.json({ error: 'Missing email' }, 400);
+
+    const apiKey = Deno.env.get('RESEND_API_KEY');
+    if (!apiKey) return c.json({ error: 'No Resend API Key' }, 500);
+
+    const { data, error } = await resend.emails.send({
+      from: 'LitterPin <noreply@admin.litterpin.org>',
+      to: [to],
+      subject: 'Report Submitted Successfully! - LitterPin',
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
+          <h2 style="color: #10b981;">Report Submitted Successfully! 🌍</h2>
+          <p>Hi ${name || 'there'},</p>
+          <p>Thank you for submitting a rubbish report! We have successfully received it and it's now marked as pending review.</p>
+          <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <p style="margin: 0; color: #166534; font-weight: bold;">🌟 Reward Earned!</p>
+            <p style="margin: 5px 0 0 0; color: #15803d;">You have automatically earned <strong>10 eco-points ($0.01)</strong> for your contribution.</p>
+          </div>
+          <p>Keep up the great work keeping our environment clean!</p>
+        </div>
+      `
+    });
+
+    if (error) throw error;
+    return c.json({ success: true, data }, 200);
+  } catch (err) {
+    console.error('Email send failed:', err);
+    return c.json({ error: String(err) }, 500);
+  }
+});
+
 app.post("/make-server-3e3b490b/reports/submit", async (c) => {
   try {
     const { userId, type, description, photo, location } = await c.req.json();
