@@ -16,6 +16,7 @@ import { MapPage } from './pages/MapPage';
 import { DebugUsers } from './pages/DebugUsers';
 import { SocialRedirect } from './pages/SocialRedirect';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { InAppBrowserGuard } from './components/InAppBrowserGuard';
 
 // Root layout component that provides auth context
 const RootLayout = () => {
@@ -140,6 +141,7 @@ export const router = createBrowserRouter([
         path: '/debug-users',
         element: <ProtectedDebugUsers />,
       },
+      
       {
         path: '*',
         element: <NotFound />,
