@@ -14,8 +14,9 @@ export const InAppBrowserGuard = ({ children }: { children: React.ReactNode }) =
       setOs('ios');
     }
 
-    const rules = [
-      'FBAN', 'FBAV', // Facebook
+        const rules = [
+      'FBAN', 'FBAV', 'FB4A', 'FB_IAB', 'FBIOS', 'FBOP', // Facebook Apps
+      'Messenger', 'MessengerForiOS', 'MESSENGER',       // Facebook Messenger
       'Instagram',     // Instagram
       'Snapchat',      // Snapchat
       'Line',          // Line
