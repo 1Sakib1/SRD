@@ -79,6 +79,28 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   const [countries, setCountries] = useState({ features: [] });
   const [highlightedCountry, setHighlightedCountry] = useState<string | null>(null);
 
+  const globeHtmlElements = React.useMemo(() => {
+    return [
+      ...MAJOR_COUNTRIES.map(c => ({ ...c, type: 'country' })),
+      ...MAJOR_CITIES.map(c => ({ ...c, type: 'city' })),
+      ...(selectedPoint ? [{ ...selectedPoint, type: 'selected' }] : [])
+    ];
+  }, [selectedPoint]);
+
+  
+  
+  const getHexAltitude = React.useCallback((d: any) => d.sumWeight * 0.005, []);
+  const getRingColor = React.useCallback(() => (t: number) => `rgba(0, 177, 80, ${1 - t})`, []);
+
+  const getPolygonAltitude = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 0.05 : 0.005, [highlightedCountry]);
+  const getPolygonCapColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.6)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
+  const getPolygonSideColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.4)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
+  const getPolygonStrokeColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.2)', [highlightedCountry]);
+  const getPointRadius = React.useCallback((d: any) => d.id === selectedPoint?.id ? 0.8 : 0.4, [selectedPoint]);
+  const getPointColor = React.useCallback((d: any) => d.id === selectedPoint?.id ? 'rgba(0,255,115,1)' : 'rgba(0,177,80,0.5)', [selectedPoint]);
+
+
+
     const resolveCountryName = (lat: number, lng: number) => {
     if (!countries.features || countries.features.length === 0) return null;
     const found = (countries.features as any[]).find((f: any) => {
@@ -156,26 +178,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
       .subscribe();
 
     
-  const globeHtmlElements = React.useMemo(() => {
-    return [
-      ...MAJOR_COUNTRIES.map(c => ({ ...c, type: 'country' })),
-      ...MAJOR_CITIES.map(c => ({ ...c, type: 'city' })),
-      ...(selectedPoint ? [{ ...selectedPoint, type: 'selected' }] : [])
-    ];
-  }, [selectedPoint]);
 
-  
-  
-  const getHexAltitude = React.useCallback((d: any) => d.sumWeight * 0.005, []);
-  const getHexColor = React.useCallback(() => '#00ff73', []);
-  const getRingColor = React.useCallback(() => (t: number) => `rgba(0, 177, 80, ${1 - t})`, []);
-
-  const getPolygonAltitude = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 0.05 : 0.005, [highlightedCountry]);
-  const getPolygonCapColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.6)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
-  const getPolygonSideColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.4)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
-  const getPolygonStrokeColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.2)', [highlightedCountry]);
-  const getPointRadius = React.useCallback((d: any) => d.id === selectedPoint?.id ? 0.8 : 0.4, [selectedPoint]);
-  const getPointColor = React.useCallback((d: any) => d.id === selectedPoint?.id ? 'rgba(0,255,115,1)' : 'rgba(0,177,80,0.5)', [selectedPoint]);
 
   return () => {
       supabase.removeChannel(channel);
