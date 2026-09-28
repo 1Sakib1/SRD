@@ -155,7 +155,29 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
       })
       .subscribe();
 
-    return () => {
+    
+  const globeHtmlElements = React.useMemo(() => {
+    return [
+      ...MAJOR_COUNTRIES.map(c => ({ ...c, type: 'country' })),
+      ...MAJOR_CITIES.map(c => ({ ...c, type: 'city' })),
+      ...(selectedPoint ? [{ ...selectedPoint, type: 'selected' }] : [])
+    ];
+  }, [selectedPoint]);
+
+  
+  
+  const getHexAltitude = React.useCallback((d: any) => d.sumWeight * 0.005, []);
+  const getHexColor = React.useCallback(() => '#00ff73', []);
+  const getRingColor = React.useCallback(() => (t: number) => `rgba(0, 177, 80, ${1 - t})`, []);
+
+  const getPolygonAltitude = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 0.05 : 0.005, [highlightedCountry]);
+  const getPolygonCapColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.6)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
+  const getPolygonSideColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.4)' : 'rgba(0, 0, 0, 0)', [highlightedCountry]);
+  const getPolygonStrokeColor = React.useCallback((d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.2)', [highlightedCountry]);
+  const getPointRadius = React.useCallback((d: any) => d.id === selectedPoint?.id ? 0.8 : 0.4, [selectedPoint]);
+  const getPointColor = React.useCallback((d: any) => d.id === selectedPoint?.id ? 'rgba(0,255,115,1)' : 'rgba(0,177,80,0.5)', [selectedPoint]);
+
+  return () => {
       supabase.removeChannel(channel);
     };
   }, []);
@@ -277,30 +299,27 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           hexMargin={0.2}
           hexTopColor={d => getHexColor(d.sumWeight)}
           hexSideColor={d => getHexColor(d.sumWeight)}
-          hexAltitude={d => Math.min(d.sumWeight * 0.08, 0.6)} // 3D Bar effect based on report count
+          hexAltitude={getHexAltitude} // 3D Bar effect based on report count
           hexBinMerge={false}
           hexTransitionDuration={1000}
           
           // Keep the radar rings for that live tech aesthetic
           ringsData={reports}
-          ringColor={() => (t: number) => `rgba(0, 177, 80, ${1 - t})`}
+          ringColor={getRingColor}
           ringMaxRadius={2}
           ringPropagationSpeed={1.5}
           ringRepeatPeriod={1500}
           
           // Country Borders
             polygonsData={countries.features}
-            polygonAltitude={(d: any) => d.properties.ADMIN === highlightedCountry ? 0.05 : 0.005}
-            polygonCapColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.6)' : 'rgba(0, 0, 0, 0)'}
-            polygonSideColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 0.4)' : 'rgba(0, 0, 0, 0)'}
-            polygonStrokeColor={(d: any) => d.properties.ADMIN === highlightedCountry ? 'rgba(0, 255, 115, 1)' : 'rgba(255, 255, 255, 0.2)'}
+            polygonAltitude={getPolygonAltitude}
+            polygonCapColor={getPolygonCapColor}
+            polygonSideColor={getPolygonSideColor}
+            polygonStrokeColor={getPolygonStrokeColor}
             polygonsTransitionDuration={500}
 
             // Combine Countries and Cities into HTML elements for professional map styling
-            htmlElementsData={[
-              ...MAJOR_COUNTRIES.map(c => ({ ...c, type: 'country' })),
-              ...MAJOR_CITIES.map(c => ({ ...c, type: 'city' }))
-            ]}
+            htmlElementsData={globeHtmlElements}
             htmlElement={(d: any) => {
               const el = document.createElement('div');
               if (d.type === 'country') {
@@ -321,8 +340,8 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
             pointsData={reports}
             pointLat={(d: any) => d.lat}
             pointLng={(d: any) => d.lng}
-            pointRadius={(d: any) => d.id === selectedPoint?.id ? 0.8 : 0.4}
-            pointColor={(d: any) => d.id === selectedPoint?.id ? 'rgba(0,255,115,1)' : 'rgba(0,177,80,0.5)'}
+            pointRadius={getPointRadius}
+            pointColor={getPointColor}
             onPointClick={(d) => {
               const point = d as ReportPoint;
               handleInteract();
