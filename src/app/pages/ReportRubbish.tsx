@@ -507,9 +507,9 @@ export const ReportRubbish = () => {
       // 1. Create anonymous account
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/auth/anonymous-login`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${publicAnonKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: guestEmail, name: guestNameInput })
         }
       );
@@ -692,7 +692,7 @@ return (
 
       {/* Guest Modal */}
       {showGuestModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl relative">
             <button 
               onClick={() => setShowGuestModal(false)}
