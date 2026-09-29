@@ -71,10 +71,9 @@ export const createOrGetAnonymousUser = async (
 
     // Create a new anonymous user
     const now = new Date().toISOString();
-    const user: User = {
+    const user: any = {
       id: `anon-${Date.now()}`,
       email: sanitizedEmail,
-      password: crypto.randomUUID(), // Unusable random password
       name: sanitizedName,
       role: 'guest',
       ecoPoints: 0,
