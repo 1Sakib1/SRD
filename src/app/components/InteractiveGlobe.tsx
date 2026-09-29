@@ -76,6 +76,9 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPoint, setSelectedPoint] = useState<ReportPoint | null>(null);
+  const [tourIndex, setTourIndex] = useState(0);
+  const [userInteracted, setUserInteracted] = useState(false);
+
   const [countries, setCountries] = useState({ features: [] });
   const [highlightedCountry, setHighlightedCountry] = useState<string | null>(null);
 
@@ -239,6 +242,45 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  
+  // Automated Tour Sequence
+  useEffect(() => {
+    if (reports.length === 0 || userInteracted || selectedPoint || focusLocation) return;
+    
+    // Step 1: Default spinning state (10 seconds)
+    if (globeEl.current) {
+        globeEl.current.controls().autoRotate = true;
+        // Optionally recenter or zoom out
+        globeEl.current.pointOfView({ altitude: 2.2 }, 1500); 
+    }
+    
+    let tourZoomTimer;
+    
+    const spinTimer = setTimeout(() => {
+      if (userInteracted || selectedPoint || focusLocation) return;
+      
+      // Step 2: Zoom into a report (5 seconds)
+      const report = reports[tourIndex % reports.length];
+      if (globeEl.current) {
+        globeEl.current.controls().autoRotate = false;
+        globeEl.current.pointOfView({ lat: report.lat, lng: report.lng, altitude: 0.4 }, 2000);
+      }
+      
+      // Step 3: Wait 5 seconds, then increment tourIndex to loop back to spinning
+      tourZoomTimer = setTimeout(() => {
+        if (!userInteracted && !selectedPoint && !focusLocation) {
+          setTourIndex(prev => prev + 1);
+        }
+      }, 5000);
+      
+    }, 10000); // 10 seconds of spinning
+    
+    return () => {
+      clearTimeout(spinTimer);
+      clearTimeout(tourZoomTimer);
+    };
+  }, [tourIndex, reports, userInteracted, selectedPoint, focusLocation]);
+
   const handleInteract = () => {
     if (globeEl.current) {
       globeEl.current.controls().autoRotate = false;
@@ -278,7 +320,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
     <div 
       ref={containerRef} 
       className="relative w-full aspect-[4/3] sm:aspect-square md:aspect-[4/3] rounded-2xl shadow-2xl border-4 border-white/20 bg-[#0a1118] overflow-hidden"
-      onPointerDown={handleInteract}
+      onPointerDown={() => { setUserInteracted(true); handleInteract(); }}
     >
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-[#0a1118]/80 z-10">
@@ -326,7 +368,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
             htmlElement={(d: any) => {
               const el = document.createElement('div');
               if (d.type === 'country') {
-                el.innerHTML = `<div style="color: rgba(255, 255, 255, 0.4); font-family: monospace; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; text-align: center; text-shadow: 0px 0px 4px rgba(0,0,0,0.8); pointer-events: none; transform: translate(-50%, -50%);">${d.name}</div>`;
+                el.innerHTML = `<div style="color: rgba(255, 255, 255, 0.4); font-family: monospace; font-size: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; text-align: center; text-shadow: 0px 0px 4px rgba(0,0,0,0.8); pointer-events: none; transform: translate(-50%, -50%);">${d.name}</div>`;
               } else {
                 el.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, 0); pointer-events: none;">
                   <div style="width: 4px; height: 4px; background: rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 4px rgba(255,255,255,0.5);"></div>
@@ -345,7 +387,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
             pointLng={(d: any) => d.lng}
             pointRadius={getPointRadius}
             pointColor={getPointColor}
-            onPointClick={(d) => {
+            onPointClick={(d) => { setUserInteracted(true);
               const point = d as ReportPoint;
               handleInteract();
               if (globeEl.current) {
