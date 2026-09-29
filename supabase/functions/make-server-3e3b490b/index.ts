@@ -340,15 +340,16 @@ app.post("/make-server-3e3b490b/auth/google-login", async (c) => {
 
 app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
   try {
-    const { to, name } = await c.req.json();
-    if (!to) return c.json({ error: 'Missing email' }, 400);
+    const { to, email, name } = await c.req.json();
+      const targetEmail = to || email;
+    if (!targetEmail) return c.json({ error: 'Missing email' }, 400);
 
     const apiKey = Deno.env.get('RESEND_API_KEY');
     if (!apiKey) return c.json({ error: 'No Resend API Key' }, 500);
 
     const { data, error } = await resend.emails.send({
       from: 'LitterPin <noreply@admin.litterpin.org>',
-      to: [to],
+      to: [targetEmail],
       subject: 'Report Submitted Successfully! - LitterPin',
       html: `
           <!DOCTYPE html>
