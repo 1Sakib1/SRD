@@ -340,7 +340,7 @@ app.post("/make-server-3e3b490b/auth/google-login", async (c) => {
 
 app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
   try {
-    const { to, email, name } = await c.req.json();
+    const { to, email, name, isGuest } = await c.req.json();
       const targetEmail = to || email;
     if (!targetEmail) return c.json({ error: 'Missing email' }, 400);
 

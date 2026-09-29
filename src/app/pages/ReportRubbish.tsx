@@ -463,10 +463,10 @@ export const ReportRubbish = () => {
       return;
     }
 
-    await submitReportData(user.id, user.email, user.name);
+    await submitReportData(user.id, user.email, user.name, user.role === "guest");
   };
 
-  const submitReportData = async (userId: string, emailStr?: string, userName?: string) => {
+  const submitReportData = async (userId: string, emailStr?: string, userName?: string, isGuestUser?: boolean) => {
     try {
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/submit`,
@@ -495,7 +495,7 @@ export const ReportRubbish = () => {
             fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${publicAnonKey}`, 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: targetEmail, name: userName || guestNameInput || 'User', reportType: type })
+              body: JSON.stringify({ email: targetEmail, name: userName || guestNameInput || 'User', reportType: type, isGuest: isGuestUser })
             });
           } catch(e) {}
         } else {
@@ -552,7 +552,7 @@ export const ReportRubbish = () => {
       
       // 3. Submit report using new user ID
       setIsSubmitting(true);
-      await submitReportData(data.user.id, data.user.email);
+      await submitReportData(data.user.id, data.user.email, guestNameInput, true);
     } catch (err) {
       toast.error('An error occurred');
     } finally {
