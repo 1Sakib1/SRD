@@ -50,8 +50,20 @@ export const ReportRubbish = () => {
     }
 
     setIsAIAnalyzing(true);
+    setScanProgress(0);
     setType('');
     setDescription('');
+    
+    // Start animation loop to 55%
+    const progressInterval = setInterval(() => {
+      setScanProgress(prev => {
+        if (prev >= 55) {
+          clearInterval(progressInterval);
+          return 55;
+        }
+        return prev + 5; // increment by 5
+      });
+    }, 100);
 
     try {
       const ai = new GoogleGenAI({ apiKey });
@@ -121,8 +133,10 @@ export const ReportRubbish = () => {
         toast.error("No rubbish detected", {
           description: "Gemini couldn't identify valid waste in this photo. Please try a clearer shot.",
           icon: <XCircle className="text-red-500" />
-        });
-        return false;
+          });
+          clearInterval(progressInterval);
+          setScanProgress(0);
+          return false;
       }
 
       const validatedType = RUBBISH_TYPES.find(t => 
@@ -136,17 +150,24 @@ export const ReportRubbish = () => {
           setDescription(descText);
         }
         toast.success("AI Analysis complete!", {
-          description: "Rubbish identified and fields populated.",
-        });
-        return true;
+            description: "Rubbish identified and fields populated.",
+          });
+          clearInterval(progressInterval);
+          setScanProgress(100);
+          await new Promise(r => setTimeout(r, 400));
+          return true;
       } else {
         toast.error("Invalid rubbish type", {
           description: "The detected items don't match our reporting categories."
-        });
-        return false;
+          });
+          clearInterval(progressInterval);
+          setScanProgress(0);
+          return false;
       }
 
     } catch (error: any) {
+        clearInterval(progressInterval);
+        setScanProgress(0);
         console.error("AI Error:", error);
         
         let displayMessage = "Please enter details manually.";
@@ -171,8 +192,10 @@ export const ReportRubbish = () => {
         });
         return true;
       } finally {
-      setIsAIAnalyzing(false);
-    }
+        clearInterval(progressInterval);
+        setIsAIAnalyzing(false);
+        setScanProgress(0);
+      }
   };
 
   /**
