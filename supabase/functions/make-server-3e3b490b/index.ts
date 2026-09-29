@@ -89,280 +89,62 @@ async function sendPasswordResetEmail(email: string, resetCode: string, userName
       from: 'LitterPin <noreply@admin.litterpin.org>',
       to: [email],
       subject: 'Reset Your Password - Smart Rubbish Detection System',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Reset Your Password</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
-          <table role="presentation" style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td align="center" style="padding: 40px 0;">
-                <table role="presentation" style="width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                  <!-- Header -->
-                  <tr>
-                    <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 8px 8px 0 0;">
-                      <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">🌱 Smart Rubbish Detection</h1>
-                    </td>
-                  </tr>
-                  
-                  <!-- Content -->
-                  <tr>
-                    <td style="padding: 40px;">
-                      <h2 style="margin: 0 0 20px; color: #1f2937; font-size: 20px; font-weight: 600;">Reset Your Password</h2>
-                      
-                      <p style="margin: 0 0 20px; color: #4b5563; font-size: 16px; line-height: 1.5;">
-                        Hi ${userName || 'there'},
-                      </p>
-                      
-                      <p style="margin: 0 0 20px; color: #4b5563; font-size: 16px; line-height: 1.5;">
-                        We received a request to reset your password. Use the verification code below to continue:
-                      </p>
-                      
-                      <!-- Reset Code Box -->
-                      <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 30px 0;">
-                        <tr>
-                          <td align="center" style="padding: 20px; background-color: #f9fafb; border: 2px dashed #10b981; border-radius: 8px;">
-                            <div style="font-size: 32px; font-weight: 700; letter-spacing: 8px; color: #10b981; font-family: 'Courier New', monospace;">
-                              ${resetCode}
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                      
-                      <p style="margin: 0 0 20px; color: #4b5563; font-size: 16px; line-height: 1.5;">
-                        This code will expire in <strong style="color: #dc2626;">15 minutes</strong>.
-                      </p>
-                      
-                      <p style="margin: 0 0 20px; color: #4b5563; font-size: 16px; line-height: 1.5;">
-                        If you didn't request this password reset, you can safely ignore this email. Your password will remain unchanged.
-                      </p>
-                      
-                      <!-- Security Notice -->
-                      <div style="margin-top: 30px; padding: 16px; background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
-                        <p style="margin: 0; color: #92400e; font-size: 14px;">
-                          <strong>🔒 Security Tip:</strong> Never share this code with anyone. Our team will never ask for your verification code.
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                  
-                  <!-- Footer -->
-                  <tr>
-                    <td style="padding: 30px 40px; background-color: #f9fafb; border-radius: 0 0 8px 8px; text-align: center;">
-                      <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
-                        LitterPin
-                      </p>
-                      <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-                        Building a cleaner, greener future together 🌍
-                      </p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </body>
-        </html>
-      `,
-    });
-
-    if (error) {
-      console.error('❌ Resend email error:', error);
-      return { success: false, error: error.message };
-    }
-
-    console.log('✅ Password reset email sent successfully:', data);
-    return { success: true };
-  } catch (error) {
-    console.error('❌ Failed to send email:', error);
-    return { success: false, error: String(error) };
-  }
-}
-
-// Initialize demo user on server startup
-(async () => {
-  try {
-    console.log('🚀 Initializing server...');
-    
-    // Check if demo user exists
-    const demoEmail = 'demo@sydney.com';
-    const demoUserKey = `user:${demoEmail}`;
-    const existingDemoUser = await kv.get(demoUserKey);
-    
-    if (!existingDemoUser) {
-      console.log('📝 Creating demo user account...');
-      await auth.registerUser(demoEmail, 'Demo@123', 'Demo User');
-      console.log('✅ Demo user created successfully!');
-      console.log('   Email: demo@sydney.com');
-      console.log('   Password: Demo@123');
-    } else {
-      console.log('✅ Demo user already exists');
-    }
-  } catch (error) {
-    console.error('❌ Failed to initialize demo user:', error);
-  }
-})();
-
-// Health check endpoint
-app.get("/make-server-3e3b490b/health", (c) => {
-  return c.json({ status: "ok" });
-});
-
-// Debug endpoint - check if user exists
-app.post("/make-server-3e3b490b/auth/check-user", async (c) => {
-  try {
-    const { email } = await c.req.json();
-    console.log('🔍 Check user request:', { email });
-    
-    const sanitizedEmail = email.toLowerCase().trim();
-    const userKey = `user:${sanitizedEmail}`;
-    const user = await kv.get(userKey);
-    
-    return c.json({ 
-      exists: !!user,
-      email: sanitizedEmail,
-      userKey: userKey
-    }, 200);
-  } catch (error) {
-    console.error('Check user error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-// Debug endpoint - list all users in KV store
-app.get("/make-server-3e3b490b/auth/list-users", async (c) => {
-  try {
-    console.log('📋 Listing all users from KV store');
-    
-    // Get all keys with user: prefix
-    const userKeys = await kv.getByPrefix('user:');
-    console.log('Found user keys:', userKeys?.length || 0);
-    
-    return c.json({ 
-      count: userKeys?.length || 0,
-      users: userKeys || []
-    }, 200);
-  } catch (error) {
-    console.error('List users error:', error);
-    return c.json({ error: 'Internal server error', details: String(error) }, 500);
-  }
-});
-
-// Google OAuth signup endpoint
-app.post("/make-server-3e3b490b/auth/google-signup", async (c) => {
-  try {
-    const { email, name, googleId, avatar } = await c.req.json();
-    console.log('🔐 Google signup request:', { email, name, googleId });
-
-    if (!email || !googleId) {
-      return c.json({ error: 'Email and Google ID are required' }, 400);
-    }
-
-    const sanitizedEmail = email.toLowerCase().trim();
-    const userKey = `user:${sanitizedEmail}`;
-    
-    // Check if user already exists
-    const existingUser = await kv.get(userKey);
-    if (existingUser) {
-      console.log('User already exists, returning existing user');
-      return c.json({ user: existingUser }, 200);
-    }
-
-    // Create new user
-    const userId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newUser = {
-      id: userId,
-      email: sanitizedEmail,
-      name: name || 'Google User',
-      role: 'user',
-      googleId: googleId,
-      avatar: avatar || null,
-      ecoPoints: 0,
-      credits: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    await kv.set(userKey, newUser);
-    await kv.set(`user_by_id:${userId}`, newUser);
-    await kv.set(`user_by_google:${googleId}`, newUser);
-
-    console.log('✅ Google user created successfully:', userId);
-    return c.json({ user: newUser }, 201);
-  } catch (error) {
-    console.error('Google signup error:', error);
-    return c.json({ error: 'Internal server error', message: String(error) }, 500);
-  }
-});
-
-// Google OAuth login endpoint
-app.post("/make-server-3e3b490b/auth/google-login", async (c) => {
-  try {
-    const { email, googleId } = await c.req.json();
-    console.log('🔐 Google login request:', { email, googleId });
-
-    if (!email || !googleId) {
-      return c.json({ error: 'Email and Google ID are required' }, 400);
-    }
-
-    const sanitizedEmail = email.toLowerCase().trim();
-    const userKey = `user:${sanitizedEmail}`;
-    
-    // Try to find user by email
-    let user = await kv.get(userKey);
-    
-    // If not found by email, try by Google ID
-    if (!user) {
-      user = await kv.get(`user_by_google:${googleId}`);
-    }
-
-    if (!user) {
-      return c.json({ error: 'User not found' }, 404);
-    }
-
-    // Update last login time
-    user.updatedAt = new Date().toISOString();
-    await kv.set(userKey, user);
-
-    console.log('✅ Google login successful:', user.id);
-    return c.json({ user }, 200);
-  } catch (error) {
-    console.error('Google login error:', error);
-    return c.json({ error: 'Internal server error', message: String(error) }, 500);
-  }
-});
-
-// Report endpoints
-
-app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
-  try {
-    const { to, name } = await c.req.json();
-    if (!to) return c.json({ error: 'Missing email' }, 400);
-
-    const apiKey = Deno.env.get('RESEND_API_KEY');
-    if (!apiKey) return c.json({ error: 'No Resend API Key' }, 500);
-
-    const { data, error } = await resend.emails.send({
-      from: 'LitterPin <noreply@admin.litterpin.org>',
-      to: [to],
-      subject: 'Report Submitted Successfully! - LitterPin',
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
-          <h2 style="color: #10b981;">Report Submitted Successfully! 🌍</h2>
-          <p>Hi ${name || 'there'},</p>
-          <p>Thank you for submitting a rubbish report! We have successfully received it and it's now marked as pending review.</p>
-          <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 6px; margin: 20px 0;">
-            <p style="margin: 0; color: #166534; font-weight: bold;">🌟 Reward Earned!</p>
-            <p style="margin: 5px 0 0 0; color: #15803d;">You have automatically earned <strong>10 eco-points ($0.01)</strong> for your contribution.</p>
-          </div>
-          <p>Keep up the great work keeping our environment clean!</p>
-        </div>
-      `
-    });
+              html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9fafb; margin: 0; padding: 0; }
+              .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); margin-top: 40px; margin-bottom: 40px; }
+              .header { text-align: center; border-bottom: 2px solid #f3f4f6; padding-bottom: 20px; margin-bottom: 30px; }
+              .logo { max-height: 60px; }
+              .title { color: #10b981; font-size: 24px; font-weight: bold; margin-top: 20px; margin-bottom: 5px; }
+              .content { color: #374151; font-size: 16px; line-height: 1.6; }
+              .reward-box { background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
+              .reward-title { margin: 0; color: #166534; font-size: 18px; font-weight: bold; }
+              .reward-text { margin: 10px 0 0 0; color: #15803d; }
+              .btn { display: inline-block; background-color: #00B150; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; margin-top: 20px; }
+              .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f3f4f6; text-align: center; font-size: 12px; color: #6b7280; line-height: 1.5; }
+              .footer a { color: #00B150; text-decoration: none; margin: 0 5px; }
+              .footer a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <img src="https://litterpin.org/litterpin-logo-transparent.png" alt="LitterPin Logo" class="logo" />
+                <div class="title">Report Submitted Successfully</div>
+              </div>
+              <div class="content">
+                <p>Hello ${name || 'there'},</p>
+                <p>Thank you for submitting a new environmental report to LitterPin. Your submission has been securely received and is currently marked as pending review by our AI categorization system.</p>
+                <p>Your effort plays a vital role in mapping and managing waste across the globe. By actively participating, you are directly contributing to a cleaner, safer environment.</p>
+                
+                <div class="reward-box">
+                  <p class="reward-title">🌱 Reward Earned</p>
+                  <p class="reward-text">You have automatically been credited with <strong>10 eco-points ($0.01)</strong> for your contribution!</p>
+                </div>
+                
+                <div style="text-align: center;">
+                  <a href="https://litterpin.org/map" class="target-blank btn">View Community Map</a>
+                </div>
+              </div>
+              <div class="footer">
+                <p>This is an automated message generated by LitterPin. Please do not reply directly to this email. If you need assistance, contact us at <a href="mailto:litterpin.org@gmail.com">litterpin.org@gmail.com</a>.</p>
+                <p>
+                  <a href="https://litterpin.org/privacy">Privacy Policy</a> | 
+                  <a href="https://litterpin.org/terms">Terms of Service</a> | 
+                  <a href="https://litterpin.org">Visit LitterPin.org</a>
+                </p>
+                <p>&copy; ${new Date().getFullYear()} LitterPin. All rights reserved.</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `
+      });
 
     if (error) throw error;
     return c.json({ success: true, data }, 200);
