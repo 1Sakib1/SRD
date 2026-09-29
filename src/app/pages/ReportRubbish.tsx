@@ -469,7 +469,7 @@ export const ReportRubbish = () => {
           try {
             fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Authorization': `Bearer ${publicAnonKey}`, 'Content-Type': 'application/json' },
               body: JSON.stringify({ email: targetEmail, name: guestNameInput || 'User', reportType: type })
             });
           } catch(e) {}
