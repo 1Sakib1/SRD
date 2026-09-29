@@ -205,7 +205,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
               <Popup>
                 <div className="flex flex-col bg-white">
                   <div className="p-4 border-b border-gray-100">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-between items-start mb-2 pr-10">
                       <h3 className="font-semibold text-gray-900 text-sm leading-tight pr-2">
                         {location.type || 'Litter'} report near {location.address.split(',')[0]}
                       </h3>
@@ -259,12 +259,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
                       </button>
                     </div>
                     
-                    <button 
-                      onClick={() => document.querySelector<HTMLElement>('.leaflet-popup-close-button')?.click()}
-                      className="w-full mt-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md text-xs font-semibold transition-colors shadow-sm"
-                    >
-                      Close Map View
-                    </button>
+                    
                   </div>
                 </div>
               </Popup>
