@@ -182,7 +182,8 @@ export const ReportRubbish = () => {
     try {
       const { data, error } = await supabase
         .from('reports')
-        .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes');
+        .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes')
+          .order('created_at', { ascending: false });
         
       if (error) {
         console.error('Error fetching reports from Supabase:', error);
@@ -266,8 +267,9 @@ export const ReportRubbish = () => {
             lng: newReport.location_lng,
             address: newReport.location_address || 'Sydney, NSW',
             reports: 1,
-            intensity: 0.8 // pending
-          };
+            intensity: 0.8, // pending
+              photo: newReport.photo
+            };
           setMapLocations(prev => [...prev, newLocationPoint]);
         }
       })
@@ -671,13 +673,13 @@ return (
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-xl font-semibold text-[#333333]">Live Rubbish Heat Map</h2>
+                <h2 className="text-xl font-semibold text-[#333333]">Pin Manually</h2>
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4"><p className="text-sm text-gray-600">Live community reports showing rubbish density hotspots</p><Link to="/map" className="inline-flex items-center justify-center bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[#00B150] text-sm font-medium hover:bg-gray-100 transition-colors self-start sm:self-auto shadow-sm whitespace-nowrap"><Map className="w-5 h-5 mr-1.5" /> View Full Map</Link></div>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4"><p className="text-sm text-gray-600">Live Rubbish Heat Map — community reports showing rubbish density hotspots</p><Link to="/map" className="inline-flex items-center justify-center bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[#00B150] text-sm font-medium hover:bg-gray-100 transition-colors self-start sm:self-auto shadow-sm whitespace-nowrap"><Map className="w-5 h-5 mr-1.5" /> View Full Map</Link></div>
             <HeatMap locations={mapLocations} center={mapCenter} height="550px" onMapClick={handleMapClick} selectedLocation={selectedLocation} onVote={handleVote} />
           </div>
         </div>
