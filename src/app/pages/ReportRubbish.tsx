@@ -19,6 +19,7 @@ export const ReportRubbish = () => {
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
   const [isDetecting, setIsDetecting] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form fields
