@@ -17,6 +17,9 @@ import { DebugUsers } from './pages/DebugUsers';
 import { SocialRedirect } from './pages/SocialRedirect';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { InAppBrowserGuard } from './components/InAppBrowserGuard';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
+
 
 // Root layout component that provides auth context
 const RootLayout = () => {
@@ -101,6 +104,15 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <ErrorBoundary />,
     children: [
+
+      {
+        path: '/privacy',
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: '/terms',
+        element: <TermsOfService />,
+      },
       {
         path: '/',
         element: <Landing />,
