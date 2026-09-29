@@ -463,10 +463,10 @@ export const ReportRubbish = () => {
       return;
     }
 
-    await submitReportData(user.id, user.email);
+    await submitReportData(user.id, user.email, user.name);
   };
 
-  const submitReportData = async (userId: string, emailStr?: string) => {
+  const submitReportData = async (userId: string, emailStr?: string, userName?: string) => {
     try {
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/submit`,
@@ -495,7 +495,7 @@ export const ReportRubbish = () => {
             fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${publicAnonKey}`, 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: targetEmail, name: guestNameInput || 'User', reportType: type })
+              body: JSON.stringify({ email: targetEmail, name: userName || guestNameInput || 'User', reportType: type })
             });
           } catch(e) {}
         } else {

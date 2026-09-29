@@ -386,6 +386,7 @@ app.post("/make-server-3e3b490b/email/send-confirmation", async (c) => {
                   <a href="https://litterpin.org" style="color: #00B150; text-decoration: none; margin: 0 5px;">Visit LitterPin.org</a>
                 </p>
                 <p>&copy; ${new Date().getFullYear()} LitterPin. All rights reserved.</p>
+                <p style="margin-top: 15px; font-size: 10px; color: #9ca3af; text-align: justify;">This message contains privileged and confidential information intended only for the use of the addressee. If you are not the intended recipient you must not disseminate, copy or take any action in reliance upon it. If you received this in error, please notify us immediately and delete this email.</p>
               </div>
             </div>
           </body>
