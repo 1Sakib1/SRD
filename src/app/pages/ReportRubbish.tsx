@@ -66,7 +66,7 @@ export const ReportRubbish = () => {
       {"type": "Category Name or 'None'", "description": "1-sentence description"}`;
 
       const response = await ai.models.generateContent({
-          model: "gemini-1.5-flash",
+          model: "gemini-3.5-flash-lite",
           config: {
             responseMimeType: "application/json"
           },
