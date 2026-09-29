@@ -573,6 +573,24 @@ app.put("/make-server-3e3b490b/reports/:reportId/status", async (c) => {
 });
 
 // Authentication endpoints
+app.post("/make-server-3e3b490b/auth/anonymous-login", async (c) => {
+  try {
+    const { email, name } = await c.req.json();
+    console.log('dY"? Anonymous login request:', { email, name });
+    
+    const result = await auth.createOrGetAnonymousUser(email, name || 'Anonymous Reporter');
+    
+    if (result.error) {
+      return c.json({ error: result.error }, 400);
+    }
+    
+    return c.json({ user: result.user }, 200);
+  } catch (error) {
+    console.error('Anonymous login endpoint error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
 app.post("/make-server-3e3b490b/auth/register", async (c) => {
   try {
     const { email, password, name } = await c.req.json();

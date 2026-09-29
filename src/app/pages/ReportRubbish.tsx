@@ -13,7 +13,7 @@ import { supabase } from '../utils/supabase';
 import { GoogleGenAI } from "@google/genai";
 
 export const ReportRubbish = () => {
-  const { user, isGuest } = useAuth();
+  const { user, login, isGuest } = useAuth();
   const navigate = useNavigate();
   
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
@@ -29,6 +29,9 @@ export const ReportRubbish = () => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [address, setAddress] = useState('');
+  const [showGuestModal, setShowGuestModal] = useState(false);
+  const [guestNameInput, setGuestNameInput] = useState('');
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [guestEmail, setGuestEmail] = useState('');
   
   // Map data
@@ -419,31 +422,26 @@ export const ReportRubbish = () => {
     setAddress(await reverseGeocode(lat, lng));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
     if (!type || !description || !latitude) {
       toast.error('Please fill in all required fields');
+      setIsSubmitting(false);
       return;
     }
 
     if (!user) {
-      const formData = {
-        type,
-        description,
-        photo,
-        latitude,
-        longitude,
-        address,
-        locationMode
-      };
-      sessionStorage.setItem('pendingReportData', JSON.stringify(formData));
-      toast.info('Please log in to submit your report');
-      navigate('/auth?redirect=/report');
+      setIsSubmitting(false);
+      setShowGuestModal(true);
       return;
     }
 
+    await submitReportData(user.id, user.email);
+  };
+
+  const submitReportData = async (userId: string, emailStr?: string) => {
     try {
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/submit`,
@@ -454,47 +452,89 @@ export const ReportRubbish = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: userId,
             type,
             description,
             photo,
             location: { lat: parseFloat(latitude), lng: parseFloat(longitude), address },
-            guestEmail: isGuest ? guestEmail : undefined,
+            guestEmail: guestEmail || emailStr,
           }),
         }
       );
       if (response.ok) {
         await loadReports();
-        if (user && user.email) {
-          toast.success(`Report submitted! A confirmation email is being sent to ${user.email}.`);
-          
-            try {
-              fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${publicAnonKey}`
-                },
-                body: JSON.stringify({
-                  to: user.email,
-                  name: user.name || ''
-                })
-              });
-            } catch (e) {
-
-            console.error('Failed to send confirmation email', e);
-          }
+        if (emailStr || guestEmail) {
+          const targetEmail = emailStr || guestEmail;
+          toast.success(`Report submitted! A confirmation email is being sent to ${targetEmail}.`);
+          try {
+            fetch('https://qqxftmbuosckaqpmetcc.supabase.co/functions/v1/make-server-3e3b490b/email/send-confirmation', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: targetEmail, name: guestNameInput || 'User', reportType: type })
+            });
+          } catch(e) {}
         } else {
           toast.success('Report submitted successfully!');
         }
-        setTimeout(() => navigate('/dashboard'), 2000);
+        setType('');
+        setDescription('');
+        setPhoto('');
+        setShowGuestModal(false);
+        setGuestEmail('');
+        
+        // Remove from sessionStorage
+        sessionStorage.removeItem('pendingReportData');
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to submit report');
       }
     } catch (error) {
       toast.error('Failed to submit report');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return (
+  const handleGuestSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!guestEmail) {
+      toast.error('Email is required for confirmation');
+      return;
+    }
+    
+    setIsGuestLoading(true);
+    try {
+      // 1. Create anonymous account
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/auth/anonymous-login`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: guestEmail, name: guestNameInput })
+        }
+      );
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        toast.error(data.error || 'Failed to create anonymous account');
+        setIsGuestLoading(false);
+        return;
+      }
+      
+      // 2. Log them in locally
+      login(data.user);
+      
+      // 3. Submit report using new user ID
+      setIsSubmitting(true);
+      await submitReportData(data.user.id, data.user.email);
+    } catch (err) {
+      toast.error('An error occurred');
+    } finally {
+      setIsGuestLoading(false);
+    }
+  };
+return (
     <div className="min-h-screen bg-gray-50">
       <Header variant={user ? 'authenticated' : 'landing'} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -649,7 +689,74 @@ export const ReportRubbish = () => {
           </p>
         </div>
       </div>
+
+      {/* Guest Modal */}
+      {showGuestModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl relative">
+            <button 
+              onClick={() => setShowGuestModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <XCircle className="w-6 h-6" />
+            </button>
+            
+            <div className="text-center mb-6">
+              <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Send className="w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Almost Done!</h3>
+              <p className="text-gray-600">You can log in to track your reports, or just report anonymously.</p>
+            </div>
+            
+            <div className="space-y-4">
+              <Link to="/auth?redirect=/report" className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors">
+                Log In to Track Reports
+              </Link>
+              
+              <div className="relative flex items-center py-2">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">OR REPORT ANONYMOUSLY</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
+              
+              <form onSubmit={handleGuestSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email (for confirmation)</label>
+                  <input
+                    type="email"
+                    required
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Display Name (Optional)</label>
+                  <input
+                    type="text"
+                    value={guestNameInput}
+                    onChange={(e) => setGuestNameInput(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    placeholder="Anonymous Reporter"
+                  />
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={isGuestLoading}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-medium transition-colors disabled:opacity-50"
+                >
+                  {isGuestLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit Anonymously'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
