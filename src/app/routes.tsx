@@ -14,6 +14,7 @@ import { NotFound } from './pages/NotFound';
 import { Leaderboard } from './pages/Leaderboard';
 import { MapPage } from './pages/MapPage';
 import { DebugUsers } from './pages/DebugUsers';
+import { Donate } from './pages/Donate';
 import { SocialRedirect } from './pages/SocialRedirect';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { InAppBrowserGuard } from './components/InAppBrowserGuard';
