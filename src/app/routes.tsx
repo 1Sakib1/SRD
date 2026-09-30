@@ -151,6 +151,10 @@ export const router = createBrowserRouter([
         element: <AboutUs />,
       },
       {
+        path: '/donate',
+        element: <Donate />,
+      },
+      {
         path: '/debug-users',
         element: <ProtectedDebugUsers />,
       },
