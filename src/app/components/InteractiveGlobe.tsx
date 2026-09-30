@@ -337,7 +337,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
           width={dimensions.width}
           height={dimensions.height}
           backgroundColor="rgba(0,0,0,0)"
-          globeImageUrl="/images/earth-hd.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           
           // Flat colored heatmap layer!
