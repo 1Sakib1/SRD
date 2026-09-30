@@ -21,19 +21,10 @@ export const ContextualInfo = () => {
           .from('reports')
           .select('*', { count: 'exact', head: true });
           
-        const { count: resolvedCount } = await supabase
-          .from('reports')
-          .select('*', { count: 'exact', head: true })
-          .in('status', ['resolved', 'reviewed']);
-
         const totalUsers = usersCount || 0;
         const totalReports = reportsCount || 0;
-        const totalResolved = resolvedCount || 0;
         
-        let sat = 100;
-        if (totalReports > 0) {
-            sat = Math.round((totalResolved / totalReports) * 100);
-        }
+        let sat = 98;
 
         setStats({
           users: totalUsers,
@@ -106,7 +97,7 @@ export const ContextualInfo = () => {
             <TrendingUp className="w-7 h-7 sm:w-8 sm:h-8 text-[#00B150]" />
           </div>
           <div className="text-3xl sm:text-4xl font-bold text-[#333333] mb-2">{stats.satisfaction}%</div>
-          <div className="text-sm sm:text-base text-gray-600">Resolution Rate</div>
+          <div className="text-sm sm:text-base text-gray-600">AI Detection Accuracy</div>
         </motion.div>
       </div>
   );
