@@ -36,7 +36,8 @@ const MAJOR_COUNTRIES = [
   { name: 'MEXICO', lat: 23.6345, lng: -102.5528 },
   { name: 'INDONESIA', lat: -0.7893, lng: 113.9213 },
   { name: 'SAUDI ARABIA', lat: 23.8859, lng: 45.0792 },
-  { name: 'NIGERIA', lat: 9.0820, lng: 8.6753 }
+  { name: 'NIGERIA', lat: 9.0820, lng: 8.6753 },
+    { name: 'NEW ZEALAND', lat: -40.9006, lng: 174.8860 },
 ];
 
 const MAJOR_CITIES = [
@@ -55,6 +56,8 @@ const MAJOR_CITIES = [
   { name: 'Cairo', lat: 30.0444, lng: 31.2357, country: 'Egypt' },
   { name: 'Mumbai', lat: 19.0760, lng: 72.8777, country: 'India' },
   { name: 'Moscow', lat: 55.7558, lng: 37.6173, country: 'Russia' },
+  { name: 'Auckland', lat: -36.8485, lng: 174.7633, country: 'New Zealand' },
+  { name: 'Wellington', lat: -41.2865, lng: 174.7762, country: 'New Zealand' },
   { name: 'Beijing', lat: 39.9042, lng: 116.4074, country: 'China' },
   { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, country: 'USA' },
   { name: 'Cape Town', lat: -33.9249, lng: 18.4241, country: 'South Africa' },
