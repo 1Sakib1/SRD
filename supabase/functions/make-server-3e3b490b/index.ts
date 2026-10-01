@@ -571,52 +571,6 @@ app.put("/make-server-3e3b490b/reports/:reportId/status", async (c) => {
     const reportId = c.req.param('reportId');
     const { status } = await c.req.json();
     console.log('🔄 Updating report status:', { reportId, status });
-
-
-app.delete("/make-server-3e3b490b/reports/:reportId", async (c) => {
-  try {
-    const reportId = c.req.param('reportId');
-    console.log('🗑️ Deleting report:', reportId);
-    
-    // Get the report
-    const reportKey = `report:${reportId}`;
-    const report = await kv.get(reportKey);
-    
-    if (!report) {
-      return c.json({ error: 'Report not found' }, 404);
-    }
-
-    // Delete from KV store
-    await kv.del(reportKey);
-    
-    // Delete from Postgres
-    try {
-      const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
-      
-      if (supabaseUrl && supabaseKey) {
-        const { createClient } = await import("npm:@supabase/supabase-js");
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        
-        const { error: pgError } = await supabase.from('reports').update({ status: 'archived_deleted' }).eq('id', reportId);
-        
-        if (pgError) {
-          console.error('Error archiving in Postgres reports table:', pgError);
-        } else {
-          console.log('Successfully archived in Postgres for ML dataset');
-        }
-      }
-    } catch (pgDeleteError) {
-      console.error('Exception archiving in Postgres:', pgDeleteError);
-    }
-    
-    return c.json({ success: true, message: 'Report deleted successfully' }, 200);
-  } catch (error) {
-    console.error('Delete report error:', error);
-    return c.json({ error: 'Internal server error', details: String(error) }, 500);
-  }
-});
-
     
     // Validate status
     if (!['pending', 'reviewed', 'resolved'].includes(status)) {
@@ -887,4 +841,50 @@ app.post("/make-server-3e3b490b/auth/reset-password", async (c) => {
   }
 });
 
+
+app.delete("/make-server-3e3b490b/reports/:reportId", async (c) => {
+  try {
+    const reportId = c.req.param('reportId');
+    console.log('🗑️ Deleting report:', reportId);
+    
+    // Get the report
+    const reportKey = `report:${reportId}`;
+    const report = await kv.get(reportKey);
+    
+    if (!report) {
+      return c.json({ error: 'Report not found' }, 404);
+    }
+
+    // Delete from KV store
+    await kv.del(reportKey);
+    
+    // Delete from Postgres (Soft Delete)
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+      
+      if (supabaseUrl && supabaseKey) {
+        const { createClient } = await import("npm:@supabase/supabase-js");
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        const { error: pgError } = await supabase.from('reports').update({ status: 'archived_deleted' }).eq('id', reportId);
+        
+        if (pgError) {
+          console.error('Error archiving in Postgres reports table:', pgError);
+        } else {
+          console.log('Successfully archived in Postgres for ML dataset');
+        }
+      }
+    } catch (pgDeleteError) {
+      console.error('Exception archiving in Postgres:', pgDeleteError);
+    }
+    
+    return c.json({ success: true, message: 'Report deleted successfully' }, 200);
+  } catch (error) {
+    console.error('Delete report error:', error);
+    return c.json({ error: 'Internal server error', details: String(error) }, 500);
+  }
+});
+
 Deno.serve(app.fetch);
+
