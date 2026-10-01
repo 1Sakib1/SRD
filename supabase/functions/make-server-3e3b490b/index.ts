@@ -598,16 +598,16 @@ app.delete("/make-server-3e3b490b/reports/:reportId", async (c) => {
         const { createClient } = await import("npm:@supabase/supabase-js");
         const supabase = createClient(supabaseUrl, supabaseKey);
         
-        const { error: pgError } = await supabase.from('reports').delete().eq('id', reportId);
+        const { error: pgError } = await supabase.from('reports').update({ status: 'archived_deleted' }).eq('id', reportId);
         
         if (pgError) {
-          console.error('Error deleting from Postgres reports table:', pgError);
+          console.error('Error archiving in Postgres reports table:', pgError);
         } else {
-          console.log('Successfully deleted from Postgres reports table');
+          console.log('Successfully archived in Postgres for ML dataset');
         }
       }
     } catch (pgDeleteError) {
-      console.error('Exception deleting from Postgres:', pgDeleteError);
+      console.error('Exception archiving in Postgres:', pgDeleteError);
     }
     
     return c.json({ success: true, message: 'Report deleted successfully' }, 200);
