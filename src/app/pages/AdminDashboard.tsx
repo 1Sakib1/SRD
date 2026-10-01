@@ -143,6 +143,36 @@ export const AdminDashboard = () => {
     }
   };
   
+  
+  const handleDeleteReport = async (reportId: string) => {
+    if (!window.confirm('Are you sure you want to permanently delete this report? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-3e3b490b/reports/${reportId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${publicAnonKey}`,
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete report');
+      }
+
+      // Remove from local state
+      setReports(prev => prev.filter(r => r.id !== reportId));
+      toast.success('Report deleted successfully');
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      toast.error('Failed to delete report');
+    }
+  };
+
   const handleStatusChange = (reportId: string, newStatus: Report['status']) => {
     // Get the report details before updating
     const report = reports.find(r => r.id === reportId);
@@ -450,8 +480,14 @@ export const AdminDashboard = () => {
                         className="px-4 py-2 bg-green-100 text-green-800 rounded-lg text-sm font-medium hover:bg-green-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Mark Resolved
-                      </button>
-                    </div>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteReport(report.id)}
+                          className="px-4 py-2 bg-red-100 text-red-800 rounded-lg text-sm font-medium hover:bg-red-200 transition-all ml-auto"
+                        >
+                          Delete
+                        </button>
+                      </div>
                   </div>
                 ))
               )}
