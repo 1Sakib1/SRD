@@ -18,12 +18,10 @@ mkdir -p public/images/partners
 
 Copy your images to these locations with **exact file names**:
 
-### Team Photos (4 images)
+### Team Photos (2 images)
 ```
 public/images/team/nazmus.jpg       ← Nazmus Sakib
 public/images/team/niloy.jpg        ← Md Abudozana Niloy
-public/images/team/suvekshya.jpg    ← Suvekshya Shrestha
-public/images/team/bisesta.jpg      ← Bisesta Shah
 ```
 
 ### Hero Image (1 image)
@@ -92,9 +90,7 @@ Smart-Rubbish-Detection/
 │       ├── hero.jpg
 │       ├── team/
 │       │   ├── nazmus.jpg
-│       │   ├── niloy.jpg
-│       │   ├── suvekshya.jpg
-│       │   └── bisesta.jpg
+│       │   └── niloy.jpg
 │       └── partners/
 │           ├── city-of-sydney.png
 │           ├── nsw-epa.png

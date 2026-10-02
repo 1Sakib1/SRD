@@ -22,22 +22,6 @@ const teamMembers = [
     avatar: '/images/team/niloy.jpg',
     fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MdAbudozanaNiloy&backgroundColor=059669',
   },
-  {
-    name: 'Suvekshya Shrestha',
-    email: 'team1@litterpin.org',
-    role: 'UI/UX Designer & Developer',
-    github: null,
-    avatar: '/images/team/suvekshya.jpg',
-    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SuvekshyaShrestha&backgroundColor=059669',
-  },
-  {
-    name: 'Bisesta Shah',
-    email: 'team2@litterpin.org',
-    role: 'Backend Developer',
-    github: null,
-    avatar: '/images/team/bisesta.jpg',
-    fallback: 'https://api.dicebear.com/7.x/avataaars/svg?seed=BisestaShah&backgroundColor=059669',
-  },
 ];
 
 const techStack = [
