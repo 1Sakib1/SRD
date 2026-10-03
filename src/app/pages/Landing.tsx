@@ -112,11 +112,11 @@ export const Landing = () => {
             >
               <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
                 <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere in the World</span>
+                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Together We Keep{' '}
-                <span className="text-green-100">Our World Clean</span>
+                <span className="text-green-100">Our Planet Clean</span>
               </h1>
               <p className="text-lg sm:text-xl text-white mb-6 sm:mb-8 leading-relaxed">
                 Photograph litter anywhere &mdash; a street, a park, a beach, a trail. Our AI
