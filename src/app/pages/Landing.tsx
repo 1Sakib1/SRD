@@ -95,7 +95,16 @@ export const Landing = () => {
       <Header variant="landing" />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-700 via-green-700 to-emerald-700 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-green-700 via-emerald-700 to-teal-700 overflow-hidden">
+        {/* Light bloom on the globe side - lifts the panel without sitting behind the copy */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(70% 90% at 82% 25%, rgba(74,222,128,0.42) 0%, rgba(45,212,191,0.18) 45%, rgba(0,0,0,0) 72%)',
+          }}
+        />
+
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -120,8 +129,8 @@ export const Landing = () => {
               </h1>
               <p className="text-lg sm:text-xl text-white mb-6 sm:mb-8 leading-relaxed">
                 Photograph litter anywhere &mdash; a street, a park, a beach, a trail. Our AI
-                verifies it, pins it to a live map your community can act on, and you earn
-                eco-points every time a spot gets cleared.
+                verifies it and pins it to a live map your community can act on. Every report
+                you send earns eco-points you can redeem for real credit.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
