@@ -95,16 +95,7 @@ export const Landing = () => {
       <Header variant="landing" />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-700 via-emerald-700 to-teal-700 overflow-hidden">
-        {/* Light bloom on the globe side - lifts the panel without sitting behind the copy */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(70% 90% at 82% 25%, rgba(74,222,128,0.42) 0%, rgba(45,212,191,0.18) 45%, rgba(0,0,0,0) 72%)',
-          }}
-        />
-
+      <section className="relative bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -119,15 +110,15 @@ export const Landing = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
-                <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
+              <div className="inline-flex items-center space-x-2 bg-white/85 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+                <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-[#04240f]" />
+                <span className="text-[#04240f] font-semibold text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#04240f] mb-4 sm:mb-6 leading-tight">
                 Together We Keep{' '}
-                <span className="text-green-100">Our Planet Clean</span>
+                Our Planet Clean
               </h1>
-              <p className="text-lg sm:text-xl text-white mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-[#04240f] mb-6 sm:mb-8 leading-relaxed">
                 Photograph litter anywhere &mdash; a street, a park, a beach, a trail. Our AI
                 verifies it and pins it to a live map your community can act on. Every report
                 you send earns eco-points you can redeem for real credit.
@@ -135,7 +126,7 @@ export const Landing = () => {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   to="/report"
-                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#00B150] rounded-lg text-base sm:text-lg font-medium hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#007A38] rounded-lg text-base sm:text-lg font-semibold hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
                 >
                   <span>Report Litter</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
