@@ -95,7 +95,7 @@ export const Landing = () => {
       <Header variant="landing" />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-green-700 via-green-700 to-emerald-700 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -112,14 +112,16 @@ export const Landing = () => {
             >
               <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
                 <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">Global Urban Waste Management Solution</span>
+                <span className="text-white font-medium text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere in the World</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Together We Keep{' '}
-                <span className="text-green-200">Our Cities Clean</span>
+                <span className="text-green-100">Our World Clean</span>
               </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-green-50 mb-6 sm:mb-8 leading-relaxed">
-                Citizen-Led Urban Mapping & Community Rewards.
+              <p className="text-lg sm:text-xl text-white mb-6 sm:mb-8 leading-relaxed">
+                Photograph litter anywhere &mdash; a street, a park, a beach, a trail. Our AI
+                verifies it, pins it to a live map your community can act on, and you earn
+                eco-points every time a spot gets cleared.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
