@@ -1,5 +1,5 @@
 import { publicAnonKey } from '../../utils/supabase/info';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { Header } from '../components/Header';
 import { HeatMap } from '../components/HeatMap';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import { supabase } from '../utils/supabase';
 import { GoogleGenAI } from "@google/genai";
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 
 export const ReportRubbish = () => {
   const { user, login, isGuest } = useAuth();
@@ -19,6 +20,12 @@ export const ReportRubbish = () => {
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
   const [isDetecting, setIsDetecting] = useState(false);
   const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
+  // AI fill animation state
+  const reduceMotion = useReducedMotion();
+  const [isTypingDesc, setIsTypingDesc] = useState(false);
+  const [aiFilledType, setAiFilledType] = useState(false);
+  const typingRef = useRef<number | null>(null);
+  const typeGlowRef = useRef<number | null>(null);
   const [scanProgress, setScanProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -42,6 +49,40 @@ export const ReportRubbish = () => {
   /**
    * AI Detection Logic with Rubbish Validation
    */
+  // Clear any in-flight animation timers if the page unmounts mid-analysis.
+  useEffect(() => () => {
+    if (typingRef.current) window.clearInterval(typingRef.current);
+    if (typeGlowRef.current) window.clearTimeout(typeGlowRef.current);
+  }, []);
+
+  // Stream the AI description in character by character. Total run stays ~1.4s
+  // regardless of length, so a long description does not drag.
+  const typeOutDescription = (text: string) => {
+    if (typingRef.current) { window.clearInterval(typingRef.current); typingRef.current = null; }
+    if (reduceMotion || !text) { setDescription(text); setIsTypingDesc(false); return; }
+
+    setDescription('');
+    setIsTypingDesc(true);
+    let i = 0;
+    const step = Math.max(1, Math.ceil(text.length / 85));
+    typingRef.current = window.setInterval(() => {
+      i = Math.min(text.length, i + step);
+      setDescription(text.slice(0, i));
+      if (i >= text.length) {
+        if (typingRef.current) window.clearInterval(typingRef.current);
+        typingRef.current = null;
+        setIsTypingDesc(false);
+      }
+    }, 16);
+  };
+
+  // Brief glow on the type dropdown when the AI fills it.
+  const flashTypeField = () => {
+    setAiFilledType(true);
+    if (typeGlowRef.current) window.clearTimeout(typeGlowRef.current);
+    typeGlowRef.current = window.setTimeout(() => setAiFilledType(false), 1500);
+  };
+
   const detectRubbishWithAI = async (base64Photo: string): Promise<boolean> => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
     if (!apiKey) {
@@ -146,8 +187,9 @@ export const ReportRubbish = () => {
 
       if (validatedType) {
         setType(validatedType);
+        flashTypeField();
         if (descText) {
-          setDescription(descText);
+          typeOutDescription(descText);
         }
         toast.success("AI Analysis complete!", {
             description: "Rubbish identified and fields populated.",
@@ -654,16 +696,81 @@ return (
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Rubbish Type</label>
-                <select value={type} onChange={(e) => setType(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" required>
-                  <option value="">Select type...</option>
-                  {RUBBISH_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                </select>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">Rubbish Type</label>
+                    <AnimatePresence>
+                      {aiFilledType && (
+                        <motion.span
+                          initial={{ opacity: 0, y: -4, scale: 0.9 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.25 }}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"
+                        >
+                          <Sparkles className="w-3 h-3" /> AI filled
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <motion.div
+                    animate={aiFilledType && !reduceMotion
+                      ? { scale: [1, 1.015, 1], boxShadow: ['0 0 0 0 rgba(16,185,129,0)', '0 0 0 4px rgba(16,185,129,0.28)', '0 0 0 0 rgba(16,185,129,0)'] }
+                      : {}}
+                    transition={{ duration: 1.2, ease: 'easeOut' }}
+                    className="rounded-lg"
+                  >
+                    <select value={type} onChange={(e) => setType(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" required>
+                      <option value="">Select type...</option>
+                      {RUBBISH_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </motion.div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Awaiting AI analysis..." rows={3} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" required />
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <AnimatePresence>
+                    {isTypingDesc && (
+                      <motion.span
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        Writing
+                        {[0, 1, 2].map((d) => (
+                          <motion.span
+                            key={d}
+                            className="w-1 h-1 rounded-full bg-emerald-600 inline-block"
+                            animate={{ opacity: [0.2, 1, 0.2] }}
+                            transition={{ duration: 0.9, repeat: Infinity, delay: d * 0.15 }}
+                          />
+                        ))}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <motion.div
+                  animate={isTypingDesc && !reduceMotion
+                    ? { boxShadow: '0 0 0 3px rgba(16,185,129,0.22)' }
+                    : { boxShadow: '0 0 0 0 rgba(16,185,129,0)' }}
+                  transition={{ duration: 0.35 }}
+                  className="rounded-lg"
+                >
+                  {/* readOnly while the AI text streams in, so a keystroke cannot
+                      race the interval and end up interleaved with it. */}
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    readOnly={isTypingDesc}
+                    placeholder="Awaiting AI analysis..."
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </motion.div>
               </div>
 
               <div className="space-y-4">
