@@ -150,15 +150,19 @@ export const Landing = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 relative">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="inline-flex items-center space-x-2 bg-white/14 border border-white/25 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+            <div>
+              {/* Staged entrance: badge, then the headline word by word, then the
+                  supporting copy, then the call to action. Each step waits for the
+                  previous one to read, instead of everything arriving at once. */}
+              <motion.div
+                className="inline-flex items-center space-x-2 bg-white/14 border border-white/25 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-[#EAFBF1]" />
                 <span className="text-[#EAFBF1] font-semibold text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
-              </div>
+              </motion.div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-[#F4FBF3] tracking-tight mb-4 sm:mb-6 leading-tight">
                 {HEADLINE_WORDS.map((word, i) => (
                   <React.Fragment key={word}>
@@ -166,7 +170,7 @@ export const Landing = () => {
                       className="inline-block"
                       initial={reduceMotion ? false : { opacity: 0, y: '0.45em', filter: 'blur(8px)' }}
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      transition={{ duration: 0.55, delay: 0.12 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.6, delay: 0.75 + i * 0.09, ease: [0.22, 1, 0.36, 1] }}
                     >
                       {word}
                     </motion.span>
@@ -174,11 +178,21 @@ export const Landing = () => {
                   </React.Fragment>
                 ))}
               </h1>
-              <p className="text-lg sm:text-xl font-medium text-[#CFE8DC] mb-6 sm:mb-8 leading-relaxed">
+              <motion.p
+                className="text-lg sm:text-xl font-medium text-[#CFE8DC] mb-6 sm:mb-8 leading-relaxed"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.5, ease: [0.22, 1, 0.36, 1] }}
+              >
                 Snap litter anywhere. Our AI verifies it, the map tracks it, and every
                 report earns you eco-points.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              </motion.p>
+              <motion.div
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.72, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <Link
                   to="/report"
                   className="px-6 sm:px-8 py-3 sm:py-4 bg-[#A3E635] text-[#09281B] rounded-lg text-base sm:text-lg font-bold hover:bg-[#BEF264] transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
@@ -186,8 +200,8 @@ export const Landing = () => {
                   <span>Report Litter</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
             
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
