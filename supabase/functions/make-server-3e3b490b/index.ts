@@ -658,6 +658,245 @@ app.put("/make-server-3e3b490b/reports/:reportId/status", async (c) => {
   }
 });
 
+app.post("/make-server-3e3b490b/auth/anonymous-login", async (c) => {
+  try {
+    const { email, name } = await c.req.json();
+    console.log('dY"? Anonymous login request:', { email, name });
+    
+    const result = await auth.createOrGetAnonymousUser(email, name || 'Anonymous Reporter');
+    
+    if (result.error) {
+      return c.json({ error: result.error }, 400);
+    }
+    
+    return c.json({ user: result.user }, 200);
+  } catch (error) {
+    console.error('Anonymous login endpoint error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+app.post("/make-server-3e3b490b/auth/register", async (c) => {
+  try {
+    const { email, password, name } = await c.req.json();
+    console.log('📝 Registration request:', { email, name });
+    
+    const result = await auth.registerUser(email, password, name);
+    
+    if (result.error) {
+      return c.json({ error: result.error }, 400);
+    }
+    
+    return c.json({ user: result.user }, 200);
+  } catch (error) {
+    console.error('Registration endpoint error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+app.post("/make-server-3e3b490b/auth/login", async (c) => {
+  try {
+    const { email, password } = await c.req.json();
+    console.log('🔐 Login request:', { email });
+    
+    const result = await auth.loginUser(email, password);
+    
+    if (result.error) {
+      return c.json({ error: result.error }, 400);
+    }
+    
+    return c.json({ user: result.user }, 200);
+  } catch (error) {
+    console.error('Login endpoint error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+app.post("/make-server-3e3b490b/auth/admin-login", async (c) => {
+  try {
+    const { email, password } = await c.req.json();
+    console.log('👑 Admin login request:', { email });
+    
+    const result = await auth.loginAdmin(email, password);
+    
+    if (result.error) {
+      return c.json({ error: result.error }, 400);
+    }
+    
+    return c.json({ user: result.user }, 200);
+  } catch (error) {
+    console.error('Admin login endpoint error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+// Forgot Password endpoint
+app.post("/make-server-3e3b490b/auth/forgot-password", async (c) => {
+  try {
+    const { email } = await c.req.json();
+    console.log('🔑 Forgot password request:', { email });
+
+    if (!email) {
+      return c.json({ error: 'Email is required' }, 400);
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim();
+    
+    // Rate limiting - 3 attempts per 15 minutes per email
+    const rateLimitResult = await checkRateLimit(`forgot-password:${sanitizedEmail}`, 3, 15);
+    if (!rateLimitResult.allowed) {
+      console.warn('⚠️ Rate limit exceeded for:', sanitizedEmail);
+      return c.json({ 
+        error: 'Too many password reset attempts. Please try again in 15 minutes.' 
+      }, 429);
+    }
+
+    const userKey = `user:${sanitizedEmail}`;
+    
+    // Check if user exists
+    const user = await kv.get(userKey);
+    
+    // Security: Don't reveal if user exists or not (always return success)
+    // This prevents email enumeration attacks
+    if (!user) {
+      console.log('⚠️ User not found, but returning success to prevent enumeration:', sanitizedEmail);
+      // Still return success to prevent attackers from knowing if email exists
+      return c.json({ 
+        message: 'If an account exists with this email, you will receive a password reset code shortly.' 
+      }, 200);
+    }
+
+    // Generate 6-digit reset code
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const resetKey = `reset:${sanitizedEmail}`;
+    
+    // Store reset code with 15 minute expiry and attempt tracking
+    const resetData = {
+      code: resetCode,
+      email: sanitizedEmail,
+      attempts: 0,
+      maxAttempts: 3,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
+      createdAt: new Date().toISOString()
+    };
+    
+    await kv.set(resetKey, resetData);
+    
+    // Send email with reset code
+    const emailResult = await sendPasswordResetEmail(sanitizedEmail, resetCode, user.name);
+    
+    if (!emailResult.success) {
+      console.error('❌ Failed to send reset email:', emailResult.error);
+      return c.json({ 
+        error: 'Failed to send reset email. Please try again later.' 
+      }, 500);
+    }
+    
+    console.log('✅ Reset code generated and email sent to:', sanitizedEmail);
+    console.log(`   Remaining attempts: ${rateLimitResult.remainingAttempts}`);
+    
+    return c.json({ 
+      message: 'If an account exists with this email, you will receive a password reset code shortly.',
+      remainingAttempts: rateLimitResult.remainingAttempts
+    }, 200);
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+// Reset Password endpoint
+app.post("/make-server-3e3b490b/auth/reset-password", async (c) => {
+  try {
+    const { email, resetCode, newPassword } = await c.req.json();
+    console.log('🔄 Reset password request:', { email });
+
+    if (!email || !resetCode || !newPassword) {
+      return c.json({ error: 'Email, reset code, and new password are required' }, 400);
+    }
+
+    if (newPassword.length < 6) {
+      return c.json({ error: 'Password must be at least 6 characters' }, 400);
+    }
+
+    const sanitizedEmail = email.toLowerCase().trim();
+    const resetKey = `reset:${sanitizedEmail}`;
+    
+    // Get reset data
+    const resetData = await kv.get(resetKey);
+    if (!resetData) {
+      return c.json({ error: 'Invalid or expired reset code' }, 400);
+    }
+
+    // Check if code is expired
+    const expiresAt = new Date(resetData.expiresAt);
+    if (expiresAt < new Date()) {
+      await kv.del(resetKey); // Clean up expired code
+      return c.json({ error: 'Reset code has expired. Please request a new one.' }, 400);
+    }
+
+    // Check attempts limit
+    if (resetData.attempts >= resetData.maxAttempts) {
+      await kv.del(resetKey); // Lock out after max attempts
+      console.warn('⚠️ Max reset attempts exceeded for:', sanitizedEmail);
+      return c.json({ 
+        error: 'Too many failed attempts. Please request a new reset code.' 
+      }, 400);
+    }
+
+    // Check if code matches
+    if (resetData.code !== resetCode) {
+      // Increment failed attempts
+      const updatedResetData = {
+        ...resetData,
+        attempts: resetData.attempts + 1
+      };
+      await kv.set(resetKey, updatedResetData);
+      
+      const remainingAttempts = resetData.maxAttempts - resetData.attempts - 1;
+      console.warn(`⚠️ Invalid reset code attempt for: ${sanitizedEmail}. Remaining: ${remainingAttempts}`);
+      
+      return c.json({ 
+        error: `Invalid reset code. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.` 
+      }, 400);
+    }
+
+    // Update user password
+    const userKey = `user:${sanitizedEmail}`;
+    const user = await kv.get(userKey);
+    
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404);
+    }
+
+    // Hash the new password
+    const bcrypt = await import("https://deno.land/x/bcrypt@v0.4.1/mod.ts");
+    const hashedPassword = await bcrypt.hash(newPassword);
+
+    // Update user
+    const updatedUser = {
+      ...user,
+      password: hashedPassword,
+      updatedAt: new Date().toISOString()
+    };
+    
+    await kv.set(userKey, updatedUser);
+    
+    // Delete reset code after successful reset
+    await kv.del(resetKey);
+    
+    // Clear rate limit for this email
+    await kv.del(`ratelimit:forgot-password:${sanitizedEmail}`);
+    
+    console.log('✅ Password reset successfully for:', sanitizedEmail);
+    return c.json({ message: 'Password reset successfully. You can now login with your new password.' }, 200);
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+
 app.delete("/make-server-3e3b490b/reports/:reportId", async (c) => {
   try {
     const reportId = c.req.param('reportId');
