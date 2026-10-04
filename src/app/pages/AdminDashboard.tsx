@@ -145,7 +145,7 @@ export const AdminDashboard = () => {
   
   
   const handleDeleteReport = async (reportId: string) => {
-    if (!window.confirm('Are you sure you want to permanently delete this report? This action cannot be undone.')) {
+    if (!window.confirm('Remove this report from the site?\n\nIt will immediately stop appearing for all visitors, including signed-in users and guests. The record itself is kept for research and AI model training, and is not erased.')) {
       return;
     }
 
@@ -166,10 +166,10 @@ export const AdminDashboard = () => {
 
       // Remove from local state
       setReports(prev => prev.filter(r => r.id !== reportId));
-      toast.success('Report deleted successfully');
+      toast.success('Report removed from public view');
     } catch (error) {
       console.error('Error deleting report:', error);
-      toast.error('Failed to delete report');
+      toast.error('Could not remove report — it is still visible. Please try again.');
     }
   };
 
