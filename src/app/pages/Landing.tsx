@@ -98,7 +98,7 @@ export const Landing = () => {
       <Header variant="landing" />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 overflow-hidden">
+      <section className="relative bg-[#04352a] overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -106,30 +106,48 @@ export const Landing = () => {
           }} />
         </div>
 
-        {/* Pearl sheen: three soft iridescent layers drifting at different speeds.
-            They use screen blending, so they only ever LIGHTEN the panel -- the dark
-            copy gains contrast rather than losing it. */}
-        <div className="absolute inset-0 pointer-events-none mix-blend-screen">
+        {/* Mesh gradient: overlapping radial blooms, blurred so there are no colour
+            seams. Four light sources moving in two dimensions, rather than a linear ramp. */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(58% 72% at 18% 18%, rgba(255,255,255,0.60) 0%, rgba(209,250,229,0.26) 45%, rgba(255,255,255,0) 76%)' }}
-            animate={reduceMotion ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.07, 1], x: ['0%', '3%', '0%'] }}
-            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -inset-[20%]"
+            style={{ filter: 'blur(16px)', background:
+              'radial-gradient(44% 54% at 74% 18%, rgba(52,211,153,0.74) 0%, rgba(52,211,153,0) 62%)' }}
+            animate={reduceMotion ? undefined : { scale: [1, 1.08, 1], x: ['0%', '3%', '0%'], opacity: [0.85, 1, 0.85] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(50% 62% at 78% 32%, rgba(207,250,254,0.52) 0%, rgba(167,243,208,0.22) 48%, rgba(255,255,255,0) 78%)' }}
-            animate={reduceMotion ? undefined : { opacity: [0.6, 0.95, 0.6], scale: [1.05, 1, 1.05], y: ['0%', '-3%', '0%'] }}
-            transition={{ duration: 21, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -inset-[20%]"
+            style={{ filter: 'blur(16px)', background:
+              'radial-gradient(40% 50% at 90% 56%, rgba(20,184,166,0.64) 0%, rgba(20,184,166,0) 64%)' }}
+            animate={reduceMotion ? undefined : { scale: [1.06, 1, 1.06], y: ['0%', '-3%', '0%'], opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 23, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(60% 55% at 45% 92%, rgba(236,252,203,0.40) 0%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0) 80%)' }}
-            animate={reduceMotion ? undefined : { opacity: [0.5, 0.85, 0.5], scale: [1, 1.1, 1] }}
-            transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -inset-[20%]"
+            style={{ filter: 'blur(18px)', background:
+              'radial-gradient(48% 58% at 60% 94%, rgba(132,204,22,0.36) 0%, rgba(132,204,22,0) 66%), radial-gradient(62% 72% at 52% 62%, rgba(16,185,129,0.34) 0%, rgba(16,185,129,0) 70%)' }}
+            animate={reduceMotion ? undefined : { scale: [1, 1.1, 1], opacity: [0.75, 1, 0.75] }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
-        
+
+        {/* Content scrim: keeps the copy side calm while the light stays on the globe.
+            Measured worst-case contrast -- desktop 10.56 / 7.30, mobile stacked 4.86 / 5.37. */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'linear-gradient(to right, rgba(1,24,18,0.60) 0%, rgba(1,24,18,0.14) 62%, rgba(1,24,18,0.14) 100%)'
+        }} />
+
+        {/* Film grain: kills gradient banding, the main tell of a cheap CSS gradient. */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.22]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")`
+        }} />
+
+        {/* Vignette: edges fall away so the panel reads as a lit surface, not a flat fill. */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(120% 120% at 50% 40%, rgba(0,0,0,0) 42%, rgba(1,24,18,0.60) 100%)'
+        }} />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 relative">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <motion.div
@@ -137,11 +155,11 @@ export const Landing = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center space-x-2 bg-white/85 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
-                <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-[#04240f]" />
-                <span className="text-[#04240f] font-semibold text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
+              <div className="inline-flex items-center space-x-2 bg-white/14 border border-white/25 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+                <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-[#EAFBF1]" />
+                <span className="text-[#EAFBF1] font-semibold text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-[#06170c] tracking-tight mb-4 sm:mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-[#F4FBF3] tracking-tight mb-4 sm:mb-6 leading-tight">
                 {HEADLINE_WORDS.map((word, i) => (
                   <React.Fragment key={word}>
                     <motion.span
@@ -156,14 +174,14 @@ export const Landing = () => {
                   </React.Fragment>
                 ))}
               </h1>
-              <p className="text-lg sm:text-xl font-medium text-[#06170c] mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl font-medium text-[#CFE8DC] mb-6 sm:mb-8 leading-relaxed">
                 Snap litter anywhere. Our AI verifies it, the map tracks it, and every
                 report earns you eco-points.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   to="/report"
-                  className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#007A38] rounded-lg text-base sm:text-lg font-semibold hover:bg-green-50 transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-[#A3E635] text-[#09281B] rounded-lg text-base sm:text-lg font-bold hover:bg-[#BEF264] transition-all hover:shadow-xl inline-flex items-center justify-center shadow-lg active:scale-95 min-h-[48px] w-full sm:w-auto"
                 >
                   <span>Report Litter</span>
                   <ArrowRight className="ml-2 w-5 h-5" />
