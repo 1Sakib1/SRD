@@ -119,9 +119,8 @@ export const Landing = () => {
                 Our Planet Clean
               </h1>
               <p className="text-lg sm:text-xl text-[#04240f] mb-6 sm:mb-8 leading-relaxed">
-                Photograph litter anywhere &mdash; a street, a park, a beach, a trail. Our AI
-                verifies it and pins it to a live map your community can act on. Every report
-                you send earns eco-points you can redeem for real credit.
+                Snap litter anywhere. Our AI verifies it, the map tracks it, and every
+                report earns you eco-points.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
