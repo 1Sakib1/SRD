@@ -480,6 +480,7 @@ export const getReports = async (): Promise<Report[]> => {
     const { data, error } = await supabase
       .from('reports')
       .select('*')
+      .neq('status', 'archived_deleted')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -541,7 +542,8 @@ export const getUserStats = async () => {
 
     const { count: reportsCount } = await supabase
       .from('reports')
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .neq('status', 'archived_deleted');
 
     return {
       totalMembers: (usersCount || 0) + 5000,

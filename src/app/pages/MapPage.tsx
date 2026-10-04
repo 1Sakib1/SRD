@@ -16,7 +16,8 @@ export const MapPage: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('reports')
-        .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes');
+        .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes')
+        .neq('status', 'archived_deleted');
         
       if (error) {
         console.error('Error fetching reports from Supabase:', error);

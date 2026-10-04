@@ -19,7 +19,8 @@ export const ContextualInfo = () => {
           
         const { count: reportsCount } = await supabase
           .from('reports')
-          .select('*', { count: 'exact', head: true });
+          .select('*', { count: 'exact', head: true })
+          .neq('status', 'archived_deleted');
           
         const totalUsers = usersCount || 0;
         const totalReports = reportsCount || 0;

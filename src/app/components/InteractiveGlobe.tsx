@@ -133,6 +133,7 @@ export const InteractiveGlobe = ({ focusLocation }: { focusLocation?: { lat: num
         const { data, error } = await supabase
           .from('reports')
           .select('id, location_lat, location_lng, type, description, location_address, created_at')
+          .neq('status', 'archived_deleted')
           .order('created_at', { ascending: false });
 
         if (error) throw error;

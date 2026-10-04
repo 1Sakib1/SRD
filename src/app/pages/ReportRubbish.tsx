@@ -206,6 +206,7 @@ export const ReportRubbish = () => {
       const { data, error } = await supabase
         .from('reports')
         .select('id, location_lat, location_lng, location_address, type, status, photo, created_at, still_there_votes, not_there_votes')
+        .neq('status', 'archived_deleted')
           .order('created_at', { ascending: false });
         
       if (error) {
