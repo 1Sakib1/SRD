@@ -503,17 +503,57 @@ app.post("/make-server-3e3b490b/reports/submit", async (c) => {
   }
 });
 
+// Service-role client. Postgres is what the public site renders, so admin reads
+// and writes must go through it, not the KV store.
+async function pgClient() {
+  const url = Deno.env.get('SUPABASE_URL') || '';
+  const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+  if (!url || !key) return null;
+  const { createClient } = await import("npm:@supabase/supabase-js");
+  return createClient(url, key);
+}
+
+// Postgres row -> the Report shape the admin UI already expects.
+function rowToReport(r: any) {
+  return {
+    id: r.id,
+    userId: r.user_id,
+    type: r.type,
+    description: r.description,
+    photo: r.photo || null,
+    location: { lat: r.location_lat, lng: r.location_lng, address: r.location_address || '' },
+    timestamp: r.created_at,
+    status: r.status,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  };
+}
+
 app.get("/make-server-3e3b490b/reports/list", async (c) => {
   try {
-    console.log('📋 Listing all reports from KV store');
-    
-    const reports = await kv.getByPrefix('report:');
-    console.log('Found reports:', reports?.length || 0);
-    
-    return c.json({ 
-      count: reports?.length || 0,
-      reports: reports || []
-    }, 200);
+    // Previously this read the KV store, which holds a largely different set of
+    // reports from Postgres -- so admins moderated a dataset the public never saw,
+    // and deleting by a KV id could never match a Postgres row.
+    const supabase = await pgClient();
+    if (!supabase) {
+      console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+      return c.json({ error: 'Server misconfigured: service role key unavailable' }, 500);
+    }
+
+    const { data, error } = await supabase
+      .from('reports')
+      .select('id, user_id, type, description, photo, location_lat, location_lng, location_address, status, created_at, updated_at')
+      .neq('status', 'archived_deleted')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('List reports error:', error);
+      return c.json({ error: 'Failed to list reports', details: error.message }, 500);
+    }
+
+    const reports = (data || []).map(rowToReport);
+    console.log('Listing reports from Postgres:', reports.length);
+    return c.json({ count: reports.length, reports }, 200);
   } catch (error) {
     console.error('List reports error:', error);
     return c.json({ error: 'Internal server error', details: String(error) }, 500);
@@ -571,276 +611,52 @@ app.put("/make-server-3e3b490b/reports/:reportId/status", async (c) => {
     const reportId = c.req.param('reportId');
     const { status } = await c.req.json();
     console.log('🔄 Updating report status:', { reportId, status });
-    
-    // Validate status
+
     if (!['pending', 'reviewed', 'resolved'].includes(status)) {
       return c.json({ error: 'Invalid status' }, 400);
     }
 
-    // Get the report
-    const reportKey = `report:${reportId}`;
-    const report = await kv.get(reportKey);
-    
-    if (!report) {
+    // Postgres drives the public site, so it decides the outcome. Previously this
+    // only wrote to KV, so an admin status change never reached the public map.
+    const supabase = await pgClient();
+    if (!supabase) {
+      console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+      return c.json({ error: 'Server misconfigured: service role key unavailable' }, 500);
+    }
+
+    const now = new Date().toISOString();
+    const { data: updated, error: pgError } = await supabase
+      .from('reports')
+      .update({ status, updated_at: now })
+      .eq('id', reportId)
+      .neq('status', 'archived_deleted')
+      .select('id, user_id, type, description, photo, location_lat, location_lng, location_address, status, created_at, updated_at');
+
+    if (pgError) {
+      console.error('Status update failed:', pgError);
+      return c.json({ error: 'Failed to update status', details: pgError.message }, 500);
+    }
+
+    // Legacy KV mirror, when an entry happens to exist under this id.
+    try {
+      const reportKey = `report:${reportId}`;
+      const existing = await kv.get(reportKey);
+      if (existing) await kv.set(reportKey, { ...existing, status, updatedAt: now });
+    } catch (kvErr) {
+      console.error('KV mirror failed (Postgres already updated):', kvErr);
+    }
+
+    if (!updated || updated.length === 0) {
       return c.json({ error: 'Report not found' }, 404);
     }
 
-    // Update status
-    const updatedReport = {
-      ...report,
-      status,
-      updatedAt: new Date().toISOString(),
-    };
-    
-    await kv.set(reportKey, updatedReport);
     console.log('✅ Report status updated:', reportId);
-    
-    return c.json({ report: updatedReport }, 200);
+    return c.json({ report: rowToReport(updated[0]) }, 200);
   } catch (error) {
     console.error('Update report status error:', error);
     return c.json({ error: 'Internal server error', details: String(error) }, 500);
   }
 });
-
-// Authentication endpoints
-app.post("/make-server-3e3b490b/auth/anonymous-login", async (c) => {
-  try {
-    const { email, name } = await c.req.json();
-    console.log('dY"? Anonymous login request:', { email, name });
-    
-    const result = await auth.createOrGetAnonymousUser(email, name || 'Anonymous Reporter');
-    
-    if (result.error) {
-      return c.json({ error: result.error }, 400);
-    }
-    
-    return c.json({ user: result.user }, 200);
-  } catch (error) {
-    console.error('Anonymous login endpoint error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-app.post("/make-server-3e3b490b/auth/register", async (c) => {
-  try {
-    const { email, password, name } = await c.req.json();
-    console.log('📝 Registration request:', { email, name });
-    
-    const result = await auth.registerUser(email, password, name);
-    
-    if (result.error) {
-      return c.json({ error: result.error }, 400);
-    }
-    
-    return c.json({ user: result.user }, 200);
-  } catch (error) {
-    console.error('Registration endpoint error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-app.post("/make-server-3e3b490b/auth/login", async (c) => {
-  try {
-    const { email, password } = await c.req.json();
-    console.log('🔐 Login request:', { email });
-    
-    const result = await auth.loginUser(email, password);
-    
-    if (result.error) {
-      return c.json({ error: result.error }, 400);
-    }
-    
-    return c.json({ user: result.user }, 200);
-  } catch (error) {
-    console.error('Login endpoint error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-app.post("/make-server-3e3b490b/auth/admin-login", async (c) => {
-  try {
-    const { email, password } = await c.req.json();
-    console.log('👑 Admin login request:', { email });
-    
-    const result = await auth.loginAdmin(email, password);
-    
-    if (result.error) {
-      return c.json({ error: result.error }, 400);
-    }
-    
-    return c.json({ user: result.user }, 200);
-  } catch (error) {
-    console.error('Admin login endpoint error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-// Forgot Password endpoint
-app.post("/make-server-3e3b490b/auth/forgot-password", async (c) => {
-  try {
-    const { email } = await c.req.json();
-    console.log('🔑 Forgot password request:', { email });
-
-    if (!email) {
-      return c.json({ error: 'Email is required' }, 400);
-    }
-
-    const sanitizedEmail = email.toLowerCase().trim();
-    
-    // Rate limiting - 3 attempts per 15 minutes per email
-    const rateLimitResult = await checkRateLimit(`forgot-password:${sanitizedEmail}`, 3, 15);
-    if (!rateLimitResult.allowed) {
-      console.warn('⚠️ Rate limit exceeded for:', sanitizedEmail);
-      return c.json({ 
-        error: 'Too many password reset attempts. Please try again in 15 minutes.' 
-      }, 429);
-    }
-
-    const userKey = `user:${sanitizedEmail}`;
-    
-    // Check if user exists
-    const user = await kv.get(userKey);
-    
-    // Security: Don't reveal if user exists or not (always return success)
-    // This prevents email enumeration attacks
-    if (!user) {
-      console.log('⚠️ User not found, but returning success to prevent enumeration:', sanitizedEmail);
-      // Still return success to prevent attackers from knowing if email exists
-      return c.json({ 
-        message: 'If an account exists with this email, you will receive a password reset code shortly.' 
-      }, 200);
-    }
-
-    // Generate 6-digit reset code
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const resetKey = `reset:${sanitizedEmail}`;
-    
-    // Store reset code with 15 minute expiry and attempt tracking
-    const resetData = {
-      code: resetCode,
-      email: sanitizedEmail,
-      attempts: 0,
-      maxAttempts: 3,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
-      createdAt: new Date().toISOString()
-    };
-    
-    await kv.set(resetKey, resetData);
-    
-    // Send email with reset code
-    const emailResult = await sendPasswordResetEmail(sanitizedEmail, resetCode, user.name);
-    
-    if (!emailResult.success) {
-      console.error('❌ Failed to send reset email:', emailResult.error);
-      return c.json({ 
-        error: 'Failed to send reset email. Please try again later.' 
-      }, 500);
-    }
-    
-    console.log('✅ Reset code generated and email sent to:', sanitizedEmail);
-    console.log(`   Remaining attempts: ${rateLimitResult.remainingAttempts}`);
-    
-    return c.json({ 
-      message: 'If an account exists with this email, you will receive a password reset code shortly.',
-      remainingAttempts: rateLimitResult.remainingAttempts
-    }, 200);
-  } catch (error) {
-    console.error('Forgot password error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
-// Reset Password endpoint
-app.post("/make-server-3e3b490b/auth/reset-password", async (c) => {
-  try {
-    const { email, resetCode, newPassword } = await c.req.json();
-    console.log('🔄 Reset password request:', { email });
-
-    if (!email || !resetCode || !newPassword) {
-      return c.json({ error: 'Email, reset code, and new password are required' }, 400);
-    }
-
-    if (newPassword.length < 6) {
-      return c.json({ error: 'Password must be at least 6 characters' }, 400);
-    }
-
-    const sanitizedEmail = email.toLowerCase().trim();
-    const resetKey = `reset:${sanitizedEmail}`;
-    
-    // Get reset data
-    const resetData = await kv.get(resetKey);
-    if (!resetData) {
-      return c.json({ error: 'Invalid or expired reset code' }, 400);
-    }
-
-    // Check if code is expired
-    const expiresAt = new Date(resetData.expiresAt);
-    if (expiresAt < new Date()) {
-      await kv.del(resetKey); // Clean up expired code
-      return c.json({ error: 'Reset code has expired. Please request a new one.' }, 400);
-    }
-
-    // Check attempts limit
-    if (resetData.attempts >= resetData.maxAttempts) {
-      await kv.del(resetKey); // Lock out after max attempts
-      console.warn('⚠️ Max reset attempts exceeded for:', sanitizedEmail);
-      return c.json({ 
-        error: 'Too many failed attempts. Please request a new reset code.' 
-      }, 400);
-    }
-
-    // Check if code matches
-    if (resetData.code !== resetCode) {
-      // Increment failed attempts
-      const updatedResetData = {
-        ...resetData,
-        attempts: resetData.attempts + 1
-      };
-      await kv.set(resetKey, updatedResetData);
-      
-      const remainingAttempts = resetData.maxAttempts - resetData.attempts - 1;
-      console.warn(`⚠️ Invalid reset code attempt for: ${sanitizedEmail}. Remaining: ${remainingAttempts}`);
-      
-      return c.json({ 
-        error: `Invalid reset code. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.` 
-      }, 400);
-    }
-
-    // Update user password
-    const userKey = `user:${sanitizedEmail}`;
-    const user = await kv.get(userKey);
-    
-    if (!user) {
-      return c.json({ error: 'User not found' }, 404);
-    }
-
-    // Hash the new password
-    const bcrypt = await import("https://deno.land/x/bcrypt@v0.4.1/mod.ts");
-    const hashedPassword = await bcrypt.hash(newPassword);
-
-    // Update user
-    const updatedUser = {
-      ...user,
-      password: hashedPassword,
-      updatedAt: new Date().toISOString()
-    };
-    
-    await kv.set(userKey, updatedUser);
-    
-    // Delete reset code after successful reset
-    await kv.del(resetKey);
-    
-    // Clear rate limit for this email
-    await kv.del(`ratelimit:forgot-password:${sanitizedEmail}`);
-    
-    console.log('✅ Password reset successfully for:', sanitizedEmail);
-    return c.json({ message: 'Password reset successfully. You can now login with your new password.' }, 200);
-  } catch (error) {
-    console.error('Reset password error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
-  }
-});
-
 
 app.delete("/make-server-3e3b490b/reports/:reportId", async (c) => {
   try {
