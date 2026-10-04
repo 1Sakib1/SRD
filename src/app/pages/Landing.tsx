@@ -7,7 +7,9 @@ import { Header } from '../components/Header';
 import { MapPin, Brain, Award, TrendingUp, Users, FileCheck, Zap, ArrowRight, Leaf, Recycle, DollarSign, Globe } from 'lucide-react';
 import { getUserStats } from '../utils/storage';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
+
+const HEADLINE_WORDS = ['Together', 'We', 'Keep', 'Our', 'Planet', 'Clean'];
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -18,6 +20,7 @@ const heroImageFallback = 'https://images.unsplash.com/photo-1506973035872-a4ec1
 
 export const Landing = () => {
   const stats = getUserStats();
+  const reduceMotion = useReducedMotion();
     const [focusLocation, setFocusLocation] = React.useState<{lat: number, lng: number} | null>(null);
   
   const globalCities = [
@@ -102,6 +105,30 @@ export const Landing = () => {
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }} />
         </div>
+
+        {/* Pearl sheen: three soft iridescent layers drifting at different speeds.
+            They use screen blending, so they only ever LIGHTEN the panel -- the dark
+            copy gains contrast rather than losing it. */}
+        <div className="absolute inset-0 pointer-events-none mix-blend-screen">
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(58% 72% at 18% 18%, rgba(255,255,255,0.60) 0%, rgba(209,250,229,0.26) 45%, rgba(255,255,255,0) 76%)' }}
+            animate={reduceMotion ? undefined : { opacity: [0.72, 1, 0.72], scale: [1, 1.07, 1], x: ['0%', '3%', '0%'] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(50% 62% at 78% 32%, rgba(207,250,254,0.52) 0%, rgba(167,243,208,0.22) 48%, rgba(255,255,255,0) 78%)' }}
+            animate={reduceMotion ? undefined : { opacity: [0.6, 0.95, 0.6], scale: [1.05, 1, 1.05], y: ['0%', '-3%', '0%'] }}
+            transition={{ duration: 21, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(60% 55% at 45% 92%, rgba(236,252,203,0.40) 0%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0) 80%)' }}
+            animate={reduceMotion ? undefined : { opacity: [0.5, 0.85, 0.5], scale: [1, 1.1, 1] }}
+            transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24 relative">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -114,11 +141,22 @@ export const Landing = () => {
                 <Leaf className="w-4 sm:w-5 h-4 sm:h-5 text-[#04240f]" />
                 <span className="text-[#04240f] font-semibold text-xs sm:text-sm lg:text-base">AI-Powered Litter Mapping &mdash; Anywhere on the Planet</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#04240f] mb-4 sm:mb-6 leading-tight">
-                Together We Keep{' '}
-                Our Planet Clean
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-[#06170c] tracking-tight mb-4 sm:mb-6 leading-tight">
+                {HEADLINE_WORDS.map((word, i) => (
+                  <React.Fragment key={word}>
+                    <motion.span
+                      className="inline-block"
+                      initial={reduceMotion ? false : { opacity: 0, y: '0.45em', filter: 'blur(8px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      transition={{ duration: 0.55, delay: 0.12 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      {word}
+                    </motion.span>
+                    {i < HEADLINE_WORDS.length - 1 ? ' ' : ''}
+                  </React.Fragment>
+                ))}
               </h1>
-              <p className="text-lg sm:text-xl text-[#04240f] mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl font-medium text-[#06170c] mb-6 sm:mb-8 leading-relaxed">
                 Snap litter anywhere. Our AI verifies it, the map tracks it, and every
                 report earns you eco-points.
               </p>
