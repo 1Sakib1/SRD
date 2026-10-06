@@ -1,4 +1,3 @@
-import { publicAnonKey } from '../../utils/supabase/info';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { Header } from '../components/Header';
