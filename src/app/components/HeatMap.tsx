@@ -135,6 +135,7 @@ export const HeatMap: React.FC<HeatMapProps> = (({
   const [isClient, setIsClient] = useState(false);
   const [returnPoints, setReturnPoints] = useState<ReturnPoint[]>([]);
   const [showRecycling, setShowRecycling] = useState(true);
+  const [showLegend, setShowLegend] = useState(false);
   
   useEffect(() => {
     setIsClient(true);
@@ -378,55 +379,72 @@ export const HeatMap: React.FC<HeatMapProps> = (({
 
       {/* Return and Earn layer toggle */}
       {/* Legend & Controls */}
-      <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-md border border-gray-200 z-[1000] min-w-[180px]">
-        <h4 className="text-xs font-semibold text-[#333333] mb-2">Report Density</h4>
-        <div className="space-y-1.5 mb-3">
-          {[
-            { label: 'High Priority (Active)', color: '#ef4444' },
-            { label: 'Medium Priority', color: '#f59e0b' },
-            { label: 'Low Priority / Emerging', color: '#00B150' },
-          ].map((item) => (
-            <div key={item.label} className="flex items-center space-x-2">
-              <div
-                className="w-3 h-3 rounded-full opacity-60"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs text-gray-600">{item.label}</span>
+      <div className="absolute bottom-4 right-4 z-[1000] flex flex-col items-end">
+        {!showLegend ? (
+          <button 
+            onClick={() => setShowLegend(true)}
+            className="bg-white/80 backdrop-blur-md p-2.5 rounded-full shadow-lg border border-gray-200/50 text-gray-700 hover:bg-white transition-all flex items-center justify-center"
+            title="Map Legend & Layers"
+          >
+            <MapPin className="w-5 h-5 text-[#00B150]" />
+          </button>
+        ) : (
+          <div className="bg-white/75 backdrop-blur-md p-3.5 rounded-xl shadow-xl border border-white/40 min-w-[190px] animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold text-gray-800 tracking-wide uppercase">Map Layers</h4>
+              <button onClick={() => setShowLegend(false)} className="text-gray-400 hover:text-gray-600 p-1">
+                &times;
+              </button>
             </div>
-          ))}
-        </div>
+            
+            <div className="space-y-2 mb-4">
+              {[
+                { label: 'High Priority (Active)', color: '#ef4444' },
+                { label: 'Medium Priority', color: '#f59e0b' },
+                { label: 'Low Priority / Emerging', color: '#00B150' },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center space-x-2">
+                  <div
+                    className="w-3 h-3 rounded-full opacity-70 shadow-sm"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-[11px] font-medium text-gray-700">{item.label}</span>
+                </div>
+              ))}
+            </div>
 
-        {showReturnPoints && returnPoints.length > 0 && (
-          <>
-            <div className="h-px bg-gray-200 w-full my-2" />
-            <h4 className="text-xs font-semibold text-[#333333] mb-2">Community Layers</h4>
-            <button
-              type="button"
-              onClick={() => setShowRecycling((v) => !v)}
-              aria-pressed={showRecycling}
-              className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded text-[11px] font-semibold transition-colors border ${
-                showRecycling
-                  ? 'bg-sky-600 text-white border-sky-700'
-                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex items-center gap-1.5">
-                <Recycle className="w-3.5 h-3.5" />
-                Return &amp; Earn
-              </div>
-              <span className={`px-1.5 py-0.5 rounded text-[9px] ${showRecycling ? 'bg-sky-500/60' : 'bg-gray-100'}`}>
-                {returnPoints.length}
-              </span>
-            </button>
-            {showRecycling && (
-              <p className="mt-1.5 text-[10px] leading-snug text-gray-500">
-                Community-mapped from OSM.{' '}
-                <a href="https://returnandearn.org.au/map" target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:text-sky-700 underline">
-                  See all
-                </a>
-              </p>
+            {showReturnPoints && returnPoints.length > 0 && (
+              <>
+                <div className="h-px bg-gray-200/60 w-full my-3" />
+                <button
+                  type="button"
+                  onClick={() => setShowRecycling((v) => !v)}
+                  aria-pressed={showRecycling}
+                  className={`w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border shadow-sm ${
+                    showRecycling
+                      ? 'bg-sky-600/90 text-white border-sky-500 shadow-sky-500/20'
+                      : 'bg-white/60 text-gray-700 border-gray-200 hover:bg-white/90'
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <Recycle className="w-3.5 h-3.5" />
+                    Return &amp; Earn
+                  </div>
+                  <span className={`px-1.5 py-0.5 rounded text-[9px] ${showRecycling ? 'bg-sky-500' : 'bg-gray-200'}`}>
+                    {returnPoints.length}
+                  </span>
+                </button>
+                {showRecycling && (
+                  <p className="mt-2 text-[10px] leading-snug text-gray-600 font-medium">
+                    Mapped from OSM.{' '}
+                    <a href="https://returnandearn.org.au/map" target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:text-sky-700 underline font-semibold">
+                      See all
+                    </a>
+                  </p>
+                )}
+              </>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

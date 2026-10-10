@@ -776,7 +776,13 @@ return (
                 <label className="block text-sm font-medium text-gray-700">Location</label>
                 <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
                   <button type="button" onClick={() => setLocationMode('auto')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'auto' ? 'bg-white text-[#00B150] shadow-sm' : 'text-gray-600'}`}>Auto Detect</button>
-                  <button type="button" onClick={() => setLocationMode('manual')} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'manual' ? 'bg-white text-[#00B150] shadow-sm' : 'text-gray-600'}`}>Manual Pin</button>
+                  <button type="button" onClick={() => {
+                    setLocationMode('manual');
+                    // On mobile, scroll down to the map so the user knows they need to tap it
+                    setTimeout(() => {
+                      document.getElementById('manual-map-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                  }} className={`flex-1 py-2 rounded-md font-medium text-sm ${locationMode === 'manual' ? 'bg-white text-[#00B150] shadow-sm' : 'text-gray-600'}`}>Manual Pin</button>
                 </div>
                 
                 {locationMode === 'auto' ? (
@@ -801,7 +807,7 @@ return (
             </form>
           </div>
           
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div id="manual-map-section" className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">
                 <h2 className="text-xl font-semibold text-[#333333]">Pin Manually</h2>
                 <div className="relative flex h-3 w-3">
