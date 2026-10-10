@@ -377,39 +377,10 @@ export const HeatMap: React.FC<HeatMapProps> = (({
       </MapContainer>
 
       {/* Return and Earn layer toggle */}
-      {showReturnPoints && (
-        <div className="absolute top-4 right-4 z-[1000]">
-          <button
-            type="button"
-            onClick={() => setShowRecycling((v) => !v)}
-            aria-pressed={showRecycling}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg shadow-md border text-xs font-semibold transition-colors ${
-              showRecycling
-                ? 'bg-sky-600 text-white border-sky-700'
-                : 'bg-white/90 backdrop-blur-sm text-gray-700 border-gray-200 hover:bg-white'
-            }`}
-          >
-            <Recycle className="w-4 h-4" />
-            Return &amp; Earn
-            <span className={`px-1.5 py-0.5 rounded text-[10px] ${showRecycling ? 'bg-sky-500/60' : 'bg-gray-100'}`}>
-              {returnPoints.length}
-            </span>
-          </button>
-          {showRecycling && returnPoints.length > 0 && (
-            <p className="mt-1.5 max-w-[190px] text-[10px] leading-snug text-gray-600 bg-white/90 backdrop-blur-sm rounded px-2 py-1.5 border border-gray-200">
-              Community-mapped from OpenStreetMap &mdash; not every NSW return point is listed.{' '}
-              <a href="https://returnandearn.org.au/map" target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">
-                See all
-              </a>
-            </p>
-          )}
-        </div>
-      )}
-      
-      {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-md border border-gray-200 z-[1000]">
+      {/* Legend & Controls */}
+      <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-md border border-gray-200 z-[1000] min-w-[180px]">
         <h4 className="text-xs font-semibold text-[#333333] mb-2">Report Density</h4>
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 mb-3">
           {[
             { label: 'High Priority (Active)', color: '#ef4444' },
             { label: 'Medium Priority', color: '#f59e0b' },
@@ -424,6 +395,39 @@ export const HeatMap: React.FC<HeatMapProps> = (({
             </div>
           ))}
         </div>
+
+        {showReturnPoints && returnPoints.length > 0 && (
+          <>
+            <div className="h-px bg-gray-200 w-full my-2" />
+            <h4 className="text-xs font-semibold text-[#333333] mb-2">Community Layers</h4>
+            <button
+              type="button"
+              onClick={() => setShowRecycling((v) => !v)}
+              aria-pressed={showRecycling}
+              className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded text-[11px] font-semibold transition-colors border ${
+                showRecycling
+                  ? 'bg-sky-600 text-white border-sky-700'
+                  : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-1.5">
+                <Recycle className="w-3.5 h-3.5" />
+                Return &amp; Earn
+              </div>
+              <span className={`px-1.5 py-0.5 rounded text-[9px] ${showRecycling ? 'bg-sky-500/60' : 'bg-gray-100'}`}>
+                {returnPoints.length}
+              </span>
+            </button>
+            {showRecycling && (
+              <p className="mt-1.5 text-[10px] leading-snug text-gray-500">
+                Community-mapped from OSM.{' '}
+                <a href="https://returnandearn.org.au/map" target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:text-sky-700 underline">
+                  See all
+                </a>
+              </p>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
