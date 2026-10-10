@@ -35,7 +35,7 @@ export function PrivacyPolicy() {
             We will only keep your personal information for as long as it is necessary for the purposes set out in this privacy notice, unless a longer retention period is required or permitted by law.
           </p>
           <p>
-            <strong>Right to Deletion:</strong> You have the right to request the deletion of your personal data. You can permanently delete your account and all associated data, including your Google OAuth data, at any time by contacting us at <strong>nazmus.sakib.au@gmail.com</strong>. Upon receiving a deletion request, we will securely erase your data from our active databases within 30 days.
+            <strong>Right to Deletion:</strong> You have the right to request the deletion of your personal data. You can permanently delete your account and all associated data, including your Google OAuth data, at any time by contacting us at <strong>litterpin.org@gmail.com</strong>. Upon receiving a deletion request, we will securely erase your data from our active databases within 30 days.
           </p>
 
           <h2 className="text-xl font-semibold text-white mt-8 mb-4">4. Compliance with Google API Services User Data Policy</h2>
@@ -50,7 +50,7 @@ export function PrivacyPolicy() {
 
           <h2 className="text-xl font-semibold text-white mt-8 mb-4">6. Contact Us</h2>
           <p>
-            If you have questions or comments about this Privacy Policy, your data, or if you wish to exercise your data deletion rights, please contact our Data Protection Officer at <strong>nazmus.sakib.au@gmail.com</strong>.
+            If you have questions or comments about this Privacy Policy, your data, or if you wish to exercise your data deletion rights, please contact our Data Protection Officer at <strong>litterpin.org@gmail.com</strong>.
           </p>
         </div>
       </div>

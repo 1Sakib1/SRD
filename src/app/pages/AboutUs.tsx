@@ -434,7 +434,7 @@ export const AboutUs = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
               <a
-                href="mailto:nazmus.sakib.au@gmail.com"
+                href="mailto:litterpin.org@gmail.com"
                 className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-medium hover:from-green-500 hover:to-emerald-500 transition-all shadow-lg hover:shadow-green-500/50 active:scale-95 min-h-[48px] border border-green-400/30"
               >
                 <Mail className="w-5 h-5" />
@@ -443,7 +443,7 @@ export const AboutUs = () => {
               </a>
             </div>
             <p className="mt-4 text-sm text-slate-400 font-mono">
-              nazmus.sakib.au@gmail.com
+              litterpin.org@gmail.com
             </p>
           </div>
         </motion.section>
