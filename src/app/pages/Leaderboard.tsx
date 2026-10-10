@@ -54,7 +54,7 @@ export const Leaderboard = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold">Top Contributors</h2>
-                <p className="text-yellow-100">Earn $0.10 for every report!</p>
+                <p className="text-yellow-100">Earn $0.01 for every report!</p>
               </div>
             </div>
             
