@@ -48,7 +48,7 @@ export function TermsOfService() {
 
           <h2 className="text-xl font-semibold text-white mt-8 mb-4">5. Contact Us</h2>
           <p>
-            If you have any questions about these Terms, please contact us at <strong>litterpin.org@gmail.com</strong>.
+            If you have any questions about these Terms, please contact us at <strong>nazmus.sakib.au@gmail.com</strong>.
           </p>
         </div>
       </div>
