@@ -17,6 +17,10 @@ const partnerLogos = {
     src: '/images/partners/planet-ark.png',
     fallback: 'https://via.placeholder.com/200x80/4CAF50/FFFFFF?text=Planet+Ark',
   },
+  returnAndEarn: {
+    src: '/images/partners/return-and-earn.png',
+    fallback: 'https://via.placeholder.com/200x80/0284c7/FFFFFF?text=Return+&+Earn',
+  },
 };
 
 // Country-specific waste management data
@@ -717,7 +721,7 @@ export const Awareness = () => {
               <h2 className="text-2xl font-bold text-[#333333]">Additional Resources & Partners</h2>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <a
                 href="https://www.epa.nsw.gov.au/"
                 target="_blank"
@@ -779,6 +783,27 @@ export const Awareness = () => {
                 <h3 className="font-semibold text-[#333333] mb-2 group-hover:text-[#00B150] transition-colors text-lg">Recycling Near You</h3>
                 <p className="text-sm text-gray-600 mb-3">National recycling directory</p>
                 <p className="text-xs text-gray-500">Find recycling locations, learn what can be recycled, and access recycling guides</p>
+              </a>
+
+              <a
+                href="https://returnandearn.org.au/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-6 border-2 border-gray-200 rounded-lg hover:border-[#00B150] hover:shadow-lg transition-all"
+              >
+                <div className="h-24 mb-4 flex items-center justify-center bg-gradient-to-br from-sky-50 to-blue-50 rounded-lg p-4">
+                  <img
+                    src={partnerLogos.returnAndEarn.src}
+                    alt="Return and Earn"
+                    className="h-full w-auto object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = partnerLogos.returnAndEarn.fallback;
+                    }}
+                  />
+                </div>
+                <h3 className="font-semibold text-[#333333] mb-2 group-hover:text-[#00B150] transition-colors text-lg">Return and Earn</h3>
+                <p className="text-sm text-gray-600 mb-3">Container deposit scheme</p>
+                <p className="text-xs text-gray-500">Get a 10c refund for eligible bottles and cans while reducing litter in NSW</p>
               </a>
             </div>
           </motion.section>
