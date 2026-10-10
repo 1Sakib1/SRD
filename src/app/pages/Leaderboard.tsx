@@ -107,7 +107,7 @@ export const Leaderboard = () => {
                       </div>
                       <div className="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-100">
                         <Star className={`w-5 h-5 ${isTop3 ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
-                        <span className="font-bold text-[#333333] text-xl">{topUser.ecoPoints}</span>
+                        <span className="font-bold text-[#333333] text-xl">{topUser.eco_points || topUser.ecoPoints || 0}</span>
                         <span className="text-sm text-gray-500 font-medium hidden sm:inline">pts</span>
                       </div>
                     </li>

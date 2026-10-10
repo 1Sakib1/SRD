@@ -454,7 +454,7 @@ export const Dashboard = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Star className={`w-5 h-5 ${isTop3 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                        <span className="font-bold text-[#333333] text-lg">{topUser.ecoPoints}</span>
+                        <span className="font-bold text-[#333333] text-lg">{topUser.eco_points || topUser.ecoPoints || 0}</span>
                         <span className="text-sm text-gray-500 hidden sm:inline">pts</span>
                       </div>
                     </li>
